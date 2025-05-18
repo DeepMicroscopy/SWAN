@@ -37,7 +37,7 @@ const rememberMe = ref(false)
           @click:append-inner="visible = !visible"
         ></v-text-field>
         <v-checkbox v-model="rememberMe" label="Remember me" color="indigo"></v-checkbox>
-        <v-btn block rounded="lg" variant="elevated" color="indigo">Login</v-btn>
+        <v-btn block rounded="lg" variant="elevated" color="indigo" to="/overview">Login</v-btn>
       </v-form>
     </v-sheet>
   </v-container>
