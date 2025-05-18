@@ -12,6 +12,8 @@
         <h1 class="text-h2 font-weight-bold">Vuetify</h1>
       </div>
 
+      <h1>Hallo VUe</h1>
+
       <v-row>
         <v-col cols="12">
           <v-card
@@ -34,8 +36,9 @@
 
             <template #subtitle>
               <div class="text-subtitle-1">
-                Change this page by updating <v-kbd>{{ `<HelloWorld />` }}</v-kbd> in <v-kbd>components/HelloWorld.vue</v-kbd>.
+                Change this s page by updating <v-kbd>{{ `<HelloWorld />` }}</v-kbd> in <v-kbd>components/HelloWorld.vue</v-kbd>.
               </div>
+              <RouterLink to="/layout">Main</RouterLink>
             </template>
           </v-card>
         </v-col>
