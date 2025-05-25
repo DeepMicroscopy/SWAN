@@ -1,4 +1,4 @@
-# Minder
+# SWAN
 
 ## Verifying commits
 

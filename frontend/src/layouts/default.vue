@@ -9,7 +9,7 @@
     <template v-slot:prepend>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
     </template>
-    <v-app-bar-title>Minder App</v-app-bar-title>
+    <v-app-bar-title>SWAN App</v-app-bar-title>
   </v-app-bar>
 
   <v-main>
@@ -20,5 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-  //
+import {ref} from 'vue'
+
+const drawer = ref(false)
 </script>

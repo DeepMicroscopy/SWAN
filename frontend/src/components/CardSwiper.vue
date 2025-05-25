@@ -79,7 +79,7 @@
 
         <v-spacer/>
 
-        <v-toolbar-title class="text-center">Minder</v-toolbar-title>
+        <v-toolbar-title class="text-center">SWAN</v-toolbar-title>
 
         <v-spacer/>
 
@@ -153,6 +153,11 @@
 
 <script setup lang="ts">
 import {ref, computed} from 'vue'
+
+// TODO
+// - dragging should be scaled to the zoom factor
+// - double click reset zoom factor
+// - implement lazy loading for cards (nextCard() -> (card, hasNext)
 
 export interface Card {
   id: string
@@ -257,12 +262,14 @@ const getImageStyle = () => {
 const forward = () => {
   currentIndex.value++
 
+  // unclear if needed
   zoomReset()
 }
 
 const backward = () => {
   currentIndex.value--
 
+  // unclear if needed
   zoomReset()
 }
 
@@ -318,7 +325,9 @@ const swipeMove = (e: MouseEvent | Touch) => {
 
   const delta = {x: currentX.value - startX.value, y: currentY.value - startY.value}
 
-  if (Math.abs(delta.x) > 50 || Math.abs(delta.y) > 50) {
+  const threshold = 50;
+
+  if (Math.abs(delta.x) > threshold || Math.abs(delta.y) > threshold) {
     if (Math.abs(delta.x) > Math.abs(delta.y)) {
       swipeDirection.value = delta.x > 0 ? 'right' : 'left'
     } else {
@@ -335,9 +344,10 @@ const handleSwipeEnd = () => {
   const delta = {x: currentX.value - startX.value, y: currentY.value - startY.value}
 
   const threshold = 100
-  let direction = null
 
   if (Math.abs(delta.x) > threshold || Math.abs(delta.y) > threshold) {
+    let direction
+
     if (Math.abs(delta.x) > Math.abs(delta.y)) {
       direction = delta.x > 0 ? 'right' : 'left'
     } else {
