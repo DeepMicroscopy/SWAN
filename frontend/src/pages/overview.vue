@@ -35,7 +35,7 @@ const dialog = ref(false)
         subtitle="May 13, 2025"
       >
         <template v-slot:prepend>
-          <v-btn density="default" color="blue" icon="mdi-clipboard-text" class="mr-3"></v-btn>
+          <v-btn density="default" color="blue" icon="mdi-clipboard-text" class="mr-3" to="swipe"></v-btn>
         </template>
 
         <template v-slot:append>
@@ -72,7 +72,7 @@ const dialog = ref(false)
         subtitle="Jan 20, 2025"
       >
         <template v-slot:prepend>
-          <v-btn density="default" color="blue" icon="mdi-clipboard-text" class="mr-3"></v-btn>
+          <v-btn density="default" color="blue" icon="mdi-clipboard-text" class="mr-3" to="swipe"></v-btn>
         </template>
 
         <template v-slot:append>
@@ -114,7 +114,7 @@ const dialog = ref(false)
       eirmod tENDE invidunt ut labore et dolore magna aliquyam erat, sed"
       >
         <template v-slot:prepend>
-          <v-btn density="default" color="blue" icon="mdi-clipboard-text" class="mr-3"></v-btn>
+          <v-btn density="default" color="blue" icon="mdi-clipboard-text" class="mr-3" to="swipe"></v-btn>
         </template>
 
         <template v-slot:append>
@@ -153,7 +153,7 @@ const dialog = ref(false)
       eirmod tENDE"
       >
         <template v-slot:prepend>
-          <v-btn density="default" color="blue" icon="mdi-clipboard-text" class="mr-3"></v-btn>
+          <v-btn density="default" color="blue" icon="mdi-clipboard-text" class="mr-3" to="swipe"></v-btn>
         </template>
 
         <template v-slot:append>
