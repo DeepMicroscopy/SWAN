@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {ref} from 'vue'
+import { useAppStore} from "@/stores/app.ts";
 
+const store = useAppStore()
 const visible = ref(false)
 const rememberMe = ref(false)
 </script>
@@ -14,8 +16,8 @@ const rememberMe = ref(false)
         <v-text-field
           density="compact"
           placeholder="you@example.com"
-          prepend-inner-icon="mdi-email-outline"
-          variant="outlined"
+          prepend-inner-icon="mdi-account"
+          variant="solo-filled"
         ></v-text-field>
         <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
           Password
@@ -32,12 +34,12 @@ const rememberMe = ref(false)
           :type="visible ? 'text' : 'password'"
           density="compact"
           placeholder="Enter your password"
-          prepend-inner-icon="mdi-lock-outline"
-          variant="outlined"
+          prepend-inner-icon="mdi-lock"
+          variant="solo-filled"
           @click:append-inner="visible = !visible"
         ></v-text-field>
         <v-checkbox v-model="rememberMe" label="Remember me" color="indigo"></v-checkbox>
-        <v-btn block rounded="lg" variant="elevated" color="indigo" to="/overview">Login</v-btn>
+        <v-btn block size="x-large" rounded="lg" variant="elevated" color="indigo" @click="store.logOn()" to="/overview">Login</v-btn>
       </v-form>
     </v-sheet>
   </v-container>
