@@ -131,7 +131,7 @@
             <v-list-item
               prepend-icon="mdi-magnify"
               title="Zoom"
-              subtitle="Pinch or Mouse-Whell"
+              subtitle="Pinch or Mouse-Wheel"
             />
             <v-list-item
               prepend-icon="mdi-magnify-expand"
