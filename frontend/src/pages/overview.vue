@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {ref} from "vue";
+  import { ref } from 'vue';
 
-const dialog = ref(false)
+  const dialog = ref(false)
 </script>
 
 <template>
@@ -11,16 +11,16 @@ const dialog = ref(false)
   >
     <v-img
       class="text-white"
+      cover
       height="250px"
       src="@/assets/malignant-spindle-cell-neoplasm.jpg"
-      cover
     >
       <div class="d-flex flex-column h-100">
         <v-card-title class="d-flex ga-2 px-2">
-          <v-btn icon="mdi-chevron-left" variant="text" color="indigo-darken-2"></v-btn>
-          <v-spacer></v-spacer>
-          <v-btn icon="mdi-pencil" variant="text" color="indigo-darken-2"></v-btn>
-          <v-btn icon="mdi-dots-vertical" variant="text" color="indigo-darken-2"></v-btn>
+          <v-btn color="indigo-darken-2" icon="mdi-chevron-left" variant="text" />
+          <v-spacer />
+          <v-btn color="indigo-darken-2" icon="mdi-pencil" variant="text" />
+          <v-btn color="indigo-darken-2" icon="mdi-dots-vertical" variant="text" />
         </v-card-title>
 
         <v-card-title class="pb-6 text-center text-indigo-darken-2">
@@ -31,20 +31,26 @@ const dialog = ref(false)
 
     <v-list lines="two">
       <v-list-item
-        title="Histogram"
         subtitle="May 13, 2025"
+        title="Histogram"
       >
-        <template v-slot:prepend>
-          <v-btn density="default" color="blue" icon="mdi-clipboard-text" class="mr-3" to="swipe"></v-btn>
+        <template #prepend>
+          <v-btn
+            class="mr-3"
+            color="blue"
+            density="default"
+            icon="mdi-clipboard-text"
+            to="swipe"
+          />
         </template>
 
-        <template v-slot:append>
+        <template #append>
           <v-btn
             color="grey-lighten-1"
             icon="mdi-information"
             variant="text"
             @click="dialog = true"
-          ></v-btn>
+          />
         </template>
 
         <v-dialog
@@ -57,31 +63,37 @@ const dialog = ref(false)
             text="In this study, we investigate the different manifestations of cell division visualized on microscopic images."
             title="Study Description"
           >
-            <template v-slot:actions>
+            <template #actions>
               <v-btn
                 class="ms-auto"
                 text="Ok"
                 @click="dialog = false"
-              ></v-btn>
+              />
             </template>
           </v-card>
         </v-dialog>
       </v-list-item>
       <v-list-item
-        title="Atypical cells"
         subtitle="Jan 20, 2025"
+        title="Atypical cells"
       >
-        <template v-slot:prepend>
-          <v-btn density="default" color="blue" icon="mdi-clipboard-text" class="mr-3" to="swipe"></v-btn>
+        <template #prepend>
+          <v-btn
+            class="mr-3"
+            color="blue"
+            density="default"
+            icon="mdi-clipboard-text"
+            to="swipe"
+          />
         </template>
 
-        <template v-slot:append>
+        <template #append>
           <v-btn
             color="grey-lighten-1"
             icon="mdi-information"
             variant="text"
             @click="dialog = true"
-          ></v-btn>
+          />
         </template>
 
         <v-dialog
@@ -94,36 +106,42 @@ const dialog = ref(false)
             text="In this study, we investigate the different manifestations of cell division visualized on microscopic images."
             title="Study Description"
           >
-            <template v-slot:actions>
+            <template #actions>
               <v-btn
                 class="ms-auto"
                 text="Ok"
                 @click="dialog = false"
-              ></v-btn>
+              />
             </template>
           </v-card>
         </v-dialog>
       </v-list-item>
     </v-list>
 
-    <v-divider></v-divider>
+    <v-divider />
     <v-list lines="three">
       <v-list-item
-        title="Long subtitle Histogram"
         subtitle="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
       eirmod tENDE invidunt ut labore et dolore magna aliquyam erat, sed"
+        title="Long subtitle Histogram"
       >
-        <template v-slot:prepend>
-          <v-btn density="default" color="blue" icon="mdi-clipboard-text" class="mr-3" to="swipe"></v-btn>
+        <template #prepend>
+          <v-btn
+            class="mr-3"
+            color="blue"
+            density="default"
+            icon="mdi-clipboard-text"
+            to="swipe"
+          />
         </template>
 
-        <template v-slot:append>
+        <template #append>
           <v-btn
             color="grey-lighten-1"
             icon="mdi-information"
             variant="text"
             @click="dialog = true"
-          ></v-btn>
+          />
         </template>
 
         <v-dialog
@@ -136,33 +154,39 @@ const dialog = ref(false)
             text="In this study, we investigate the different manifestations of cell division visualized on microscopic images."
             title="Study Description"
           >
-            <template v-slot:actions>
+            <template #actions>
               <v-btn
                 class="ms-auto"
                 text="Ok"
                 @click="dialog = false"
-              ></v-btn>
+              />
             </template>
           </v-card>
         </v-dialog>
       </v-list-item>
-      <v-divider inset></v-divider>
+      <v-divider inset />
       <v-list-item
-        title="Long title Histogram-Histogram-Histogram"
         subtitle="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
       eirmod tENDE"
+        title="Long title Histogram-Histogram-Histogram"
       >
-        <template v-slot:prepend>
-          <v-btn density="default" color="blue" icon="mdi-clipboard-text" class="mr-3" to="swipe"></v-btn>
+        <template #prepend>
+          <v-btn
+            class="mr-3"
+            color="blue"
+            density="default"
+            icon="mdi-clipboard-text"
+            to="swipe"
+          />
         </template>
 
-        <template v-slot:append>
+        <template #append>
           <v-btn
             color="grey-lighten-1"
             icon="mdi-information"
             variant="text"
             @click="dialog = true"
-          ></v-btn>
+          />
         </template>
 
         <v-dialog
@@ -175,12 +199,12 @@ const dialog = ref(false)
             text="In this study, we investigate the different manifestations of cell division visualized on microscopic images."
             title="Study Description"
           >
-            <template v-slot:actions>
+            <template #actions>
               <v-btn
                 class="ms-auto"
                 text="Ok"
                 @click="dialog = false"
-              ></v-btn>
+              />
             </template>
           </v-card>
         </v-dialog>

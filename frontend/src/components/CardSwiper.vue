@@ -8,8 +8,8 @@
           :class="`swipe-${swipeDirection}`"
         >
           <v-icon
-            size="64"
             :color="getSwipeColor(swipeDirection)"
+            size="64"
           >
             {{ getSwipeIcon(swipeDirection) }}
           </v-icon>
@@ -24,13 +24,13 @@
           class="card-wrapper"
           :class="{ 'active-card': index === 0 }"
           :style="getCardStyle(index)"
-          @touchstart.prevent="handleSwipeStartTouch"
-          @touchmove.prevent="handleSwipeMoveTouch"
-          @touchend.prevent="handleSwipeEnd"
           @mousedown.prevent="handleSwipeStartMouse"
+          @mouseleave.prevent="handleSwipeEnd"
           @mousemove.prevent="handleSwipeMoveMouse"
           @mouseup.prevent="handleSwipeEnd"
-          @mouseleave.prevent="handleSwipeEnd"
+          @touchend.prevent="handleSwipeEnd"
+          @touchmove.prevent="handleSwipeMoveTouch"
+          @touchstart.prevent="handleSwipeStartTouch"
         >
           <v-card
             class="card-item elevation-8"
@@ -38,17 +38,17 @@
           >
             <div class="image-container" @wheel.prevent="handleMouseWheel">
               <v-img
-                :src="card.imageUrl"
                 :alt="card.title"
                 class="image-zoom"
+                :src="card.imageUrl"
                 :style="getImageStyle()"
-                @touchstart.prevent="handleDragStartTouch"
-                @touchmove.prevent="handleDragMoveTouch"
-                @touchend.prevent="handleDragEnd"
                 @mousedown.prevent="handleStartMouse"
+                @mouseleave.prevent="handleDragEnd"
                 @mousemove.prevent="handleDragMoveMouse"
                 @mouseup.prevent="handleDragEnd"
-                @mouseleave.prevent="handleDragEnd"
+                @touchend.prevent="handleDragEnd"
+                @touchmove.prevent="handleDragMoveTouch"
+                @touchstart.prevent="handleDragStartTouch"
               />
             </div>
           </v-card>
@@ -56,37 +56,37 @@
       </div>
     </div>
 
-    <v-container width="auto" class="pt-2">
+    <v-container class="pt-2" width="auto">
       <v-progress-linear
-        color="green"
         class="progress-bar"
-        rounded
+        color="green"
         :model-value="progress"
+        rounded
       />
 
       <v-toolbar
-        rounded
         class="pa-2"
-        density="compact"
         color="rgba(0,0,0,0.5)"
+        density="compact"
+        rounded
       >
         <v-btn
-          icon="mdi-arrow-left"
-          @click="backward"
           color="white"
           :disabled="currentIndex === 0"
+          icon="mdi-arrow-left"
+          @click="backward"
         />
 
-        <v-spacer/>
+        <v-spacer />
 
         <v-toolbar-title class="text-center">SWAN</v-toolbar-title>
 
-        <v-spacer/>
+        <v-spacer />
 
         <v-btn
+          color="white"
           icon="mdi-help-circle"
           @click="showHelp = true"
-          color="white"
         />
       </v-toolbar>
     </v-container>
@@ -106,26 +106,26 @@
             <v-list-subheader inset>Swipe or Drag</v-list-subheader>
             <v-list-item
               prepend-icon="mdi-arrow-up"
-              title="Swipe Up"
               subtitle="Classify as A"
+              title="Swipe Up"
             />
             <v-list-item
               prepend-icon="mdi-arrow-down"
-              title="Swipe Down"
               subtitle="Classify as B"
+              title="Swipe Down"
             />
             <v-list-item
               prepend-icon="mdi-arrow-left"
-              title="Swipe Left"
               subtitle="Classify as C"
+              title="Swipe Left"
             />
             <v-list-item
               prepend-icon="mdi-arrow-right"
-              title="Swipe Right"
               subtitle="Classify as D"
+              title="Swipe Right"
             />
 
-            <v-divider/>
+            <v-divider />
 
             <v-list-subheader inset>Inspect</v-list-subheader>
             <v-list-item
@@ -135,13 +135,13 @@
             />
             <v-list-item
               prepend-icon="mdi-magnify-expand"
-              title="Reset"
               subtitle="Double-Tap or -Click"
+              title="Reset"
             />
           </v-list>
         </v-card-text>
         <v-card-actions>
-          <v-spacer/>
+          <v-spacer />
           <v-btn color="primary" @click="showHelp = false">
             OK
           </v-btn>
@@ -152,316 +152,320 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed} from 'vue'
+  import { computed, ref } from 'vue'
 
-// TODO
-// - dragging should be scaled to the zoom factor
-// - double click reset zoom factor
-// - implement lazy loading for cards (nextCard() -> (card, hasNext)
+  // TODO
+  // - clean up even more unused stuff (like active-card)
+  // - dragging should be scaled to the zoom factor
+  // - double click reset zoom factor
+  // - extract indicators to component (per-ui type)
+  // - extract help menu to component (per-ui type)
+  // - move threshold and config to props
+  // - implement lazy loading for cards (nextCard() -> (card, hasNext)
 
-export interface Card {
-  id: string
-  imageUrl: string
-  title?: string
-  description?: string
-}
+  export interface Card {
+    id: string
+    imageUrl: string
+    title?: string
+    description?: string
+  }
 
-interface SwipeDirection {
-  direction: 'up' | 'down' | 'left' | 'right'
-  action: string
-  color: string
-  icon: string
-}
+  interface SwipeDirection {
+    direction: 'up' | 'down' | 'left' | 'right'
+    action: string
+    color: string
+    icon: string
+  }
 
-export interface SwipeEvent {
-  card: Card
-  direction: 'up' | 'down' | 'left' | 'right'
-}
+  export interface SwipeEvent {
+    card: Card
+    direction: 'up' | 'down' | 'left' | 'right'
+  }
 
-interface Props {
-  cards: Card[]
-}
+  interface Props {
+    cards?: Card[]
+  }
 
-const props = withDefaults(defineProps<Props>(), {
-  cards: () => [],
-})
+  const props = withDefaults(defineProps<Props>(), {
+    cards: () => [],
+  })
 
-const emit = defineEmits<{
-  swiped: [event: SwipeEvent]
-}>()
+  const emit = defineEmits<{
+    swiped: [event: SwipeEvent]
+  }>()
 
-const currentIndex = ref(0)
-const showHelp = ref(false)
+  const currentIndex = ref(0)
+  const showHelp = ref(false)
 
-// Card swipe
-const isSwiping = ref(false)
-const swipeDirection = ref<string | null>(null)
-const startX = ref(0)
-const startY = ref(0)
-const currentX = ref(0)
-const currentY = ref(0)
+  // Card swipe
+  const isSwiping = ref(false)
+  const swipeDirection = ref<string | null>(null)
+  const startX = ref(0)
+  const startY = ref(0)
+  const currentX = ref(0)
+  const currentY = ref(0)
 
-// Image drag
-const isDragging = ref(false)
-const imageX = ref(0)
-const imageY = ref(0)
-const imageStartX = ref(0)
-const imageStartY = ref(0)
+  // Image drag
+  const isDragging = ref(false)
+  const imageX = ref(0)
+  const imageY = ref(0)
+  const imageStartX = ref(0)
+  const imageStartY = ref(0)
 
-// Image zoom
-const isZooming = ref(false)
-const imageZoom = ref(1)
-const currentDistance = ref(0)
+  // Image zoom
+  const isZooming = ref(false)
+  const imageZoom = ref(1)
+  const currentDistance = ref(0)
 
-// data holder
-const swipeDirections: Record<string, SwipeDirection> = {
-  up: {direction: 'up', action: 'Favorit', color: 'success', icon: 'mdi-heart'},
-  down: {direction: 'down', action: 'Ablehnen', color: 'error', icon: 'mdi-close'},
-  left: {direction: 'left', action: 'Später', color: 'warning', icon: 'mdi-clock'},
-  right: {direction: 'right', action: 'Teilen', color: 'info', icon: 'mdi-share'}
-}
+  // data holder
+  const swipeDirections: Record<string, SwipeDirection> = {
+    up: { direction: 'up', action: 'Favorit', color: 'success', icon: 'mdi-heart' },
+    down: { direction: 'down', action: 'Ablehnen', color: 'error', icon: 'mdi-close' },
+    left: { direction: 'left', action: 'Später', color: 'warning', icon: 'mdi-clock' },
+    right: { direction: 'right', action: 'Teilen', color: 'info', icon: 'mdi-share' },
+  }
 
-// Computed
-const visibleCards = computed(() => {
-  return props.cards.slice(currentIndex.value, currentIndex.value + 2)
-})
+  // Computed
+  const visibleCards = computed(() => {
+    return props.cards.slice(currentIndex.value, currentIndex.value + 2)
+  })
 
-const progress = computed(() => {
-  return 100 * (currentIndex.value / props.cards.length)
-})
+  const progress = computed(() => {
+    return 100 * (currentIndex.value / props.cards.length)
+  })
 
-// Methods
-const getCardStyle = (index: number) => {
-  const baseTransform = `translateZ(${-index * 10}px) scale(${1 - index * 0.05})`
+  // Methods
+  const getCardStyle = (index: number) => {
+    const baseTransform = `translateZ(${-index * 10}px) scale(${1 - index * 0.05})`
 
-  if (index === 0 && isSwiping.value) {
-    const deltaX = currentX.value - startX.value
-    const deltaY = currentY.value - startY.value
-    const rotation = deltaX * 0.1
+    if (index === 0 && isSwiping.value) {
+      const deltaX = currentX.value - startX.value
+      const deltaY = currentY.value - startY.value
+      const rotation = deltaX * 0.1
+
+      return {
+        transform: `${baseTransform} translateX(${deltaX}px) translateY(${deltaY}px) rotateZ(${rotation}deg)`,
+        opacity: 1 - Math.abs(deltaX) / 1000 - Math.abs(deltaY) / 1000,
+      }
+    }
 
     return {
-      transform: `${baseTransform} translateX(${deltaX}px) translateY(${deltaY}px) rotateZ(${rotation}deg)`,
-      opacity: 1 - Math.abs(deltaX) / 1000 - Math.abs(deltaY) / 1000
+      transform: baseTransform,
+      opacity: 1 - index * 0.2,
     }
   }
 
-  return {
-    transform: baseTransform,
-    opacity: 1 - index * 0.2
-  }
-}
-
-const getImageStyle = () => {
-  return {
-    transform: `scale(${imageZoom.value}) translate(${imageX.value}px, ${imageY.value}px)`,
-    transformOrigin: 'center center',
-    transition: isDragging.value ? 'none' : 'transform 0.3s ease'
-  }
-}
-
-const forward = () => {
-  currentIndex.value++
-
-  // unclear if needed
-  zoomReset()
-}
-
-const backward = () => {
-  currentIndex.value--
-
-  // unclear if needed
-  zoomReset()
-}
-
-const getSwipeIcon = (direction: string) => {
-  return swipeDirections[direction]?.icon || 'mdi-help'
-}
-
-const getSwipeColor = (direction: string) => {
-  return swipeDirections[direction]?.color || 'primary'
-}
-
-const getSwipeText = (direction: string) => {
-  return swipeDirections[direction]?.action || ''
-}
-
-// Swipe events
-const handleSwipeStartTouch = (e: TouchEvent) => {
-  if (e.touches.length === 1) {
-    swipeStart(e.touches[0])
-  }
-}
-
-const handleSwipeStartMouse = (e: MouseEvent) => {
-  swipeStart(e)
-}
-
-const swipeStart = (e: MouseEvent | Touch) => {
-  if (imageZoom.value !== 1) return
-
-  isSwiping.value = true
-
-  startX.value = currentX.value = e.clientX
-  startY.value = currentY.value = e.clientY
-}
-
-const handleSwipeMoveTouch = (e: TouchEvent) => {
-  if (e.touches.length === 1 && isSwiping.value) {
-    swipeMove(e.touches[0])
-  }
-}
-
-const handleSwipeMoveMouse = (e: MouseEvent) => {
-  if (isSwiping.value) {
-    swipeMove(e)
-  }
-}
-
-const swipeMove = (e: MouseEvent | Touch) => {
-  if (!isSwiping.value) return
-
-  currentX.value = e.clientX
-  currentY.value = e.clientY
-
-  const delta = {x: currentX.value - startX.value, y: currentY.value - startY.value}
-
-  const threshold = 50;
-
-  if (Math.abs(delta.x) > threshold || Math.abs(delta.y) > threshold) {
-    if (Math.abs(delta.x) > Math.abs(delta.y)) {
-      swipeDirection.value = delta.x > 0 ? 'right' : 'left'
-    } else {
-      swipeDirection.value = delta.y > 0 ? 'down' : 'up'
+  const getImageStyle = () => {
+    return {
+      transform: `scale(${imageZoom.value}) translate(${imageX.value}px, ${imageY.value}px)`,
+      transformOrigin: 'center center',
+      transition: isDragging.value ? 'none' : 'transform 0.3s ease',
     }
-  } else {
-    swipeDirection.value = null
-  }
-}
-
-const handleSwipeEnd = () => {
-  if (!isSwiping.value) return
-
-  const delta = {x: currentX.value - startX.value, y: currentY.value - startY.value}
-
-  const threshold = 100
-
-  if (Math.abs(delta.x) > threshold || Math.abs(delta.y) > threshold) {
-    let direction
-
-    if (Math.abs(delta.x) > Math.abs(delta.y)) {
-      direction = delta.x > 0 ? 'right' : 'left'
-    } else {
-      direction = delta.y > 0 ? 'down' : 'up'
-    }
-
-    emit('swiped', <SwipeEvent>{
-      card: props.cards[currentIndex.value],
-      direction: direction,
-    })
-
-    forward()
   }
 
-  swipeReset();
-}
+  const forward = () => {
+    currentIndex.value++
 
-function swipeReset() {
-  isSwiping.value = false
-
-  swipeDirection.value = null
-
-  currentX.value = startX.value
-  currentY.value = startY.value
-}
-
-// Drag Events
-const handleDragStartTouch = (e: TouchEvent) => {
-  if (e.touches.length === 1) {
-    dragStart(e.touches[0])
-  } else if (e.touches.length === 2) {
-    zoomStart(e.touches)
-  }
-}
-
-const handleStartMouse = (e: MouseEvent) => {
-  dragStart(e)
-}
-
-const dragStart = (e: MouseEvent | Touch) => {
-  if (imageZoom.value === 1) return
-
-  isDragging.value = true
-
-  imageStartX.value = e.clientX - imageX.value
-  imageStartY.value = e.clientY - imageY.value
-}
-
-const handleDragMoveTouch = (e: TouchEvent) => {
-  if (e.touches.length === 1 && isDragging.value) {
-    dragMove(e.touches[0])
-  } else if (e.touches.length === 2) {
-    zoomMove(e.touches)
-  }
-}
-
-const handleDragMoveMouse = (e: MouseEvent) => {
-  if (isDragging.value) {
-    dragMove(e)
-  }
-}
-
-const dragMove = (e: MouseEvent | Touch) => {
-  if (!isDragging.value) return
-
-  imageX.value = e.clientX - imageStartX.value
-  imageY.value = e.clientY - imageStartY.value
-}
-
-const handleDragEnd = () => {
-  isDragging.value = false
-  isZooming.value = false
-
-  currentDistance.value = 0
-}
-
-// Zoom Events
-const handleMouseWheel = (e: WheelEvent) => {
-  zoomChange(e.deltaY > 0)
-}
-
-const zoomStart = (touches: TouchList) => {
-  isZooming.value = true
-
-  currentDistance.value = distance(touches)
-}
-
-const zoomMove = (touches: TouchList) => {
-  const delta = distance(touches)
-
-  zoomChange(currentDistance.value > delta)
-
-  currentDistance.value = delta
-}
-
-const zoomChange = (dir: boolean) => {
-  imageZoom.value = Math.max(1, Math.min(3, imageZoom.value + (dir ? -0.1 : 0.1)))
-
-  if (imageZoom.value === 1) {
+    // unclear if needed
     zoomReset()
   }
-}
 
-const zoomReset = () => {
-  imageZoom.value = 1
+  const backward = () => {
+    currentIndex.value--
 
-  imageX.value = 0
-  imageY.value = 0
-}
+    // unclear if needed
+    zoomReset()
+  }
 
-const distance = (touches: TouchList) => {
-  const [touch1, touch2] = touches;
-  return Math.hypot(touch1.clientX - touch2.clientX, touch1.clientY - touch2.clientY);
-}
+  const getSwipeIcon = (direction: string) => {
+    return swipeDirections[direction]?.icon || 'mdi-help'
+  }
+
+  const getSwipeColor = (direction: string) => {
+    return swipeDirections[direction]?.color || 'primary'
+  }
+
+  const getSwipeText = (direction: string) => {
+    return swipeDirections[direction]?.action || ''
+  }
+
+  // Swipe events
+  const handleSwipeStartTouch = (e: TouchEvent) => {
+    if (e.touches.length === 1) {
+      swipeStart(e.touches[0])
+    }
+  }
+
+  const handleSwipeStartMouse = (e: MouseEvent) => {
+    swipeStart(e)
+  }
+
+  const swipeStart = (e: MouseEvent | Touch) => {
+    if (imageZoom.value !== 1) return
+
+    isSwiping.value = true
+
+    startX.value = currentX.value = e.clientX
+    startY.value = currentY.value = e.clientY
+  }
+
+  const handleSwipeMoveTouch = (e: TouchEvent) => {
+    if (e.touches.length === 1 && isSwiping.value) {
+      swipeMove(e.touches[0])
+    }
+  }
+
+  const handleSwipeMoveMouse = (e: MouseEvent) => {
+    if (isSwiping.value) {
+      swipeMove(e)
+    }
+  }
+
+  const swipeMove = (e: MouseEvent | Touch) => {
+    if (!isSwiping.value) return
+
+    currentX.value = e.clientX
+    currentY.value = e.clientY
+
+    const delta = { x: currentX.value - startX.value, y: currentY.value - startY.value }
+
+    const threshold = 50;
+
+    if (Math.abs(delta.x) > threshold || Math.abs(delta.y) > threshold) {
+      if (Math.abs(delta.x) > Math.abs(delta.y)) {
+        swipeDirection.value = delta.x > 0 ? 'right' : 'left'
+      } else {
+        swipeDirection.value = delta.y > 0 ? 'down' : 'up'
+      }
+    } else {
+      swipeDirection.value = null
+    }
+  }
+
+  const handleSwipeEnd = () => {
+    if (!isSwiping.value) return
+
+    const delta = { x: currentX.value - startX.value, y: currentY.value - startY.value }
+
+    const threshold = 100
+
+    if (Math.abs(delta.x) > threshold || Math.abs(delta.y) > threshold) {
+      let direction
+
+      if (Math.abs(delta.x) > Math.abs(delta.y)) {
+        direction = delta.x > 0 ? 'right' : 'left'
+      } else {
+        direction = delta.y > 0 ? 'down' : 'up'
+      }
+
+      emit('swiped', <SwipeEvent>{
+        card: props.cards[currentIndex.value],
+        direction,
+      })
+
+      forward()
+    }
+
+    swipeReset();
+  }
+
+  function swipeReset () {
+    isSwiping.value = false
+
+    swipeDirection.value = null
+
+    currentX.value = startX.value
+    currentY.value = startY.value
+  }
+
+  // Drag Events
+  const handleDragStartTouch = (e: TouchEvent) => {
+    if (e.touches.length === 1) {
+      dragStart(e.touches[0])
+    } else if (e.touches.length === 2) {
+      zoomStart(e.touches)
+    }
+  }
+
+  const handleStartMouse = (e: MouseEvent) => {
+    dragStart(e)
+  }
+
+  const dragStart = (e: MouseEvent | Touch) => {
+    if (imageZoom.value === 1) return
+
+    isDragging.value = true
+
+    imageStartX.value = e.clientX - imageX.value
+    imageStartY.value = e.clientY - imageY.value
+  }
+
+  const handleDragMoveTouch = (e: TouchEvent) => {
+    if (e.touches.length === 1 && isDragging.value) {
+      dragMove(e.touches[0])
+    } else if (e.touches.length === 2) {
+      zoomMove(e.touches)
+    }
+  }
+
+  const handleDragMoveMouse = (e: MouseEvent) => {
+    if (isDragging.value) {
+      dragMove(e)
+    }
+  }
+
+  const dragMove = (e: MouseEvent | Touch) => {
+    if (!isDragging.value) return
+
+    imageX.value = e.clientX - imageStartX.value
+    imageY.value = e.clientY - imageStartY.value
+  }
+
+  const handleDragEnd = () => {
+    isDragging.value = false
+    isZooming.value = false
+
+    currentDistance.value = 0
+  }
+
+  // Zoom Events
+  const handleMouseWheel = (e: WheelEvent) => {
+    zoomChange(e.deltaY > 0)
+  }
+
+  const zoomStart = (touches: TouchList) => {
+    isZooming.value = true
+
+    currentDistance.value = distance(touches)
+  }
+
+  const zoomMove = (touches: TouchList) => {
+    const delta = distance(touches)
+
+    zoomChange(currentDistance.value > delta)
+
+    currentDistance.value = delta
+  }
+
+  const zoomChange = (dir: boolean) => {
+    imageZoom.value = Math.max(1, Math.min(3, imageZoom.value + (dir ? -0.1 : 0.1)))
+
+    if (imageZoom.value === 1) {
+      zoomReset()
+    }
+  }
+
+  const zoomReset = () => {
+    imageZoom.value = 1
+
+    imageX.value = 0
+    imageY.value = 0
+  }
+
+  const distance = (touches: TouchList) => {
+    const [touch1, touch2] = touches;
+    return Math.hypot(touch1.clientX - touch2.clientX, touch1.clientY - touch2.clientY);
+  }
 </script>
 
 <style lang="scss" scoped>

@@ -1,6 +1,6 @@
 <template>
   <v-app class="rounded rounded-md">
-    <router-view/>
+    <router-view />
   </v-app>
 </template>
 

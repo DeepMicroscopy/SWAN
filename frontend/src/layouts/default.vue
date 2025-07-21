@@ -1,18 +1,24 @@
 <template>
   <v-navigation-drawer v-model="drawer">
     <v-list nav>
-      <v-list-item title="SWAN" prepend-icon="mdi-duck" link></v-list-item>
-      <v-divider></v-divider>
+      <v-list-item link prepend-icon="mdi-duck" title="SWAN" />
+      <v-divider />
     </v-list>
-    <template v-slot:append v-if="store.loggedIn">
-      <v-divider/>
+    <template v-if="store.loggedIn" #append>
+      <v-divider />
       <v-list-item>
-        <template v-slot:append>
-          <v-btn variant="plain" append-icon="mdi-logout" @click="store.logOff()" link to="login">
+        <template #append>
+          <v-btn
+            append-icon="mdi-logout"
+            link
+            to="login"
+            variant="plain"
+            @click="store.logOff()"
+          >
             Logout
 
-            <template v-slot:append>
-              <v-icon color="error"></v-icon>
+            <template #append>
+              <v-icon color="error" />
             </template>
           </v-btn>
         </template>
@@ -21,8 +27,8 @@
   </v-navigation-drawer>
 
   <v-app-bar>
-    <template v-slot:prepend>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+    <template #prepend>
+      <v-app-bar-nav-icon @click="drawer = !drawer" />
     </template>
     <v-app-bar-title>SWAN App</v-app-bar-title>
   </v-app-bar>
@@ -35,9 +41,9 @@
 </template>
 
 <script lang="ts" setup>
-import {ref} from 'vue'
-import { useAppStore} from "@/stores/app.ts";
+  import { ref } from 'vue'
+  import { useAppStore } from '@/stores/app.ts';
 
-const store = useAppStore()
-const drawer = ref(false)
+  const store = useAppStore()
+  const drawer = ref(false)
 </script>
