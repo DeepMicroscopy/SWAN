@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from study.models import Dataset, Study, Classification
+from app.models import Dataset, Study, Classification
 
 
 @admin.register(Dataset)

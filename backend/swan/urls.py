@@ -26,9 +26,8 @@ admin.site.index_title = 'Welcome to SWAN'
 
 urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
-    path('study/', include('study.urls')),
-    path('dataset/', include('dataset.urls')),
     path('admin/', admin.site.urls),
+    path('', include('app.urls')),
 ]
 
 if settings.DEBUG:

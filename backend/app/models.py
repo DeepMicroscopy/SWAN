@@ -7,7 +7,11 @@ import zipfile
 from django.contrib.auth.models import Group, User
 from django.db import models
 
-from models.base import UUIDModel
+class UUIDModel(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    class Meta:
+        abstract = True
 
 def upload_to(name):
     today = datetime.date.today()
