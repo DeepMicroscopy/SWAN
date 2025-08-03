@@ -4,7 +4,7 @@ services:
     image: deepmicroscopy/swan:latest
     build: .
     volumes:
-      - ./.upload/:/media/
+      - ./.media/:/media/
     environment:
       PRODUCTION: "false"
       ALLOWED_HOSTS: "localhost"

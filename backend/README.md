@@ -3,6 +3,7 @@
 ## Docker
 
 ```shell
+docker-compose up -d postgres
 python manage.py makemigrations
 docker-compose build && docker-compose up
 docker-compose exec swan python manage.py migrate
