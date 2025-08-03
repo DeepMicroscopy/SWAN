@@ -1,5 +1,12 @@
 # Backend
 
+## TODO
+
+- QR Code Generation
+- CSV Export
+- API Spec Generation
+- Testing
+
 ## Docker
 
 ```shell

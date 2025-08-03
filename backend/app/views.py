@@ -48,10 +48,10 @@ def classify(request):
     data["file"] = items[data["index"]]
 
     if request.user.username == "anonymous":
-        result, created = ClassificationAnonymous.objects.update_or_create(date=datetime.datetime.now(), session=request.session.session_key, study_id=data["study"], file=data["file"], choice=data["choice"], index=data["index"])
+        result, created = ClassificationAnonymous.objects.create(date=datetime.datetime.now(), session=request.session.session_key, study_id=data["study"], file=data["file"], choice=data["choice"], index=data["index"])
         return JsonResponse(ClassificationAnonymous.objects.filter(id=result.id).values().first(), safe=False)
     else:
-        result, created = ClassificationUser.objects.update_or_create(date=datetime.datetime.now(), user=request.user, study_id=data["study"], file=data["file"], choice=data["choice"], index=data["index"])
+        result = ClassificationUser.objects.create(date=datetime.datetime.now(), user=request.user, study_id=data["study"], file=data["file"], choice=data["choice"], index=data["index"])
         return JsonResponse(ClassificationUser.objects.filter(id=result.id).values().first(), safe=False)
 
 def index_studies(request):
