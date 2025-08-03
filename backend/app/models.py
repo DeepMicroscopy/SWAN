@@ -1,7 +1,7 @@
 import datetime
 import uuid
 
-from django.contrib.auth.models import Group, User, AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 
 from app.util import extract_file_names

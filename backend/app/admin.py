@@ -1,7 +1,12 @@
 from django.contrib import admin
 
-from app.models import Dataset, Study, ClassificationUser, ClassificationAnonymous
+from app.models import User, Dataset, Study, ClassificationUser, ClassificationAnonymous
+from django.contrib.auth.admin import UserAdmin
 
+
+@admin.register(User)
+class CustomUserAdmin(UserAdmin):
+    pass
 
 @admin.register(Dataset)
 class DatasetAdmin(admin.ModelAdmin):
