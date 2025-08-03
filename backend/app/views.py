@@ -6,7 +6,7 @@ import random
 import magic
 from django import forms
 from django.contrib.auth.decorators import permission_required
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import JsonResponse, FileResponse, HttpResponse
 from django.shortcuts import render
 
@@ -18,7 +18,7 @@ from swan.settings import MEDIA_ROOT
 def groups(request):
     return request.user.groups.values_list("id", flat=True)
 
-class Question1Form(forms.Form):
+class ClassifyForm(forms.Form):
     study = forms.CharField()
     choice = forms.IntegerField()
     index = forms.IntegerField()
@@ -26,22 +26,30 @@ class Question1Form(forms.Form):
 # noinspection DuplicatedCode
 def classify(request):
     if request.method == "GET":
-        return render(request, 'classify.html', {'form': Question1Form()})
-
-    data = {}
+        return render(request, 'classify.html', {'form': ClassifyForm()})
 
     if request.content_type == "application/x-www-form-urlencoded":
-        form = Question1Form(request.POST)
+        form = ClassifyForm(request.POST)
         if not form.is_valid():
-            return JsonResponse(form.errors.as_json(), status=400)
+            return HttpResponse(form.errors.as_json(), status=400, content_type="application/json")
         data = form.cleaned_data
+    elif request.content_type == "application/json":
+        data = json.loads(request.body)
+    else:
+        return HttpResponse("unknown content-type", status=400)
 
-    result = Study.objects.filter(id=data["study"], group__in=groups(request)).select_related("dataset").first()
-    if result is None:
-        raise PermissionDenied
+    try:
+        result = Study.objects.filter(id=data["study"], group__in=groups(request)).select_related("dataset").first()
+        if result is None:
+            raise PermissionDenied
+    except ValidationError:
+        return HttpResponse("validation error", status=400)
 
-    if data["index"] >= result.dataset.file_count:
-        return HttpResponse(status=400)
+    try:
+        if data["index"] >= result.dataset.file_count:
+            return HttpResponse("index too large", status=400)
+    except TypeError:
+        return HttpResponse("index has wrong type", status=400)
 
     items = deterministic_shuffle(result.dataset.file_list, seed_from(request.user, request.session, data["study"]))
 
