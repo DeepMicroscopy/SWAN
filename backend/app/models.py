@@ -24,14 +24,18 @@ def upload_to_image(instance, filename):
     return upload_to("image")
 
 def extract_file_names(file_path):
+    result = []
+
     if zipfile.is_zipfile(file_path):
         with zipfile.ZipFile(file_path, 'r') as zipf:
-            return zipf.namelist()
+            result = zipf.namelist()
     elif tarfile.is_tarfile(file_path):
         with tarfile.open(file_path, 'r:*') as tarf:
-            return tarf.getnames()
-    else:
-        return []
+            result = tarf.getnames()
+
+    result.sort()
+
+    return result
 
 class Dataset(UUIDModel):
     title = models.CharField(max_length=200)
