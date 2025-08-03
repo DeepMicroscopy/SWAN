@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from app.models import Dataset, Study, Classification
+from app.models import Dataset, Study, ClassificationUser, ClassificationAnonymous
 
 
 @admin.register(Dataset)
@@ -15,6 +15,10 @@ class StudyAdmin(admin.ModelAdmin):
     list_display = ['title', 'pub_date', 'end_date', 'group', 'dataset', 'ui']
 
 
-@admin.register(Classification)
+@admin.register(ClassificationUser)
 class ClassificationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['date', 'study', 'user', 'index', 'choice']
+
+@admin.register(ClassificationAnonymous)
+class ClassificationAdmin(admin.ModelAdmin):
+    list_display = ['date', 'study', 'session', 'index', 'choice']

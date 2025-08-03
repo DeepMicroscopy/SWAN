@@ -1,0 +1,22 @@
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div>
+        <div>
+            {{ form.study.errors }}
+            Study
+            {{ form.study }}
+        </div>
+        <div>
+            {{ form.choice.errors }}
+            Choice
+            {{ form.choice }}
+        </div>
+        <div>
+            {{ form.index.errors }}
+            Index
+            {{ form.index }}
+        </div>
+        <input type="submit" value="Submit" />
+    </div>
+</form>

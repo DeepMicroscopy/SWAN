@@ -1,11 +1,15 @@
 import datetime
 import uuid
 
-import tarfile
-import zipfile
-
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group, User, AbstractUser
 from django.db import models
+
+from app.util import extract_file_names
+from swan.settings import AUTH_USER_MODEL
+
+
+class User(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
 class UUIDModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -13,31 +17,23 @@ class UUIDModel(models.Model):
     class Meta:
         abstract = True
 
+
 def upload_to(name):
     today = datetime.date.today()
     return f'{name}/{today.year}/{today.month}/{today.day}/{uuid.uuid4().hex}'
 
+
 def upload_to_dataset(instance, filename):
     return upload_to("dataset")
+
 
 def upload_to_image(instance, filename):
     return upload_to("image")
 
-def extract_file_names(file_path):
-    result = []
-
-    if zipfile.is_zipfile(file_path):
-        with zipfile.ZipFile(file_path, 'r') as zipf:
-            result = zipf.namelist()
-    elif tarfile.is_tarfile(file_path):
-        with tarfile.open(file_path, 'r:*') as tarf:
-            result = tarf.getnames()
-
-    result.sort()
-
-    return result
 
 class Dataset(UUIDModel):
+    objects = models.Manager()
+
     title = models.CharField(max_length=200)
     archive = models.FileField(upload_to=upload_to_dataset)
     file_count = models.PositiveIntegerField(null=True, blank=True)
@@ -55,8 +51,10 @@ class Dataset(UUIDModel):
 
             super().save(update_fields=['file_list', 'file_count'])
 
+
 class UiType(models.IntegerChoices):
     DEFAULT = 1, 'Default'
+
 
 class Study(UUIDModel):
     objects = models.Manager()
@@ -78,9 +76,29 @@ class Study(UUIDModel):
     def __str__(self):
         return self.title
 
+
 class Classification(UUIDModel):
+    objects = models.Manager()
+
     date = models.DateTimeField("entry time")
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     study = models.ForeignKey(Study, on_delete=models.CASCADE)
     file = models.CharField(max_length=200)
-    choice = models.IntegerField()
+    choice = models.PositiveSmallIntegerField()
+    index = models.PositiveIntegerField()
+
+    class Meta:
+        abstract = True
+
+class ClassificationUser(Classification):
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        verbose_name = "Classification (User)"
+        verbose_name_plural = "Classifications (User)"
+
+class ClassificationAnonymous(Classification):
+    session = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = "Classification (Anonymous)"
+        verbose_name_plural = "Classifications (Anonymous)"

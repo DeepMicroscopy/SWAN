@@ -132,8 +132,8 @@
     }
   },
   {
-    "model": "auth.user",
-    "pk": 1,
+    "model": "app.user",
+    "pk": "e2b1c229-4a4b-499b-9cb7-56c237c8e4dd",
     "fields": {
       "password": "pbkdf2_sha256$1000000$hAjvIltyXcLVKH8OleO3jZ$V6X/jxw8JcGjKLcyBviUmMCjphENK3S+GfrXeztElIU=",
       "last_login": "2025-08-03T18:43:05.197Z",
@@ -150,8 +150,8 @@
     }
   },
   {
-    "model": "auth.user",
-    "pk": 2,
+    "model": "app.user",
+    "pk": "bc094f1f-52e9-45bc-93b8-aa172555751c",
     "fields": {
       "password": "pbkdf2_sha256$1000000$hAjvIltyXcLVKH8OleO3jZ$V6X/jxw8JcGjKLcyBviUmMCjphENK3S+GfrXeztElIU=",
       "last_login": "2025-08-03T18:43:12.004Z",
