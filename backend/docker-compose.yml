@@ -1,0 +1,27 @@
+services:
+
+  swan:
+    image: deepmicroscopy/swan:latest
+    build: .
+    volumes:
+      - ./.upload/:/media/
+    environment:
+      PRODUCTION: "false"
+      ALLOWED_HOSTS: "localhost"
+      MEDIA_ROOT: "/media/"
+      DB_HOST: "postgres"
+      DB_NAME: "swan"
+      DB_USER: "swan"
+      DB_PASSWORD: "swan"
+    ports:
+      - "127.0.0.1:8000:5000"
+
+  postgres:
+    image: postgres:17.5-alpine3.22
+    restart: always
+    environment:
+      POSTGRES_DB: "swan"
+      POSTGRES_USER: "swan"
+      POSTGRES_PASSWORD: "swan"
+    ports:
+      - "127.0.0.1:5432:5432"

@@ -1,10 +1,13 @@
 # Backend
 
-## Usage
+## Docker
 
-```sh
-python manage.py dumpdata | jq 'map(select(.model as $in | ["admin.logentry", "auth.permission", "contenttypes.contenttype", "sessions.session"] | index($in) | not))' > data.json
-rm db.sqlite3 && python manage.py makemigrations && python manage.py migrate && python manage.py loaddata data.json && python manage.py runserver
+```shell
+python manage.py makemigrations
+docker-compose build && docker-compose up
+docker-compose exec swan python manage.py migrate
+docker-compose exec swan python manage.py loaddata data.json
+docker-compose exec swan python manage.py dumpdata | jq 'map(select(.model as $in | ["admin.logentry", "auth.permission", "contenttypes.contenttype", "sessions.session"] | index($in) | not))' > data.json
 ```
 
 ## Setup

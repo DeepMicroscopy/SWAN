@@ -22,8 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", default='django-insecure-y+hye+(pesz^ew6i-m90q0s6&jd7gr72a#n*crc^#i@_xdq5h#')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("PRODUCTION", default='0') == '0'
+# SECURITY WARNING: do not run with debug turned on in production!
+DEBUG = os.environ.get("PRODUCTION", default="false") == "false"
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", default='localhost').split(" ")
 
@@ -75,9 +75,17 @@ WSGI_APPLICATION = 'swan.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "NAME": "default",
+        "ENGINE": "django.db.backends.postgresql",
+        "OPTIONS": {
+            "host": os.environ.get("DB_HOST", default="localhost"),
+            "port": os.environ.get("DB_PORT", default="5432"),
+            "dbname": os.environ.get("DB_NAME", default="swan"),
+            "user": os.environ.get("DB_USER", default="swan"),
+            "password": os.environ.get("DB_PASSWORD", default="swan"),
+            "require_auth": "scram-sha-256"
+        }
     }
 }
 
@@ -126,11 +134,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, '.upload')
+MEDIA_URL = "media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, os.environ.get("MEDIA_ROOT", default=".media"))
 
 # change to True in production
-SECURE_SSL_REDIRECT = os.environ.get("PRODUCTION") == '1'
+SECURE_SSL_REDIRECT = os.environ.get("PRODUCTION") == "true"
 
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
