@@ -1,18 +1,18 @@
 import datetime
 import json
 import os.path
-import random
-
 import magic
+
 from django import forms
 from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import JsonResponse, FileResponse, HttpResponse
 from django.shortcuts import render
 
-from app.models import Study, Classification, ClassificationUser, ClassificationAnonymous
-from app.util import extract_file_data, deterministic_shuffle, seed_from
-from swan.settings import MEDIA_ROOT
+from app.models import Study, ClassificationUser, ClassificationAnonymous
+from app.util import extract_file_data, deterministic_shuffle, seed_from, create_qr
+
+from swan.settings import MEDIA_ROOT, PUBLIC_URL
 
 
 def groups(request):
@@ -72,6 +72,9 @@ def study(request, uuid):
         raise PermissionDenied
 
     return JsonResponse(result)
+
+def study_share(request, uuid):
+    return HttpResponse(create_qr(PUBLIC_URL + f"#/studies/{uuid}"), content_type="image/svg+xml")
 
 def study_image(request, uuid):
     result = Study.objects.filter(id=uuid, group__in=groups(request)).first()

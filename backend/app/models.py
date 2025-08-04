@@ -76,6 +76,8 @@ class Study(UUIDModel):
     def __str__(self):
         return self.title
 
+    title.verbose_name = "study"
+
 
 class Classification(UUIDModel):
     objects = models.Manager()

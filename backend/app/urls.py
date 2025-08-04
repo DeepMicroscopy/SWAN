@@ -7,6 +7,7 @@ urlpatterns = [
 
     path("studies/", views.index_studies, name="index-studies"),
     path("studies/<uuid>", views.study, name="study"),
+    path("studies/<uuid>/share", views.study_share, name="study-share"),
     path("studies/<uuid>/image", views.study_image, name="study-image"),
     path("studies/<uuid>/index", views.study_index, name="study-index"),
     path("studies/<uuid>/<int:index>", views.study_entry, name="study-entry"),
