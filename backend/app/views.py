@@ -63,7 +63,7 @@ def classify(request):
         return JsonResponse(ClassificationUser.objects.filter(id=result.id).values().first(), safe=False)
 
 def index_studies(request):
-    now = datetime.datetime.now(datetime.UTC)
+    now = datetime.datetime.now(datetime.timezone.utc)
     return JsonResponse(list(Study.objects.filter(pub_date__lte=now, end_date__gt=now, group__in=groups(request)).values_list('id', flat=True)), safe=False)
 
 def study(request, uuid):
