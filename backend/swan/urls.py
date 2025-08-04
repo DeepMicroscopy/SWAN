@@ -16,8 +16,9 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.urls import path, include
+from django.contrib.auth.decorators import login_not_required
+from django.urls import path, include, re_path
+from django.views.static import serve
 
 from swan import settings
 
@@ -25,11 +26,22 @@ admin.site.site_header = 'SWAN Admin'
 admin.site.site_title = 'SWAN Admin Portal'
 admin.site.index_title = 'Welcome to SWAN'
 
+@login_not_required
+def free_serve(request, path, **kwargs):
+    return serve(request, path, **kwargs)
+
 urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
-    path('', include('app.urls')),
-] + staticfiles_urlpatterns()
+    path('v1/', include('app.urls')),
+    path('', free_serve, {'path': 'index.html', 'document_root': settings.STATIC_ROOT}),
+    path('favicon.ico', free_serve, {'path': 'favicon.ico', 'document_root': settings.STATIC_ROOT}),
+]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# TODO should be done by nginx
+if not settings.DEBUG:
+    urlpatterns += [re_path('static/(?P<path>.*)', free_serve, {'document_root': settings.STATIC_ROOT})]
+
+urlpatterns += [re_path('assets/(?P<path>.*)', free_serve, {'document_root': settings.STATIC_ROOT / "assets"})]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

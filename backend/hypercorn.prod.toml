@@ -1,0 +1,3 @@
+bind = ["deepmicroscopy.org:8000"]
+reload = true
+workers = 4
