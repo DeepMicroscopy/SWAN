@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", default="django-insecure-y+hye+(pesz^e
 DEBUG = os.environ.get("PRODUCTION", default="false") == "false"
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", default="localhost").split(" ")
-
+USE_X_FORWARDED_HOST = True
 
 # Application definition
 
@@ -145,8 +145,8 @@ PUBLIC_URL = os.environ.get("PUBLIC_URL", default="https://swan.deepmicrosocopy.
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, os.environ.get("MEDIA_ROOT", default=".media"))
 
-# change to True in production
 SECURE_SSL_REDIRECT = os.environ.get("PRODUCTION") == "true"
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
