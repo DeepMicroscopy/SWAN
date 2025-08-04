@@ -42,7 +42,7 @@ class ClassificationAdmin(admin.ModelAdmin):
 
     @admin.action(description="Export as CSV")
     def export_csv(self, request, queryset):
-        response = HttpResponse(content_type="application/json")
+        response = HttpResponse(content_type="text/plain")
         writer = csv.writer(response)
         writer.writerow(["time", "study", "file", "choice"] + self.csv_header())
 
@@ -53,11 +53,11 @@ class ClassificationAdmin(admin.ModelAdmin):
 
     @abc.abstractmethod
     def csv_header(self):
-        pass
+        raise NotImplemented
 
     @abc.abstractmethod
     def csv_data(self, entry):
-        pass
+        raise NotImplemented
 
 
 @admin.register(ClassificationUser)

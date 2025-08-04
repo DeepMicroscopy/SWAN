@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / "subdir".
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -75,22 +77,10 @@ WSGI_APPLICATION = "swan.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",
-    },
-    "postgres": {
-        "NAME": "postgres",
-        "ENGINE": "django.db.backends.postgresql",
-        "OPTIONS": {
-            "host": os.environ.get("DB_HOST", default="localhost"),
-            "port": os.environ.get("DB_PORT", default="5432"),
-            "dbname": os.environ.get("DB_NAME", default="swan"),
-            "user": os.environ.get("DB_USER", default="swan"),
-            "password": os.environ.get("DB_PASSWORD", default="swan"),
-            "require_auth": "scram-sha-256"
-        }
-    }
+    'default': dj_database_url.parse(
+        os.getenv('DATABASE_URL', default=f"sqlite:///{BASE_DIR}/db.sqlite3"),
+        conn_max_age=600,  # for persistent connections
+    )
 }
 
 
