@@ -51,7 +51,7 @@
   const drawer = ref(false)
 
   function logoff () {
-    axios.post('/accounts/logout/')
+    axios.post('/v1/auth/logout/')
       .then(function (response) {
         const data = response.data;
         if (typeof data === 'string' && !data.startsWith('<!DOCTYPE html>\n\n<html lang="en-us" dir="ltr">\n<head>\n<title>Logged out')) {

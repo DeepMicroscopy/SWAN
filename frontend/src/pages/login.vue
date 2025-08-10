@@ -14,14 +14,14 @@
   const failureMessage = ref(false)
 
   function login () {
-    axios.post('/accounts/login/?next=/v1/studies/', { username: username.value, password: password.value }, { headers: { 'Content-Type':'application/x-www-form-urlencoded' } })
+    axios.post('/v1/auth/login/', { username: username.value, password: password.value })
       .then(function (response) {
         const data = response.data;
         if (typeof data === 'string' && data.startsWith('\n<p>Your username and password didn\'t match')) {
           console.log('Failure during login...')
           failureMessage.value = true
         } else {
-          console.log('NO Failure during login...')
+          console.log('NO Failure during login...', data)
           failureMessage.value = false
           store.logOn()
           router.push('/overview')
