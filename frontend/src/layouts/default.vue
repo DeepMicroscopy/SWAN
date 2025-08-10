@@ -52,18 +52,12 @@
 
   function logoff () {
     axios.post('/v1/auth/logout/')
-      .then(function (response) {
-        const data = response.data;
-        if (typeof data === 'string' && !data.startsWith('<!DOCTYPE html>\n\n<html lang="en-us" dir="ltr">\n<head>\n<title>Logged out')) {
-          console.log('Something went WRONG during logout...')
-          console.log(response)
-        }
-        store.logOff()
-        router.push('/login')
-
-      })
       .catch(function (error) {
         console.log(error);
+      })
+      .finally(function () {
+        store.logOff()
+        router.push('/login')
       })
   }
 </script>
