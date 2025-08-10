@@ -8,12 +8,20 @@
   const rememberMe = ref(false)
   const username = ref('')
   const password = ref('')
+  const failureMessage = ref(false)
 
   function login () {
     axios.post('/accounts/login/?next=/v1/studies/', { username: username.value, password: password.value }, { headers: { 'Content-Type':'application/x-www-form-urlencoded' } })
       .then(function (response) {
-        console.log(response);
-        store.logOn()
+        const data = response.data;
+        if (typeof data === 'string' && data.startsWith('\n<p>Your username and password didn\'t match')) {
+          console.log('Failure during login...')
+          failureMessage.value = true
+        } else {
+          console.log('NO Failure during login...')
+          failureMessage.value = false
+          store.logOn()
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -25,7 +33,16 @@
   <v-container>
     <v-sheet class="pa-6 px-md-10 py-md-12" elevation="5" max-width="450" rounded="xl">
       <h1 class="text-h4 font-weight-black mb-5 text-indigo-lighten-4">Login</h1>
+
+      <v-alert
+        v-model="failureMessage"
+        class="mb-5"
+        text="We couldn’t sign you in. Please check your credentials."
+        type="error"
+        variant="tonal"
+      />
       <v-form>
+
         <div class="text-subtitle-1 text-medium-emphasis">Email address</div>
         <v-text-field
           v-model="username"
@@ -61,7 +78,6 @@
           :disabled="username === '' || password === ''"
           rounded="lg"
           size="x-large"
-          to="/overview"
           variant="elevated"
           @click="login()"
         >Login</v-btn>
