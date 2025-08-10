@@ -84,6 +84,24 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    proxy: {
+      '^/v1/': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        secure: false,
+        headers: {
+          origin: 'http://localhost:8000',
+        },
+      },
+      '^/accounts/': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        secure: false,
+        headers: {
+          origin: 'http://localhost:8000',
+        },
+      },
+    },
   },
   css: {
     preprocessorOptions: {
