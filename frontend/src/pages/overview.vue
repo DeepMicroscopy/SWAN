@@ -1,7 +1,32 @@
 <script setup lang="ts">
   import { ref } from 'vue';
+  import { default as axios } from 'axios';
+
 
   const dialog = ref(false)
+
+  const studies = ref([])
+
+  onMounted( () => {
+    console.log('LOAD studies...')
+
+    axios.get('/v1/studies/')
+      .then(function (response) {
+        studies.value = response.data;
+        console.log(studies)
+
+        studies.value.forEach(function (study) {
+          console.log('Studies:')
+          for (const key in study) {
+            console.log(key,':', study[key])
+          }
+        })
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+  })
+
 </script>
 
 <template>
@@ -209,6 +234,52 @@
           </v-card>
         </v-dialog>
       </v-list-item>
+      <v-list-item
+        v-for="(study, index) in studies"
+        :key="index"
+      >
+        <v-list-item-title>{{ study.title }}</v-list-item-title>
+        <v-list-item-subtitle>{{ study.pub_date }}</v-list-item-subtitle>
+        <template #prepend>
+          <v-btn
+            class="mr-3"
+            color="blue"
+            density="default"
+            icon="mdi-clipboard-text"
+            to="swipe"
+          />
+        </template>
+
+        <template #append>
+          <v-btn
+            color="grey-lighten-1"
+            icon="mdi-information"
+            variant="text"
+            @click="dialog = true"
+          />
+        </template>
+
+        <v-dialog
+          v-model="dialog"
+          width="auto"
+        >
+          <v-card
+            max-width="400"
+            prepend-icon="mdi-folder-information-outline"
+            text="In this study, we investigate the different manifestations of cell division visualized on microscopic images."
+            title="Study Description"
+          >
+            <template #actions>
+              <v-btn
+                class="ms-auto"
+                text="Ok"
+                @click="dialog = false"
+              />
+            </template>
+          </v-card>
+        </v-dialog>
+      </v-list-item>
+
     </v-list>
   </v-card>
 
