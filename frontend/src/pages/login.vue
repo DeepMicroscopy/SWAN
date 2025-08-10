@@ -15,20 +15,14 @@
 
   function login () {
     axios.post('/v1/auth/login/', { username: username.value, password: password.value })
-      .then(function (response) {
-        const data = response.data;
-        if (typeof data === 'string' && data.startsWith('\n<p>Your username and password didn\'t match')) {
-          console.log('Failure during login...')
-          failureMessage.value = true
-        } else {
-          console.log('NO Failure during login...', data)
-          failureMessage.value = false
-          store.logOn()
-          router.push('/overview')
-        }
+      .then(function () {
+        failureMessage.value = false
+        store.logOn()
+        router.push('/overview')
       })
       .catch(function (error) {
-        console.log(error);
+        console.log(error)
+        failureMessage.value = true
       })
   }
 </script>
@@ -84,7 +78,8 @@
           size="x-large"
           variant="elevated"
           @click="login()"
-        >Login</v-btn>
+        >Login
+        </v-btn>
       </v-form>
     </v-sheet>
   </v-container>
