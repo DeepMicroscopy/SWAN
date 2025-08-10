@@ -1,15 +1,16 @@
 import datetime
 import uuid
 
+from app import util
 from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 
-from app.util import extract_file_names
 from swan.settings import AUTH_USER_MODEL
 
 
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
 
 class UUIDModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -46,7 +47,7 @@ class Dataset(UUIDModel):
         super().save(*args, **kwargs)
 
         if self.archive:
-            self.file_list = extract_file_names(self.archive.path)
+            self.file_list = util.extract_file_names(self.archive.path)
             self.file_count = len(self.file_list)
 
             super().save(update_fields=['file_list', 'file_count'])
@@ -91,12 +92,14 @@ class Classification(UUIDModel):
     class Meta:
         abstract = True
 
+
 class ClassificationUser(Classification):
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         verbose_name = "Classification (User)"
         verbose_name_plural = "Classifications (User)"
+
 
 class ClassificationAnonymous(Classification):
     session = models.CharField(max_length=200)

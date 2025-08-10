@@ -6,6 +6,31 @@ import qrcode
 import qrcode.image.svg
 import qrcode.image.styles.moduledrawers.svg
 
+from rest_framework.renderers import BaseRenderer
+
+
+def groups(request):
+    return request.user.groups.values_list("id", flat=True)
+
+
+class SVGRenderer(BaseRenderer):
+    media_type = "image/svg+xml"
+    format = "svg"
+    charset = "utf-8"
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data.encode(self.charset) if isinstance(data, str) else data
+
+
+class FileRenderer(BaseRenderer):
+    media_type = "application/octet-stream"
+    format = "bin"
+    charset = None  # binary data, no charset
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data
+
+
 def extract_file_names(file_path):
     result = []
 
@@ -20,6 +45,7 @@ def extract_file_names(file_path):
 
     return result
 
+
 def extract_file_data(file_path, file_name):
     file_data = None
 
@@ -32,11 +58,13 @@ def extract_file_data(file_path, file_name):
 
     return file_data
 
+
 def seed_from(user, session, study):
     if user.username == "anonymous":
         return f"{session.session_key}--{study}"
     else:
         return f"{user.id}--{study}"
+
 
 def deterministic_shuffle(items: list[str], seed):
     result = items.copy()
@@ -46,18 +74,19 @@ def deterministic_shuffle(items: list[str], seed):
 
     return result
 
+
 def create_qr(data):
     # ERROR_CORRECT_L: About 7% or less errors can be corrected.
     # ERROR_CORRECT_M: About 15% or less errors can be corrected.
     # ERROR_CORRECT_Q: About 25% or less errors can be corrected.
     # ERROR_CORRECT_H: About 30% or less errors can be corrected
     qr = qrcode.QRCode(
-        version = None,
-        error_correction = qrcode.ERROR_CORRECT_M,
-        box_size = 32,
-        border = 4,
-        image_factory = qrcode.image.svg.SvgPathImage,
-        mask_pattern = None,
+        version=None,
+        error_correction=qrcode.ERROR_CORRECT_M,
+        box_size=32,
+        border=4,
+        image_factory=qrcode.image.svg.SvgPathImage,
+        mask_pattern=None,
     )
 
     qr.add_data(data)
@@ -67,10 +96,10 @@ def create_qr(data):
         back_color='white',
         fill_color='black',
         # unavailable for svg
-        #color_mask=None,
+        # color_mask=None,
         module_drawer=qrcode.image.styles.moduledrawers.svg.SvgPathSquareDrawer(),
         # unavailable for svg
-        #embeded_image_path=None,
+        # embeded_image_path=None,
     )
 
     return img.to_string(encoding="unicode")

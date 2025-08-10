@@ -38,7 +38,11 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles"
+    "django.contrib.staticfiles",
+    'django_extensions',
+    'rest_framework',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +157,22 @@ CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = [
     "https://" + x for x in ALLOWED_HOSTS
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'SWAN API',
+    'DESCRIPTION': 'Auto-generated API documentation',
+    'VERSION': '1.0.0',
+}

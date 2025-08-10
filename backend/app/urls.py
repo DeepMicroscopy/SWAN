@@ -1,21 +1,15 @@
-from django.urls import path
+from rest_framework import routers
 
-from . import views
+from .auth import AuthViewSet
+from .classify import ClassifyViewSet
+from .dataset import DatasetViewSet
+from .study import StudyViewSet
 
-urlpatterns = [
-    path("classify/", views.classify),
+router = routers.DefaultRouter()
 
-    path("studies/", views.index_studies, name="index-studies"),
-    path("studies/<uuid>", views.study, name="study"),
-    # TODO
-    #  - support multiple share types
-    #  - add token
-    path("studies/<uuid>/share", views.study_share, name="study-share"),
-    path("studies/<uuid>/image", views.study_image, name="study-image"),
-    path("studies/<uuid>/index", views.study_index, name="study-index"),
-    path("studies/<uuid>/<int:index>", views.study_entry, name="study-entry"),
+router.register(r"auth", AuthViewSet, basename="auth")
+router.register(r"studies", StudyViewSet, basename="study")
+router.register(r"datasets", DatasetViewSet, basename="dataset")
+router.register(r"classify", ClassifyViewSet, basename="classify")
 
-    path("datasets/", views.index_datasets, name="index-datasets"),
-    path("datasets/<uuid>", views.dataset, name="dataset"),
-    path("datasets/<uuid>/<index>", views.dataset_image, name="dataset-image"),
-]
+urlpatterns = router.urls
