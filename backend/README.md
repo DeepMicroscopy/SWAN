@@ -7,6 +7,9 @@
 - API Spec Generation
 - Testing
 
+- give feedback for choices
+- template for texts / studies
+
 ## Docker
 
 ```shell
