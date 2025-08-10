@@ -13,7 +13,7 @@
             link
             to="login"
             variant="plain"
-            @click="store.logOff()"
+            @click="logoff()"
           >
             Logout
 
@@ -43,7 +43,16 @@
 <script lang="ts" setup>
   import { ref } from 'vue'
   import { useAppStore } from '@/stores/app.ts';
+  import { useRouter } from 'vue-router';
 
   const store = useAppStore()
+  const router = useRouter()
   const drawer = ref(false)
+
+  function logoff () {
+    store.logOff()
+    router.push('/login')
+  }
+
+
 </script>

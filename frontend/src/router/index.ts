@@ -8,6 +8,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
+import { useAppStore } from '@/stores/app.ts';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -31,6 +32,14 @@ router.onError((err, to) => {
 
 router.isReady().then(() => {
   localStorage.removeItem('vuetify:dynamic-reload')
+})
+
+router.beforeEach(to => {
+  //Avoid access to the app if not logged in
+  const store = useAppStore()
+  if (!store.loggedIn && to.name !== '/login') {
+    return { name: '/login' }
+  }
 })
 
 export default router
