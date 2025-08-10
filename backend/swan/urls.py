@@ -14,6 +14,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import os
+
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.decorators import login_not_required
@@ -44,7 +46,7 @@ urlpatterns = [
     path('favicon.ico', free_serve, {'path': 'favicon.ico', 'document_root': settings.STATIC_ROOT}),
 ]
 
-if settings.DEBUG:
+if settings.DEBUG or os.environ.get("API_DOCS") == "true":
     urlpatterns += [
         path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
         path('api/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
