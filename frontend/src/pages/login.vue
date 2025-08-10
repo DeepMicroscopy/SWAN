@@ -2,8 +2,11 @@
   import { ref } from 'vue'
   import { useAppStore } from '@/stores/app.ts';
   import { default as axios } from 'axios';
+  import { useRouter } from 'vue-router';
 
   const store = useAppStore()
+  const router = useRouter()
+
   const visible = ref(false)
   const rememberMe = ref(false)
   const username = ref('')
@@ -21,6 +24,7 @@
           console.log('NO Failure during login...')
           failureMessage.value = false
           store.logOn()
+          router.push('/overview')
         }
       })
       .catch(function (error) {
