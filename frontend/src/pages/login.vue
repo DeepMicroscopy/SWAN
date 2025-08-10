@@ -10,7 +10,7 @@
   const password = ref('')
 
   function login () {
-    axios.post('/accounts/login/?next=/v1/studies/', { username, password }, { headers: { 'Content-Type':'application/x-www-form-urlencoded' } })
+    axios.post('/accounts/login/?next=/v1/studies/', { username: username.value, password: password.value }, { headers: { 'Content-Type':'application/x-www-form-urlencoded' } })
       .then(function (response) {
         console.log(response);
         store.logOn()
