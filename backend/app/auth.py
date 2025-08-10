@@ -14,6 +14,7 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(required=True, write_only=True)
 
 
+@extend_schema(tags=['Auth'])
 class AuthViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
