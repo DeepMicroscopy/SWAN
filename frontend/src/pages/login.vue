@@ -1,10 +1,24 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import { useAppStore } from '@/stores/app.ts';
+  import { default as axios } from 'axios';
 
   const store = useAppStore()
   const visible = ref(false)
   const rememberMe = ref(false)
+  const username = ref('')
+  const password = ref('')
+
+  function login () {
+    axios.post('/accounts/login/?next=/v1/studies/', { username, password }, { headers: { 'Content-Type':'application/x-www-form-urlencoded' } })
+      .then(function (response) {
+        console.log(response);
+        store.logOn()
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+  }
 </script>
 
 <template>
@@ -14,6 +28,7 @@
       <v-form>
         <div class="text-subtitle-1 text-medium-emphasis">Email address</div>
         <v-text-field
+          v-model="username"
           density="compact"
           placeholder="you@example.com"
           prepend-inner-icon="mdi-account"
@@ -30,6 +45,7 @@
             Forgot login password?</a>
         </div>
         <v-text-field
+          v-model="password"
           :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
           density="compact"
           placeholder="Enter your password"
@@ -42,11 +58,12 @@
         <v-btn
           block
           color="indigo"
+          :disabled="username === '' || password === ''"
           rounded="lg"
           size="x-large"
           to="/overview"
           variant="elevated"
-          @click="store.logOn()"
+          @click="login()"
         >Login</v-btn>
       </v-form>
     </v-sheet>
