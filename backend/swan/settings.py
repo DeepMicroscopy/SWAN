@@ -137,8 +137,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = 'app.User'
 
-PUBLIC_URL = os.environ.get("PUBLIC_URL", default="https://swan.deepmicrosocopy.org")
-
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / os.environ.get("MEDIA_ROOT", default=".media")
 

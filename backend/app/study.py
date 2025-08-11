@@ -56,7 +56,7 @@ class StudyViewSet(viewsets.GenericViewSet):
     )
     @action(detail=True, renderer_classes=[util.SVGRenderer])
     def share(self, request, pk=None):
-        return HttpResponse(util.create_qr(settings.PUBLIC_URL + f"#/studies/{pk}"), content_type="image/svg+xml")
+        return HttpResponse(util.create_qr(request.build_absolute_uri(f"/#/studies/{pk}")), content_type="image/svg+xml")
 
     @extend_schema(
         responses=OpenApiTypes.BINARY,
