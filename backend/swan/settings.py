@@ -142,21 +142,16 @@ PUBLIC_URL = os.environ.get("PUBLIC_URL", default="https://swan.deepmicrosocopy.
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / os.environ.get("MEDIA_ROOT", default=".media")
 
+SECURE_SSL_REDIRECT = os.environ.get("PRODUCTION") == "true"
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # ideally we would want to enable these
-#SECURE_SSL_REDIRECT = os.environ.get("PRODUCTION") == "true"
-#SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-#
 #SECURE_HSTS_SECONDS = 31536000
 #SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 #SECURE_HSTS_PRELOAD = True
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-
-# ideally we would match the host and use X-Forwarded-Proto
-CSRF_TRUSTED_ORIGINS = [
-    "https://" + x for x in ALLOWED_HOSTS
-]
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
