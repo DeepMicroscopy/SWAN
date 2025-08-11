@@ -3,7 +3,7 @@ import magic
 
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from drf_spectacular.utils import extend_schema, OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiTypes, OpenApiParameter
 
 from rest_framework import serializers, viewsets, status
 from rest_framework.decorators import action
@@ -21,13 +21,23 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["id", "title", "archive", "file_count", "file_list"]
 
 
-@extend_schema(tags=['Dataset'])
+@extend_schema(
+    tags=['Dataset'],
+    parameters=[
+        OpenApiParameter(
+            name="id", type=OpenApiTypes.UUID,
+            location=OpenApiParameter.PATH, required=True,
+            description="Primary key"
+        ),
+    ],
+)
 class DatasetViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Dataset.objects.all()
     serializer_class = DatasetSerializer
     permission_classes = [IsAdminUser]
 
     @extend_schema(
+        operation_id="v1_datasets_retrieve_entry",
         responses=OpenApiTypes.BINARY,
         description="The file at the index of the dataset",
     )

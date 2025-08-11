@@ -1,12 +1,10 @@
 import datetime
 import os
-import magic
 
+import magic
 from django.http.response import FileResponse, HttpResponse
 from django.shortcuts import get_object_or_404
-
-from drf_spectacular.utils import extend_schema, OpenApiTypes
-
+from drf_spectacular.utils import extend_schema, OpenApiTypes, OpenApiParameter
 from rest_framework import serializers, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -22,7 +20,16 @@ class StudySerializer(serializers.HyperlinkedModelSerializer):
         fields = ["id", "title", "image", "pub_date", "end_date", "ui"]
 
 
-@extend_schema(tags=['Study'])
+@extend_schema(
+    tags=['Study'],
+    parameters=[
+        OpenApiParameter(
+            name="id", type=OpenApiTypes.UUID,
+            location=OpenApiParameter.PATH, required=True,
+            description="Primary key"
+        ),
+    ],
+)
 class StudyViewSet(viewsets.GenericViewSet):
     serializer_class = StudySerializer
 
@@ -68,12 +75,17 @@ class StudyViewSet(viewsets.GenericViewSet):
     @action(detail=True)
     def index(self, request, pk=None):
         if request.user.username == "anonymous":
-            result = ClassificationAnonymous.objects.filter(study=pk, session=request.session.session_key,
-                                                            study__group__in=util.groups(request)).order_by(
-                "-index").first()
+            result = ClassificationAnonymous.objects.filter(
+                study=pk,
+                session=request.session.session_key,
+                study__group__in=util.groups(request)
+            ).order_by("-index").first()
         else:
-            result = ClassificationUser.objects.filter(study=pk, user=request.user,
-                                                       study__group__in=util.groups(request)).order_by("-index").first()
+            result = ClassificationUser.objects.filter(
+                study=pk,
+                user=request.user,
+                study__group__in=util.groups(request)
+            ).order_by("-index").first()
 
         if result is None:
             return Response(0)
@@ -81,10 +93,11 @@ class StudyViewSet(viewsets.GenericViewSet):
             return Response(result.index)
 
     @extend_schema(
+        operation_id="v1_studies_retrieve_entry",
         responses=OpenApiTypes.BINARY,
         description="The file at the index of the dataset based on the user"
     )
-    @action(detail=True, url_path="(?P<index>\d+)", renderer_classes=[util.FileRenderer])
+    @action(detail=True, url_path="(?P<index>[0-9]+)", renderer_classes=[util.FileRenderer])
     def entry(self, request, pk=None, index=None):
         index = int(index)
         queryset = Study.objects.filter(group__in=util.groups(request)).select_related("dataset")

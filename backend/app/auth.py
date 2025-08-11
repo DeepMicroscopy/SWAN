@@ -1,12 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
-
 from drf_spectacular.utils import extend_schema
-
+from rest_framework import serializers
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework import serializers
 
 
 class LoginSerializer(serializers.Serializer):
@@ -16,6 +14,7 @@ class LoginSerializer(serializers.Serializer):
 
 @extend_schema(tags=['Auth'])
 class AuthViewSet(viewsets.ViewSet):
+    serializer_class = LoginSerializer
     permission_classes = [AllowAny]
 
     @extend_schema(
