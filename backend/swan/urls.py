@@ -37,9 +37,7 @@ def free_serve(request, path, **kwargs):
     return serve(request, path, **kwargs)
 
 urlpatterns = [
-    # path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
-
     path('v1/', include('app.urls')),
 
     path('', free_serve, {'path': 'index.html', 'document_root': settings.STATIC_ROOT}),
@@ -53,10 +51,9 @@ if settings.DEBUG or os.environ.get("API_DOCS") == "true":
         path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc-ui'),
     ]
 
-# TODO should be done by nginx
-if not settings.DEBUG:
-    urlpatterns += [re_path('static/(?P<path>.*)', free_serve, {'document_root': settings.STATIC_ROOT})]
-
-urlpatterns += [re_path('assets/(?P<path>.*)', free_serve, {'document_root': settings.STATIC_ROOT / "assets"})]
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# could be directly served by nginx, but we use caching to simplify setup
+urlpatterns += [
+    re_path('static/(?P<path>.*)', free_serve, {'document_root': settings.STATIC_ROOT}),
+    re_path('assets/(?P<path>.*)', free_serve, {'document_root': settings.STATIC_ROOT / "assets"}),
+    re_path('media/(?P<path>.*)', free_serve, {'document_root': settings.MEDIA_ROOT})
+]
