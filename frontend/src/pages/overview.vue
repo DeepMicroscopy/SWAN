@@ -1,31 +1,49 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import { default as axios } from 'axios';
+  import MarkdownIt from 'markdown-it';
+  import DOMPurify from 'dompurify';
 
 
   const dialog = ref(false)
 
   const studies = ref([])
 
-  onMounted( () => {
+  onMounted(() => {
     console.log('LOAD studies...')
 
     axios.get('/v1/studies/')
       .then(function (response) {
         studies.value = response.data;
-        console.log(studies)
 
-        studies.value.forEach(function (study) {
-          console.log('Studies:')
+        console.log('Studies:')
+        studies.value.forEach(study => {
+          console.group(`id: ${study.id}`)
+
           for (const key in study) {
-            console.log(key,':', study[key])
+            console.log(key + ':', study[key])
           }
+
+          console.groupEnd()
         })
       })
       .catch(function (error) {
         console.log(error);
       })
   })
+
+  function formatDate (rawDate: string): string {
+    return new Date(rawDate).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    });
+  }
+
+  function formatMarkdown (description: string): string {
+    const md = new MarkdownIt();
+    return DOMPurify.sanitize(md.render(description));
+  }
 
 </script>
 
@@ -56,190 +74,11 @@
 
     <v-list lines="two">
       <v-list-item
-        subtitle="May 13, 2025"
-        title="Histogram"
-      >
-        <template #prepend>
-          <v-btn
-            class="mr-3"
-            color="blue"
-            density="default"
-            icon="mdi-clipboard-text"
-            to="swipe"
-          />
-        </template>
-
-        <template #append>
-          <v-btn
-            color="grey-lighten-1"
-            icon="mdi-information"
-            variant="text"
-            @click="dialog = true"
-          />
-        </template>
-
-        <v-dialog
-          v-model="dialog"
-          width="auto"
-        >
-          <v-card
-            max-width="400"
-            prepend-icon="mdi-folder-information-outline"
-            text="In this study, we investigate the different manifestations of cell division visualized on microscopic images."
-            title="Study Description"
-          >
-            <template #actions>
-              <v-btn
-                class="ms-auto"
-                text="Ok"
-                @click="dialog = false"
-              />
-            </template>
-          </v-card>
-        </v-dialog>
-      </v-list-item>
-      <v-list-item
-        subtitle="Jan 20, 2025"
-        title="Atypical cells"
-      >
-        <template #prepend>
-          <v-btn
-            class="mr-3"
-            color="blue"
-            density="default"
-            icon="mdi-clipboard-text"
-            to="swipe"
-          />
-        </template>
-
-        <template #append>
-          <v-btn
-            color="grey-lighten-1"
-            icon="mdi-information"
-            variant="text"
-            @click="dialog = true"
-          />
-        </template>
-
-        <v-dialog
-          v-model="dialog"
-          width="auto"
-        >
-          <v-card
-            max-width="400"
-            prepend-icon="mdi-folder-information-outline"
-            text="In this study, we investigate the different manifestations of cell division visualized on microscopic images."
-            title="Study Description"
-          >
-            <template #actions>
-              <v-btn
-                class="ms-auto"
-                text="Ok"
-                @click="dialog = false"
-              />
-            </template>
-          </v-card>
-        </v-dialog>
-      </v-list-item>
-    </v-list>
-
-    <v-divider />
-    <v-list lines="three">
-      <v-list-item
-        subtitle="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-      eirmod tENDE invidunt ut labore et dolore magna aliquyam erat, sed"
-        title="Long subtitle Histogram"
-      >
-        <template #prepend>
-          <v-btn
-            class="mr-3"
-            color="blue"
-            density="default"
-            icon="mdi-clipboard-text"
-            to="swipe"
-          />
-        </template>
-
-        <template #append>
-          <v-btn
-            color="grey-lighten-1"
-            icon="mdi-information"
-            variant="text"
-            @click="dialog = true"
-          />
-        </template>
-
-        <v-dialog
-          v-model="dialog"
-          width="auto"
-        >
-          <v-card
-            max-width="400"
-            prepend-icon="mdi-folder-information-outline"
-            text="In this study, we investigate the different manifestations of cell division visualized on microscopic images."
-            title="Study Description"
-          >
-            <template #actions>
-              <v-btn
-                class="ms-auto"
-                text="Ok"
-                @click="dialog = false"
-              />
-            </template>
-          </v-card>
-        </v-dialog>
-      </v-list-item>
-      <v-divider inset />
-      <v-list-item
-        subtitle="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-      eirmod tENDE"
-        title="Long title Histogram-Histogram-Histogram"
-      >
-        <template #prepend>
-          <v-btn
-            class="mr-3"
-            color="blue"
-            density="default"
-            icon="mdi-clipboard-text"
-            to="swipe"
-          />
-        </template>
-
-        <template #append>
-          <v-btn
-            color="grey-lighten-1"
-            icon="mdi-information"
-            variant="text"
-            @click="dialog = true"
-          />
-        </template>
-
-        <v-dialog
-          v-model="dialog"
-          width="auto"
-        >
-          <v-card
-            max-width="400"
-            prepend-icon="mdi-folder-information-outline"
-            text="In this study, we investigate the different manifestations of cell division visualized on microscopic images."
-            title="Study Description"
-          >
-            <template #actions>
-              <v-btn
-                class="ms-auto"
-                text="Ok"
-                @click="dialog = false"
-              />
-            </template>
-          </v-card>
-        </v-dialog>
-      </v-list-item>
-      <v-list-item
         v-for="(study, index) in studies"
         :key="index"
       >
         <v-list-item-title>{{ study.title }}</v-list-item-title>
-        <v-list-item-subtitle>{{ study.pub_date }}</v-list-item-subtitle>
+        <v-list-item-subtitle>{{ formatDate(study.pub_date) }} - {{ formatDate(study.end_date) }}</v-list-item-subtitle>
         <template #prepend>
           <v-btn
             class="mr-3"
@@ -264,11 +103,20 @@
           width="auto"
         >
           <v-card
-            max-width="400"
-            prepend-icon="mdi-folder-information-outline"
-            text="In this study, we investigate the different manifestations of cell division visualized on microscopic images."
-            title="Study Description"
+            class="mx-auto"
           >
+            <v-img
+              cover
+              :src="study.image"
+            />
+            <v-card-title>
+              <v-icon icon="mdi-folder-information-outline" />
+              Study Description
+            </v-card-title>
+            <v-card-text class="ma-3">
+              <div v-html="formatMarkdown(study.description)" />
+            </v-card-text>
+
             <template #actions>
               <v-btn
                 class="ms-auto"
