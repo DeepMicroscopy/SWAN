@@ -4,18 +4,6 @@
   import MarkdownIt from 'markdown-it';
   import DOMPurify from 'dompurify';
 
-
-  interface Study {
-    id: string;
-    title: string;
-    description: string;
-    image: string;
-    pub_date: string;
-    end_date: string;
-    ui: string;
-    length: number;
-  }
-
   const showDialog = ref(false)
   const dialog = ref<Study | null>(null)
 

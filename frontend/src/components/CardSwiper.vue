@@ -20,7 +20,7 @@
       <div class="cards-stack position-absolute">
         <div
           v-for="(card, index) in visibleCards"
-          :key="card.id"
+          :key="card.index"
           class="card-wrapper"
           :class="{ 'active-card': index === 0 }"
           :style="getCardStyle(index)"
@@ -40,7 +40,7 @@
               <v-img
                 :alt="card.title"
                 class="image-zoom"
-                :src="card.imageUrl"
+                :src="card.image"
                 :style="getImageStyle()"
                 @mousedown.prevent="handleStartMouse"
                 @mouseleave.prevent="handleDragEnd"
@@ -79,14 +79,18 @@
 
         <v-spacer />
 
-        <v-toolbar-title class="text-center">SWAN</v-toolbar-title>
+        <v-btn
+          color="white"
+          icon="mdi-help-circle"
+          @click="showHelp = true"
+        />
 
         <v-spacer />
 
         <v-btn
           color="white"
-          icon="mdi-help-circle"
-          @click="showHelp = true"
+          icon="mdi-close"
+          @click="close"
         />
       </v-toolbar>
     </v-container>
@@ -153,6 +157,8 @@
 
 <script setup lang="ts">
   import { computed, ref } from 'vue'
+  import { useRouter } from 'vue-router';
+  const router = useRouter()
 
   // TODO
   // - clean up even more unused stuff (like active-card)
@@ -164,8 +170,8 @@
   // - implement lazy loading for cards (nextCard() -> (card, hasNext)
 
   export interface Card {
-    id: string
-    imageUrl: string
+    index: number
+    image: string
     title?: string
     description?: string
   }
@@ -277,6 +283,10 @@
 
     // unclear if needed
     zoomReset()
+  }
+
+  const close = () => {
+    router.back()
   }
 
   const getSwipeIcon = (direction: string) => {

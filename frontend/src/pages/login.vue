@@ -15,12 +15,12 @@
 
   function login () {
     axios.post('/v1/auth/login/', { username: username.value, password: password.value })
-      .then(function () {
+      .then(() => {
         failureMessage.value = false
         store.logOn()
         router.push('/overview')
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error)
         failureMessage.value = true
       })
