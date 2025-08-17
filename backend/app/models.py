@@ -29,6 +29,8 @@ def upload_to(name):
 def upload_to_dataset(instance, filename):
     return upload_to("dataset")
 
+def upload_to_solution(instance, filename):
+    return upload_to("solution")
 
 def upload_to_image(instance, filename):
     return upload_to("image")
@@ -52,10 +54,12 @@ class Dataset(UUIDModel):
 
             super().save(update_fields=['file_list', 'file_count'])
 
+def ui_default():
+    return {'left': {'text':'left'}, 'right': {'text':'right'}}
 
 class Ui(UUIDModel):
     title = models.CharField(max_length=200)
-    labels = models.JSONField(default=list)
+    labels = models.JSONField(default=ui_default)
 
     def __str__(self):
         return self.title
@@ -77,8 +81,10 @@ class Study(UUIDModel):
     def __str__(self):
         return self.title
 
+# TODO ensure consistency with solution.study.archive on save
 class Solution(models.Model):
     study = models.OneToOneField(Study, on_delete=models.CASCADE, primary_key=True)
+    archive = models.FileField(upload_to=upload_to_solution)
     config = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
@@ -88,7 +94,7 @@ class Classification(UUIDModel):
     date = models.DateTimeField("entry time")
     study = models.ForeignKey(Study, on_delete=models.CASCADE)
     file = models.CharField(max_length=200)
-    choice = models.PositiveSmallIntegerField()
+    choice = models.CharField(max_length=200)
     index = models.PositiveIntegerField()
 
     class Meta:

@@ -1,10 +1,128 @@
 [
   {
-    "model": "app.dataset",
-    "pk": "b38379ba-a529-4c92-b926-25fc4ce43de6",
+    "model": "app.user",
+    "pk": "4b311a7d-0551-48ae-ab5d-000000000000",
     "fields": {
-      "title": "test",
-      "archive": "dataset/2025/8/3/655d33fada0a487e93cf063a7cbfb972",
+      "password": "pbkdf2_sha256$1000000$lNVTxKgPG3TxZA7uqWOZmG$I29OVz+c+TmILMn3Ywswe0S6MQTcYVU48g0tHdPHKmw=",
+      "last_login": "2025-08-17T16:34:49.870Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "admin@localhost",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2025-08-17T15:59:44.171Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.user",
+    "pk": "4b311a7d-0551-48ae-ab5d-000000000001",
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$9kfKRpSZGNeAjyXp6VCks5$GHyJ4a2KOCdynwmKq3TtkVV9C96JluJ/szcn8grWchg=",
+      "last_login": "2025-08-17T16:00:44.779Z",
+      "is_superuser": false,
+      "username": "user",
+      "first_name": "",
+      "last_name": "",
+      "email": "user@localhost",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2025-08-17T15:59:44.171Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.user",
+    "pk": "d56b3e26-3ae1-4cde-bfd0-000000000001",
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$hRSIQTWf9mnqrxNFCVogzr$yGFzBx3657GSRSLxSfjkjkafnRPO+LmPup2BAMCmlhA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "expert-a-any",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-08-17T16:05:30Z",
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.user",
+    "pk": "d56b3e26-3ae1-4cde-bfd0-000000000002",
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$hRSIQTWf9mnqrxNFCVogzr$yGFzBx3657GSRSLxSfjkjkafnRPO+LmPup2BAMCmlhA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "expert-b-cats",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-08-17T16:05:30Z",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.user",
+    "pk": "d56b3e26-3ae1-4cde-bfd0-000000000003",
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$hRSIQTWf9mnqrxNFCVogzr$yGFzBx3657GSRSLxSfjkjkafnRPO+LmPup2BAMCmlhA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "expert-c-dogs",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-08-17T16:05:30Z",
+      "groups": [
+        3
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.user",
+    "pk": "d56b3e26-3ae1-4cde-bfd0-000000000004",
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$hRSIQTWf9mnqrxNFCVogzr$yGFzBx3657GSRSLxSfjkjkafnRPO+LmPup2BAMCmlhA=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "expert-d-multi",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-08-17T16:05:30Z",
+      "groups": [
+        1,
+        2,
+        3
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.dataset",
+    "pk": "570f18ae-8b9b-4be9-aeb0-000000000001",
+    "fields": {
+      "title": "test-dataset",
+      "archive": "dataset/test",
       "file_count": 100,
       "file_list": [
         "SWAN/MIDOG21_141.png",
@@ -112,68 +230,117 @@
   },
   {
     "model": "app.ui",
-    "pk": "9ed4d6c2-971b-4227-9464-fb40485c1c60",
+    "pk": "16315980-c11d-49d5-9e44-000000000001",
     "fields": {
-     "title": "test"
+      "title": "test-ui",
+      "labels": {
+        "left": {
+          "text": "left"
+        },
+        "right": {
+          "text": "right"
+        }
+      }
     }
   },
   {
     "model": "app.study",
-    "pk": "4a869600-4fbe-477e-9d5c-b5b803f06fd1",
+    "pk": "d8c03784-682d-4f44-97a6-000000000001",
     "fields": {
-      "title": "test",
-      "image": "image/2025/8/3/1b2afb367aae4fd7bb606fb0b9668ec2",
-      "pub_date": "2025-08-03T17:22:51Z",
-      "end_date": "2026-08-03T17:22:52Z",
+      "title": "test-study-all",
+      "image": "image/test",
+      "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n(/3.png)[/4.png]",
+      "pub_date": "2025-08-17T00:00:00Z",
+      "end_date": "2026-08-17T00:00:00Z",
       "group": 1,
-      "dataset": "b38379ba-a529-4c92-b926-25fc4ce43de6",
-      "ui": "9ed4d6c2-971b-4227-9464-fb40485c1c60"
+      "dataset": "570f18ae-8b9b-4be9-aeb0-000000000001",
+      "ui": "16315980-c11d-49d5-9e44-000000000001"
+    }
+  },
+  {
+    "model": "app.study",
+    "pk": "d8c03784-682d-4f44-97a6-000000000002",
+    "fields": {
+      "title": "test-study-cats",
+      "image": "image/test",
+      "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n(/3.png)[/4.png]",
+      "pub_date": "2025-08-17T00:00:00Z",
+      "end_date": "2026-08-17T00:00:00Z",
+      "group": 2,
+      "dataset": "570f18ae-8b9b-4be9-aeb0-000000000001",
+      "ui": "16315980-c11d-49d5-9e44-000000000001"
+    }
+  },
+  {
+    "model": "app.study",
+    "pk": "d8c03784-682d-4f44-97a6-000000000003",
+    "fields": {
+      "title": "test-study-dogs",
+      "image": "image/test",
+      "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n(/3.png)[/4.png]",
+      "pub_date": "2025-08-17T00:00:00Z",
+      "end_date": "2026-08-17T00:00:00Z",
+      "group": 3,
+      "dataset": "570f18ae-8b9b-4be9-aeb0-000000000001",
+      "ui": "16315980-c11d-49d5-9e44-000000000001"
+    }
+  },
+  {
+    "model": "app.solution",
+    "pk": "d8c03784-682d-4f44-97a6-000000000001",
+    "fields": {
+      "archive": "solution/test",
+      "config": {
+        "SWAN/MIDOC01.jpg": "bad"
+      }
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "9cebddb2-b019-4929-8e0c-000000000001",
+    "fields": {
+      "date": "2025-08-17T16:35:01Z",
+      "study": "d8c03784-682d-4f44-97a6-000000000001",
+      "file": "SWAN/MIDOC01.jpg",
+      "choice": "left",
+      "index": 0,
+      "user": "d56b3e26-3ae1-4cde-bfd0-000000000001"
+    }
+  },
+  {
+    "model": "app.classificationanonymous",
+    "pk": "43b0d019-dcf0-462f-aab8-000000000001",
+    "fields": {
+      "date": "2025-08-17T16:35:38Z",
+      "study": "d8c03784-682d-4f44-97a6-000000000001",
+      "file": "SWAN/MIDOC01.jpg",
+      "choice": "right",
+      "index": 0,
+      "session": "asdz89zhasdhasdh"
     }
   },
   {
     "model": "auth.group",
     "pk": 1,
     "fields": {
-      "name": "Expert",
+      "name": "Experts",
       "permissions": []
     }
   },
   {
-    "model": "app.user",
-    "pk": "e2b1c229-4a4b-499b-9cb7-56c237c8e4dd",
+    "model": "auth.group",
+    "pk": 2,
     "fields": {
-      "password": "pbkdf2_sha256$1000000$hAjvIltyXcLVKH8OleO3jZ$V6X/jxw8JcGjKLcyBviUmMCjphENK3S+GfrXeztElIU=",
-      "last_login": "2025-08-03T18:43:05.197Z",
-      "is_superuser": true,
-      "username": "admin",
-      "first_name": "",
-      "last_name": "",
-      "email": "admin@localhost",
-      "is_staff": true,
-      "is_active": true,
-      "date_joined": "2025-08-03T17:11:25.827Z",
-      "groups": [],
-      "user_permissions": []
+      "name": "Experts (Cats)",
+      "permissions": []
     }
   },
   {
-    "model": "app.user",
-    "pk": "bc094f1f-52e9-45bc-93b8-aa172555751c",
+    "model": "auth.group",
+    "pk": 3,
     "fields": {
-      "password": "pbkdf2_sha256$1000000$hAjvIltyXcLVKH8OleO3jZ$V6X/jxw8JcGjKLcyBviUmMCjphENK3S+GfrXeztElIU=",
-      "last_login": "2025-08-03T18:43:12.004Z",
-      "is_superuser": false,
-      "username": "user",
-      "first_name": "",
-      "last_name": "",
-      "email": "",
-      "is_staff": false,
-      "is_active": true,
-      "date_joined": "2025-08-03T17:22:40Z",
-      "groups": [
-        1
-      ],
-      "user_permissions": []
+      "name": "Experts (Dogs)",
+      "permissions": []
     }
   }
 ]

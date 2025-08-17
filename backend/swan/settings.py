@@ -136,6 +136,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Custom
 
+LOGIN_URL = "/admin/login/"
+LOGIN_REDIRECT_URL = "/admin/"
+
 AUTH_USER_MODEL = 'app.User'
 
 MEDIA_URL = "media/"

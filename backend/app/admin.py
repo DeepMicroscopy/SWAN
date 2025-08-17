@@ -27,7 +27,7 @@ class DatasetAdmin(admin.ModelAdmin):
 
 @admin.register(Solution)
 class SolutionAdmin(admin.ModelAdmin):
-    list_display = ['study']
+    list_display = ['study', 'archive']
     formfield_overrides = {
         JSONField: {'widget': JSONEditorWidget},
     }
