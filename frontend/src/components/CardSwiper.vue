@@ -130,8 +130,8 @@
             <v-list-subheader inset>Inspect</v-list-subheader>
             <v-list-item
               prepend-icon="mdi-magnify"
-              title="Zoom"
               subtitle="Pinch or Mouse-Wheel"
+              title="Zoom"
             />
             <v-list-item
               prepend-icon="mdi-magnify-expand"
@@ -184,17 +184,19 @@
 
   interface Props {
     cards?: Card[]
+    index?: number
   }
 
   const props = withDefaults(defineProps<Props>(), {
     cards: () => [],
+    index: () => 0,
   })
 
   const emit = defineEmits<{
     swiped: [event: SwipeEvent]
   }>()
 
-  const currentIndex = ref(0)
+  const currentIndex = ref(props.index)
   const showHelp = ref(false)
 
   // Card swipe

@@ -2,13 +2,14 @@
 <template>
   <CardSwiper
     :cards="cards"
+    :index="index"
     @swiped="handleSwipe"
   />
 </template>
 
 <route lang="yaml">
 meta:
-  layout: swipe
+layout: swipe
 </route>
 
 <script setup lang="ts">
@@ -33,6 +34,8 @@ meta:
       imageUrl: 'https://picsum.photos/1000/1000?random=4',
     },
   ])
+
+  const index = ref (0);
 
   const handleSwipe = (event: SwipeEvent) => {
     console.log(`card "${event.card.id}" swiped ${event.direction}`)

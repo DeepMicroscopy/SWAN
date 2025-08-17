@@ -85,7 +85,7 @@
             color="blue"
             density="default"
             icon="mdi-clipboard-text"
-            to="swipe"
+            :to="{ name: '/studies/[id]', params: { id: study.id } }"
           />
         </template>
 
