@@ -40,3 +40,9 @@ python manage.py shell
 ```sh
 python manage.py check --deploy
 ```
+
+## Current
+
+```sh
+rm -f app/migrations/000* && rm db.sqlite3 && ./manage.py makemigrations && ./manage.py migrate && ./manage.py loaddata data.json && ./manage.py runserver
+```
