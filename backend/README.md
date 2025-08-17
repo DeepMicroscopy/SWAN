@@ -44,5 +44,6 @@ python manage.py check --deploy
 ## Current
 
 ```sh
+./manage.py dumpdata | jq 'map(select(.model as $in | ["admin.logentry", "auth.permission", "contenttypes.contenttype", "sessions.session"] | index($in) | not))' > data.json
 rm -f app/migrations/000* && rm db.sqlite3 && ./manage.py makemigrations && ./manage.py migrate && ./manage.py loaddata data.json && ./manage.py runserver
 ```
