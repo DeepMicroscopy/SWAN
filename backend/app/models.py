@@ -1,10 +1,9 @@
 import datetime
 import uuid
 
+from app import util
 from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
-
-from app import util
 from swan.settings import AUTH_USER_MODEL
 
 
@@ -80,9 +79,6 @@ class Study(UUIDModel):
 
     def __str__(self):
         return self.title
-
-    def length(self):
-        return self.dataset.file_count
 
 # TODO ensure consistency with solution.study.archive on save
 class Solution(models.Model):

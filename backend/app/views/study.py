@@ -3,7 +3,7 @@ import os
 
 import magic
 from app import util
-from app.models import Study, ClassificationAnonymous, ClassificationUser
+from app.models import Study, ClassificationAnonymous, ClassificationUser, Ui
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, OpenApiTypes
@@ -13,56 +13,66 @@ from rest_framework.response import Response
 from swan import settings
 
 
+def get_index_for_request(request, pk):
+    if request.user.username == "anonymous":
+        result = ClassificationAnonymous.objects.filter(
+            study=pk,
+            session=request.session.session_key,
+            study__group__in=util.groups(request)
+        ).order_by("-index").first()
+    else:
+        result = ClassificationUser.objects.filter(
+            study=pk,
+            user=request.user,
+            study__group__in=util.groups(request)
+        ).order_by("-index").first()
+
+    if result is None:
+        return 0
+    else:
+        return result.index
+
+class UiSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Ui
+        fields = ["title", "labels"]
+
+
 class StudySerializer(serializers.HyperlinkedModelSerializer):
-    length = serializers.IntegerField()
+    ui = UiSerializer()
+    length = serializers.IntegerField(source="dataset.file_count")
+    index = serializers.SerializerMethodField()
+
+    def get_index(self, study):
+        request = self.context.get("request")
+        return get_index_for_request(request, study.id)
 
     class Meta:
         model = Study
-        fields = ["id", "title", "description", "image", "pub_date", "end_date", "ui", "length"]
+        fields = ["id", "title", "description", "image", "pub_date", "end_date", "ui", "length", "index"]
 
+class StudyListSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Study
+        fields = ["id", "title", "description", "image", "pub_date", "end_date"]
 
 @extend_schema(tags=['Study'])
-class StudyViewSet(viewsets.GenericViewSet):
+class StudyViewSet(viewsets.ViewSet):
     queryset = Study.objects.all()
-    serializer_class = StudySerializer
 
     def list(self, request):
         now = datetime.datetime.now(datetime.timezone.utc)
         queryset = Study.objects.filter(
             pub_date__lte=now, end_date__gt=now, group__in=util.groups(request)
         )
-        serializer = self.get_serializer(queryset, many=True)
+        serializer = StudyListSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         queryset = Study.objects.filter(group__in=util.groups(request))
         study = get_object_or_404(queryset, pk=pk)
-        serializer = self.get_serializer(study)
+        serializer = StudySerializer(study, context={"request": request})
         return Response(serializer.data)
-
-    @extend_schema(
-        responses=OpenApiTypes.INT,
-        description="The current index in the dataset for this study based on the user"
-    )
-    @action(detail=True)
-    def index(self, request, pk=None):
-        if request.user.username == "anonymous":
-            result = ClassificationAnonymous.objects.filter(
-                study=pk,
-                session=request.session.session_key,
-                study__group__in=util.groups(request)
-            ).order_by("-index").first()
-        else:
-            result = ClassificationUser.objects.filter(
-                study=pk,
-                user=request.user,
-                study__group__in=util.groups(request)
-            ).order_by("-index").first()
-
-        if result is None:
-            return Response(0)
-        else:
-            return Response(result.index)
 
     @extend_schema(
         operation_id="v1_studies_retrieve_entry",

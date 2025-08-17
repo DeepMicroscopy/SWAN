@@ -1,12 +1,3 @@
-<!-- Beispiel: CardStackView.vue -->
-<template>
-  <CardSwiper
-    :cards="cards"
-    :index="index"
-    @swiped="handleSwipe"
-  />
-</template>
-
 <route lang="yaml">
 meta:
   layout: swipe
@@ -18,10 +9,10 @@ meta:
   import type { Card, SwipeEvent } from '@/components/CardSwiper.vue';
   import { default as axios } from 'axios';
   import { useRoute } from 'vue-router';
-  const route = useRoute()
 
-  const study = await axios.get<Study>(`/v1/studies/${route.params?.id}`);
-  const lastIndex = await axios.get<number>(`/v1/studies/${route.params?.id}/index`);
+  const route = useRoute<'/studies.[id]'>();
+
+  const study = await axios.get<Study>(`/v1/studies/${route.params.id}/`);
 
   const result: Card[] = []
   for (let index = 0; index < study.data.length; index++) {
@@ -29,7 +20,7 @@ meta:
   }
 
   const cards = ref<Card[]>(result);
-  const index = ref(lastIndex.data+1);
+  const index = ref(study.data.index + 1);
 
   const handleSwipe = (event: SwipeEvent) => {
     console.log(`card "${event.card.index}" swiped ${event.direction}`)
@@ -43,3 +34,11 @@ meta:
       })
   }
 </script>
+
+<template>
+  <CardSwiper
+    :cards="cards"
+    :index="index"
+    @swiped="handleSwipe"
+  />
+</template>

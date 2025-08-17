@@ -1,13 +1,14 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import { default as axios } from 'axios';
+  import type { StudyList } from '@/api.ts';
   import MarkdownIt from 'markdown-it';
   import DOMPurify from 'dompurify';
 
   const showDialog = ref(false)
-  const dialog = ref<Study | null>(null)
+  const dialog = ref<StudyList | null>(null)
 
-  const studies = ref([])
+  const studies = ref<StudyList[]>([])
 
   onMounted(() => {
     console.log('LOAD studies...')
@@ -17,11 +18,13 @@
         studies.value = response.data;
 
         console.log('Studies:')
-        studies.value.forEach(study => {
+        studies.value.forEach((study: StudyList) => {
           console.group(`id: ${study.id}`)
 
-          for (const key in study) {
-            console.log(key + ':', study[key])
+          const entries = Object.entries(study)
+
+          for (const key in entries) {
+            console.log(key + ':', entries[key])
           }
 
           console.groupEnd()
@@ -40,7 +43,9 @@
     });
   }
 
-  function formatMarkdown (description: string): string {
+  function formatMarkdown (description: string|undefined): string|undefined {
+    if (!description) return;
+
     const md = new MarkdownIt();
     console.group('des')
     console.log(md.render(description))
@@ -49,7 +54,7 @@
     return DOMPurify.sanitize(md.render(description));
   }
 
-  function setDialog (study: Study) {
+  function setDialog (study: StudyList) {
     showDialog.value = true
     dialog.value = study
   }
@@ -94,7 +99,7 @@
             color="blue"
             density="default"
             icon="mdi-clipboard-text"
-            :to="{ name: '/studies/[id]', params: { id: study.id } }"
+            :to="{ name: '/studies.[id]', params: { id: study.id } }"
           />
         </template>
 
@@ -122,14 +127,14 @@
     >
       <v-img
         cover
-        :src="dialog.image"
+        :src="dialog?.image"
       />
       <v-card-title>
         <v-icon icon="mdi-folder-information-outline" />
         Study Description
       </v-card-title>
       <v-card-text class="ma-3">
-        <div v-html="formatMarkdown(dialog.description)" />
+        <div v-html="formatMarkdown(dialog?.description)" />
       </v-card-text>
 
       <template #actions>
