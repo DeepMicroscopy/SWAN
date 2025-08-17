@@ -8,7 +8,7 @@ from app.models import Ui
 class UiSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Ui
-        fields = ["id", "title"]
+        fields = ["id", "title", "labels"]
 
 
 @extend_schema(tags=['Ui'])

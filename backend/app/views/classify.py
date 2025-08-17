@@ -14,13 +14,13 @@ from app.models import Study
 
 class ClassifyInputSerializer(serializers.Serializer):
     study = serializers.UUIDField(required=True)
-    choice = serializers.IntegerField(required=True)
+    choice = serializers.CharField(required=True)
     index = serializers.IntegerField(required=True)
 
 
 class ClassifyOutputSerializer(serializers.Serializer):
     study = serializers.UUIDField(required=True, source="study_id")
-    choice = serializers.IntegerField(required=True)
+    choice = serializers.CharField(required=True)
     index = serializers.IntegerField(required=True)
 
 
