@@ -17,7 +17,7 @@ from swan import settings
 class StudySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Study
-        fields = ["id", "title", "image", "pub_date", "end_date", "ui"]
+        fields = ["id", "title", "description", "image", "pub_date", "end_date", "ui"]
 
 
 @extend_schema(tags=['Study'])
