@@ -81,6 +81,9 @@ class Study(UUIDModel):
     def __str__(self):
         return self.title
 
+    def length(self):
+        return self.dataset.file_count
+
 # TODO ensure consistency with solution.study.archive on save
 class Solution(models.Model):
     study = models.OneToOneField(Study, on_delete=models.CASCADE, primary_key=True)

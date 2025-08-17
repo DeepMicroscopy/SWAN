@@ -2,22 +2,23 @@ import datetime
 import os
 
 import magic
+from app import util
+from app.models import Study, ClassificationAnonymous, ClassificationUser
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, OpenApiTypes
 from rest_framework import serializers, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
-from app import util
-from app.models import Study, ClassificationAnonymous, ClassificationUser
 from swan import settings
 
 
 class StudySerializer(serializers.HyperlinkedModelSerializer):
+    length = serializers.IntegerField()
+
     class Meta:
         model = Study
-        fields = ["id", "title", "description", "image", "pub_date", "end_date", "ui"]
+        fields = ["id", "title", "description", "image", "pub_date", "end_date", "ui", "length"]
 
 
 @extend_schema(tags=['Study'])
