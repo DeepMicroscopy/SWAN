@@ -249,7 +249,7 @@
     "fields": {
       "title": "test-study-all",
       "image": "image/test",
-      "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n(/3.png)[/4.png]",
+      "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n\r\n(/3.png)[/4.png]",
       "pub_date": "2025-08-17T00:00:00Z",
       "end_date": "2026-08-17T00:00:00Z",
       "group": 1,
