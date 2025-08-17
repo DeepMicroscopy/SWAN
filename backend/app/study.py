@@ -47,27 +47,6 @@ class StudyViewSet(viewsets.GenericViewSet):
         serializer = self.get_serializer(study)
         return Response(serializer.data)
 
-    # TODO
-    #  - support multiple share types
-    #  - add token
-    @extend_schema(
-        responses=OpenApiTypes.STR,
-        description="A QR code linking to this study",
-    )
-    @action(detail=True, renderer_classes=[util.SVGRenderer])
-    def share(self, request, pk=None):
-        return HttpResponse(util.create_qr(request.build_absolute_uri(f"/#/studies/{pk}")), content_type="image/svg+xml")
-
-    @extend_schema(
-        responses=OpenApiTypes.BINARY,
-        description="The title image of the study"
-    )
-    @action(detail=True, renderer_classes=[util.FileRenderer])
-    def image(self, request, pk=None):
-        queryset = Study.objects.filter(group__in=util.groups(request))
-        study = get_object_or_404(queryset, pk=pk)
-        return FileResponse(open(study.image.path, "rb"), content_type=magic.from_file(study.image.path, mime=True))
-
     @extend_schema(
         responses=OpenApiTypes.INT,
         description="The current index in the dataset for this study based on the user"

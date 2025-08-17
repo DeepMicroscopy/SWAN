@@ -29,7 +29,7 @@ class StudyAdmin(admin.ModelAdmin):
     def share(self, study):
         context = {"study": study}
         template = """
-            <a href="{% url 'study-share' pk=study.id %}" target="_blank">Download</a>
+            <a href="{% url 'share-users' study=study.id %}" target="_blank">Download</a>
         """
 
         return django_engine.from_string(template).render(context)
