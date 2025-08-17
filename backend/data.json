@@ -111,6 +111,13 @@
     }
   },
   {
+    "model": "app.ui",
+    "pk": "9ed4d6c2-971b-4227-9464-fb40485c1c60",
+    "fields": {
+     "title": "test"
+    }
+  },
+  {
     "model": "app.study",
     "pk": "4a869600-4fbe-477e-9d5c-b5b803f06fd1",
     "fields": {
@@ -120,7 +127,7 @@
       "end_date": "2026-08-03T17:22:52Z",
       "group": 1,
       "dataset": "b38379ba-a529-4c92-b926-25fc4ce43de6",
-      "ui": 1
+      "ui": "9ed4d6c2-971b-4227-9464-fb40485c1c60"
     }
   },
   {

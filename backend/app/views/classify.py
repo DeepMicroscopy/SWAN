@@ -1,14 +1,15 @@
 import datetime
 
-from app import util
-from app.models import Study
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .models import ClassificationUser, ClassificationAnonymous
+
+from app import util
+from app.models import ClassificationUser, ClassificationAnonymous
+from app.models import Study
 
 
 class ClassifyInputSerializer(serializers.Serializer):
@@ -25,6 +26,8 @@ class ClassifyOutputSerializer(serializers.Serializer):
 
 @extend_schema(tags=['Classify'])
 class ClassifyViewSet(viewsets.ViewSet):
+    queryset = ClassificationUser.objects.all()
+
     @extend_schema(
         request=ClassifyInputSerializer,
         responses=ClassifyOutputSerializer,

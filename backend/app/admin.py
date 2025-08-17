@@ -2,11 +2,13 @@ import abc
 import csv
 
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.db.models import JSONField
 from django.http import HttpResponse
 from django.template import engines
+from django_json_widget.widgets import JSONEditorWidget
 
-from app.models import User, Dataset, Study, ClassificationUser, ClassificationAnonymous
-from django.contrib.auth.admin import UserAdmin
+from app.models import User, Dataset, Study, ClassificationUser, ClassificationAnonymous, Solution, Ui
 
 django_engine = engines['django']
 
@@ -15,6 +17,7 @@ django_engine = engines['django']
 class CustomUserAdmin(UserAdmin):
     pass
 
+
 @admin.register(Dataset)
 class DatasetAdmin(admin.ModelAdmin):
     list_display = ['title', 'archive', 'file_count']
@@ -22,9 +25,23 @@ class DatasetAdmin(admin.ModelAdmin):
     readonly_fields = ['file_list']
 
 
+@admin.register(Solution)
+class SolutionAdmin(admin.ModelAdmin):
+    list_display = ['study']
+    formfield_overrides = {
+        JSONField: {'widget': JSONEditorWidget},
+    }
+
+@admin.register(Ui)
+class UiAdmin(admin.ModelAdmin):
+    list_display = ['title']
+    formfield_overrides = {
+        JSONField: {'widget': JSONEditorWidget},
+    }
+
 @admin.register(Study)
 class StudyAdmin(admin.ModelAdmin):
-    list_display = ['title', 'pub_date', 'end_date', 'group', 'dataset', 'ui', 'share']
+    list_display = ['title', 'pub_date', 'end_date', 'group', 'dataset', 'ui', 'share', 'educational']
 
     def share(self, study):
         context = {"study": study}
@@ -34,8 +51,13 @@ class StudyAdmin(admin.ModelAdmin):
 
         return django_engine.from_string(template).render(context)
 
+    @staticmethod
+    def educational(study):
+        return study.solution is not None
+
     share.short_description = "QR Code"
     share.allow_tags = False
+
 
 class ClassificationAdmin(admin.ModelAdmin):
     actions = ["export_csv"]
@@ -47,7 +69,9 @@ class ClassificationAdmin(admin.ModelAdmin):
         writer.writerow(["time", "study", "file", "choice"] + self.csv_header())
 
         for entry in queryset:
-            writer.writerow([int(entry.date.timestamp()), entry.study.id, entry.file, entry.choice] + self.csv_data(entry))
+            writer.writerow(
+                [int(entry.date.timestamp()), entry.study.id, entry.file, entry.choice] + self.csv_data(entry)
+            )
 
         return response
 
@@ -70,6 +94,7 @@ class ClassificationUserAdmin(ClassificationAdmin):
 
     def csv_data(self, entry):
         return [entry.user]
+
 
 @admin.register(ClassificationAnonymous)
 class ClassificationAnonymousAdmin(ClassificationAdmin):

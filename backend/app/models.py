@@ -1,10 +1,10 @@
 import datetime
 import uuid
 
-from app import util
 from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 
+from app import util
 from swan.settings import AUTH_USER_MODEL
 
 
@@ -14,6 +14,8 @@ class User(AbstractUser):
 
 class UUIDModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    objects = models.Manager()
 
     class Meta:
         abstract = True
@@ -33,8 +35,6 @@ def upload_to_image(instance, filename):
 
 
 class Dataset(UUIDModel):
-    objects = models.Manager()
-
     title = models.CharField(max_length=200)
     archive = models.FileField(upload_to=upload_to_dataset)
     file_count = models.PositiveIntegerField(null=True, blank=True)
@@ -53,36 +53,38 @@ class Dataset(UUIDModel):
             super().save(update_fields=['file_list', 'file_count'])
 
 
-class UiType(models.IntegerChoices):
-    DEFAULT = 1, 'Default'
-
-
-class Study(UUIDModel):
-    objects = models.Manager()
-
+class Ui(UUIDModel):
     title = models.CharField(max_length=200)
-    image = models.FileField(upload_to=upload_to_image)
-
-    pub_date = models.DateTimeField("publication date")
-    end_date = models.DateTimeField("date the study ends")
-
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-
-    ui = models.IntegerField(
-        choices=UiType.choices,
-        default=UiType.DEFAULT
-    )
+    labels = models.JSONField(default=list)
 
     def __str__(self):
         return self.title
 
-    title.verbose_name = "study"
 
+class Study(UUIDModel):
+    title = models.CharField(max_length=200)
+    image = models.FileField(upload_to=upload_to_image, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+
+    pub_date = models.DateTimeField("publication date")
+    end_date = models.DateTimeField("date the study ends")
+
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True)
+    dataset = models.ForeignKey(Dataset, on_delete=models.PROTECT)
+
+    ui = models.ForeignKey(Ui, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.title
+
+class Solution(models.Model):
+    study = models.OneToOneField(Study, on_delete=models.CASCADE, primary_key=True)
+    config = models.JSONField(default=dict, blank=True)
+
+    def __str__(self):
+        return str(self.study)
 
 class Classification(UUIDModel):
-    objects = models.Manager()
-
     date = models.DateTimeField("entry time")
     study = models.ForeignKey(Study, on_delete=models.CASCADE)
     file = models.CharField(max_length=200)

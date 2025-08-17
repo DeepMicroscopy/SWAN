@@ -3,6 +3,7 @@ attrs==25.3.0
 dj-database-url==3.0.1
 Django==5.2.1
 django-extensions==4.1
+django-json-widget==2.0.3
 djangorestframework==3.16.1
 drf-spectacular==0.28.0
 drf-spectacular-sidecar==2025.8.1

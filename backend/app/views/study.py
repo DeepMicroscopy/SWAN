@@ -2,16 +2,16 @@ import datetime
 import os
 
 import magic
-from django.http.response import FileResponse, HttpResponse
+from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from drf_spectacular.utils import extend_schema, OpenApiTypes, OpenApiParameter
+from drf_spectacular.utils import extend_schema, OpenApiTypes
 from rest_framework import serializers, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from app import util
+from app.models import Study, ClassificationAnonymous, ClassificationUser
 from swan import settings
-from . import util
-from .models import Study, ClassificationAnonymous, ClassificationUser
 
 
 class StudySerializer(serializers.HyperlinkedModelSerializer):
@@ -20,20 +20,12 @@ class StudySerializer(serializers.HyperlinkedModelSerializer):
         fields = ["id", "title", "image", "pub_date", "end_date", "ui"]
 
 
-@extend_schema(
-    tags=['Study'],
-    parameters=[
-        OpenApiParameter(
-            name="id", type=OpenApiTypes.UUID,
-            location=OpenApiParameter.PATH, required=True,
-            description="Primary key"
-        ),
-    ],
-)
+@extend_schema(tags=['Study'])
 class StudyViewSet(viewsets.GenericViewSet):
+    queryset = Study.objects.all()
     serializer_class = StudySerializer
 
-    def list(self, request, *args, **kwargs):
+    def list(self, request):
         now = datetime.datetime.now(datetime.timezone.utc)
         queryset = Study.objects.filter(
             pub_date__lte=now, end_date__gt=now, group__in=util.groups(request)

@@ -3,9 +3,8 @@ import tarfile
 import zipfile
 
 import qrcode
-import qrcode.image.svg
 import qrcode.image.styles.moduledrawers.svg
-
+import qrcode.image.svg
 from rest_framework.renderers import BaseRenderer
 
 
