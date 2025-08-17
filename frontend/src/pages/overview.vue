@@ -5,7 +5,19 @@
   import DOMPurify from 'dompurify';
 
 
-  const dialog = ref(false)
+  interface Study {
+    id: string;
+    title: string;
+    description: string;
+    image: string;
+    pub_date: string;
+    end_date: string;
+    ui: string;
+    length: number;
+  }
+
+  const showDialog = ref(false)
+  const dialog = ref<Study | null>(null)
 
   const studies = ref([])
 
@@ -42,7 +54,16 @@
 
   function formatMarkdown (description: string): string {
     const md = new MarkdownIt();
+    console.group('des')
+    console.log(md.render(description))
+    console.log(DOMPurify.sanitize(md.render(description)))
+    console.groupEnd()
     return DOMPurify.sanitize(md.render(description));
+  }
+
+  function setDialog (study: Study) {
+    showDialog.value = true
+    dialog.value = study
   }
 
 </script>
@@ -94,42 +115,44 @@
             color="grey-lighten-1"
             icon="mdi-information"
             variant="text"
-            @click="dialog = true"
+            @click="setDialog(study)"
           />
         </template>
 
-        <v-dialog
-          v-model="dialog"
-          width="auto"
-        >
-          <v-card
-            class="mx-auto"
-          >
-            <v-img
-              cover
-              :src="study.image"
-            />
-            <v-card-title>
-              <v-icon icon="mdi-folder-information-outline" />
-              Study Description
-            </v-card-title>
-            <v-card-text class="ma-3">
-              <div v-html="formatMarkdown(study.description)" />
-            </v-card-text>
 
-            <template #actions>
-              <v-btn
-                class="ms-auto"
-                text="Ok"
-                @click="dialog = false"
-              />
-            </template>
-          </v-card>
-        </v-dialog>
       </v-list-item>
 
     </v-list>
   </v-card>
+
+  <v-dialog
+    v-model="showDialog"
+    width="auto"
+  >
+    <v-card
+      class="mx-auto"
+    >
+      <v-img
+        cover
+        :src="dialog.image"
+      />
+      <v-card-title>
+        <v-icon icon="mdi-folder-information-outline" />
+        Study Description
+      </v-card-title>
+      <v-card-text class="ma-3">
+        <div v-html="formatMarkdown(dialog.description)" />
+      </v-card-text>
+
+      <template #actions>
+        <v-btn
+          class="ms-auto"
+          text="Ok"
+          @click="showDialog = false"
+        />
+      </template>
+    </v-card>
+  </v-dialog>
 
 </template>
 
