@@ -1,11 +1,12 @@
-from app import util
 from django.http.response import HttpResponse
 from drf_spectacular.utils import extend_schema, OpenApiTypes, OpenApiParameter
 from rest_framework import viewsets
 from rest_framework.decorators import action
 
+from app import util
 
-@extend_schema(tags=['Share'])
+
+@extend_schema(tags=['Share'], parameters=[OpenApiParameter("study", OpenApiTypes.UUID, OpenApiParameter.PATH)])
 class ShareViewSet(viewsets.ViewSet):
     lookup_url_kwarg = "study"
 
@@ -14,7 +15,6 @@ class ShareViewSet(viewsets.ViewSet):
     @extend_schema(
         responses=OpenApiTypes.STR,
         description="A QR code linking to this study",
-        parameters=[OpenApiParameter("study", OpenApiTypes.UUID, OpenApiParameter.PATH)],
     )
     @action(detail=True, renderer_classes=[util.SVGRenderer])
     def users(self, request, study=None):

@@ -6,6 +6,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.db.models import JSONField
 from django.http import HttpResponse
 from django.template import engines
+from django.urls import reverse
+from django.utils.html import format_html
 from django_json_widget.widgets import JSONEditorWidget
 
 from app.models import User, Dataset, Study, ClassificationUser, ClassificationAnonymous, Solution, Ui
@@ -41,23 +43,21 @@ class UiAdmin(admin.ModelAdmin):
 
 @admin.register(Study)
 class StudyAdmin(admin.ModelAdmin):
-    list_display = ['title', 'pub_date', 'end_date', 'group', 'dataset', 'ui', 'share', 'educational']
+    list_display = ['title', 'pub_date', 'end_date', 'group', 'dataset', 'ui', 'share', 'export', 'educational']
 
-    def share(self, study):
-        context = {"study": study}
-        template = """
-            <a href="{% url 'share-users' study=study.id %}" target="_blank">Download</a>
-        """
+    @staticmethod
+    def share(study):
+        url = reverse("share-users", args=[study.id])
+        return format_html('<a href="{}" target="_blank">QR</a>', url)
 
-        return django_engine.from_string(template).render(context)
+    @staticmethod
+    def export(study):
+        url = reverse("export-csv", args=[study.id])
+        return format_html('<a href="{}" target="_blank">CSV</a>', url)
 
     @staticmethod
     def educational(study):
         return study.solution is not None
-
-    share.short_description = "QR Code"
-    share.allow_tags = False
-
 
 class ClassificationAdmin(admin.ModelAdmin):
     actions = ["export_csv"]
@@ -93,7 +93,7 @@ class ClassificationUserAdmin(ClassificationAdmin):
         return ["user"]
 
     def csv_data(self, entry):
-        return [entry.user]
+        return [entry.user.id]
 
 
 @admin.register(ClassificationAnonymous)

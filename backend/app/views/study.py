@@ -2,14 +2,15 @@ import datetime
 import os
 
 import magic
-from app import util
-from app.models import Study, ClassificationAnonymous, ClassificationUser, Ui
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, OpenApiTypes
 from rest_framework import serializers, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from app import util
+from app.models import Study, ClassificationAnonymous, ClassificationUser, Ui
 from swan import settings
 
 
@@ -33,17 +34,24 @@ def get_index_for_request(request, pk):
         return result.index
 
 class UiSerializer(serializers.HyperlinkedModelSerializer):
+    class UiLabelSerializer(serializers.Serializer):
+        left = serializers.DictField()
+        right = serializers.DictField()
+        up = serializers.DictField(required=False)
+        down = serializers.DictField(required=False)
+
+    labels = UiLabelSerializer()
+
     class Meta:
         model = Ui
         fields = ["title", "labels"]
-
 
 class StudySerializer(serializers.HyperlinkedModelSerializer):
     ui = UiSerializer()
     length = serializers.IntegerField(source="dataset.file_count")
     index = serializers.SerializerMethodField()
 
-    def get_index(self, study):
+    def get_index(self, study: Study) -> int:
         request = self.context.get("request")
         return get_index_for_request(request, study.id)
 
@@ -57,8 +65,14 @@ class StudyListSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["id", "title", "description", "image", "pub_date", "end_date"]
 
 @extend_schema(tags=['Study'])
-class StudyViewSet(viewsets.ViewSet):
+class StudyViewSet(viewsets.GenericViewSet):
     queryset = Study.objects.all()
+
+    def get_serializer(self, context):
+        if self.action == "list":
+            return StudyListSerializer
+        else:
+            return StudySerializer
 
     def list(self, request):
         now = datetime.datetime.now(datetime.timezone.utc)
