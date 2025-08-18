@@ -11,14 +11,28 @@ class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
 
-class ResponseSerializer(serializers.Serializer):
+class StatusSerializer(serializers.Serializer):
+    authenticated = serializers.BooleanField()
+    username = serializers.CharField()
+
+class DetailSerializer(serializers.Serializer):
     detail = serializers.CharField()
 
 @extend_schema(tags=['Auth'])
 class AuthViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
-    @extend_schema(request=LoginSerializer, responses=ResponseSerializer)
+    @extend_schema(request=None, responses=StatusSerializer)
+    @action(detail=False, methods=['get'])
+    def status(self, request):
+        serializer = StatusSerializer({
+            "authenticated": request.user.is_authenticated,
+            "username": request.user.username if request.user.is_authenticated else None
+        })
+
+        return Response(serializer.data)
+
+    @extend_schema(request=LoginSerializer, responses=DetailSerializer)
     @action(detail=False, methods=['post'])
     def login(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -36,7 +50,7 @@ class AuthViewSet(viewsets.ViewSet):
 
         return Response({"detail": "Logged in successfully"})
 
-    @extend_schema(request=None, responses=ResponseSerializer)
+    @extend_schema(request=None, responses=DetailSerializer)
     @action(detail=False, methods=['post'])
     def logout(self, request):
         logout(request)
