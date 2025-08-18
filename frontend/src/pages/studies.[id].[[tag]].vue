@@ -10,7 +10,11 @@ meta:
   import { default as axios } from 'axios';
   import { useRoute } from 'vue-router';
 
-  const route = useRoute<'/studies.[id]'>();
+  const route = useRoute<'/studies.[id].[[tag]]'>();
+
+  if ((route.params.tag?.length ?? 0) > 0) {
+    document.cookie = `anonymous=${route.params.tag}; path=/; Secure`;
+  }
 
   const study = await axios.get<Study>(`/v1/studies/${route.params.id}/`);
 

@@ -99,7 +99,7 @@
             color="blue"
             density="default"
             icon="mdi-clipboard-text"
-            :to="{ name: '/studies.[id]', params: { id: study.id } }"
+            :to="{ name: '/studies.[id].[[tag]]', params: { id: study.id } }"
           />
         </template>
 

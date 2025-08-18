@@ -38,6 +38,10 @@ router.beforeEach(to => {
   //Avoid access to the app if not logged in
   const store = useAppStore()
   if (!store.loggedIn && to.name !== '/login') {
+    if (to.name === '/studies.[id].[[tag]]' && (to.params.tag?.length ?? 0) > 0) {
+      return
+    }
+
     return { name: '/login' }
   }
 })
