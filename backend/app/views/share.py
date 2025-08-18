@@ -2,6 +2,7 @@ from django.http.response import HttpResponse
 from drf_spectacular.utils import extend_schema, OpenApiTypes, OpenApiParameter
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser
 
 from app import util
 
@@ -9,6 +10,7 @@ from app import util
 @extend_schema(tags=['Share'], parameters=[OpenApiParameter("study", OpenApiTypes.UUID, OpenApiParameter.PATH)])
 class ShareViewSet(viewsets.ViewSet):
     lookup_url_kwarg = "study"
+    permission_classes = [IsAdminUser]
 
     # TODO
     #  - add anonymous with token

@@ -5,6 +5,7 @@ from django.http.response import HttpResponse
 from drf_spectacular.utils import extend_schema, OpenApiTypes, OpenApiParameter
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser
 
 from app import util
 from app.models import ClassificationUser, ClassificationAnonymous
@@ -56,6 +57,7 @@ def get_data(study):
 @extend_schema(tags=['Export'], parameters=[OpenApiParameter("study", OpenApiTypes.UUID, OpenApiParameter.PATH)])
 class ExportViewSet(viewsets.ViewSet):
     lookup_url_kwarg = "study"
+    permission_classes = [IsAdminUser]
 
     @extend_schema(
         responses=OpenApiTypes.STR,

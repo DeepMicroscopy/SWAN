@@ -11,15 +11,14 @@ class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
 
+class ResponseSerializer(serializers.Serializer):
+    detail = serializers.CharField()
 
 @extend_schema(tags=['Auth'])
 class AuthViewSet(viewsets.ViewSet):
-    serializer_class = LoginSerializer
     permission_classes = [AllowAny]
 
-    @extend_schema(
-        request=LoginSerializer
-    )
+    @extend_schema(request=LoginSerializer, responses=ResponseSerializer)
     @action(detail=False, methods=['post'])
     def login(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -37,6 +36,7 @@ class AuthViewSet(viewsets.ViewSet):
 
         return Response({"detail": "Logged in successfully"})
 
+    @extend_schema(request=None, responses=ResponseSerializer)
     @action(detail=False, methods=['post'])
     def logout(self, request):
         logout(request)
