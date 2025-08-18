@@ -27,7 +27,7 @@ class SolutionSerializer(serializers.Serializer):
 
 
 class EducationSerializer(serializers.Serializer):
-    solution = serializers.DictField()
+    solution = SolutionSerializer()
     proof = serializers.CharField(allow_null=True)
 
 
@@ -38,7 +38,7 @@ class ClassifyOutputSerializer(serializers.Serializer):
     education = serializers.SerializerMethodField(required=False, allow_null=True)
 
     @staticmethod
-    def get_education(obj: Classification):
+    def get_education(obj: Classification) -> EducationSerializer:
         if not hasattr(obj.study, "solution"):
             return None
 
