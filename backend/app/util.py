@@ -123,7 +123,7 @@ def create_qr(data):
     if settings.DEBUG:
         xml = xml.replace(
             "</svg>",
-            f"<text x='10' y='10' font-size='4' fill='black'>{data[data.index("#") - 1:]}</text></svg>"
+            "<text x='10' y='10' font-size='4' fill='black'>" + data[data.index("#") - 1:] + "</text></svg>",
         )
 
     return xml
