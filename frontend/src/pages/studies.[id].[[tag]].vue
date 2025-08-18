@@ -44,6 +44,7 @@ meta:
     :cards="cards"
     :index="index"
     :labels="study.data.ui.labels"
+    :title="study.data.title"
     @swiped="handleSwipe"
   />
 </template>

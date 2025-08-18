@@ -79,6 +79,8 @@
 
         <v-spacer />
 
+        <p>{{ props.title }}</p>
+
         <v-btn
           color="white"
           icon="mdi-help-circle"
@@ -109,23 +111,25 @@
 
             <v-list-subheader inset>Swipe or Drag</v-list-subheader>
             <v-list-item
+              v-if="props.labels.up"
               prepend-icon="mdi-arrow-up"
-              subtitle="Classify as A"
+              :subtitle="`Classify as ${props.labels.up.text}`"
               title="Swipe Up"
             />
             <v-list-item
+              v-if="props.labels.down"
               prepend-icon="mdi-arrow-down"
-              subtitle="Classify as B"
+              :subtitle="`Classify as ${props.labels.down.text}`"
               title="Swipe Down"
             />
             <v-list-item
               prepend-icon="mdi-arrow-left"
-              subtitle="Classify as C"
+              :subtitle="`Classify as ${props.labels.left.text}`"
               title="Swipe Left"
             />
             <v-list-item
               prepend-icon="mdi-arrow-right"
-              subtitle="Classify as D"
+              :subtitle="`Classify as ${props.labels.right.text}`"
               title="Swipe Right"
             />
 
@@ -159,6 +163,7 @@
   import { computed, ref } from 'vue'
   import { useRouter } from 'vue-router';
   import type { UiLabels } from '@/api.ts';
+
   const router = useRouter()
 
   // TODO
@@ -190,26 +195,28 @@
   }
 
   interface Props {
+    title?: string
     cards?: Card[]
     index?: number
     labels?: UiLabels
   }
 
   const props = withDefaults(defineProps<Props>(), {
+    title: () => 'n/a',
     cards: () => [],
-    index: () => 0,
+    index: () => -1,
     labels: () => ({
       'left': {
-        'text': 'left',
+        'text': 'n/a',
       },
       'right': {
-        'text': 'right',
+        'text': 'n/a',
       },
       'up': {
-        'text': 'up',
+        'text': 'n/a',
       },
       'down': {
-        'text': 'down',
+        'text': 'n/a',
       },
     }),
   })
@@ -243,8 +250,8 @@
 
   // data holder
   const swipeDirections: Record<string, SwipeDirection> = {
-    up: { direction: 'up', action: props.labels.up?.text ?? 'up', color: 'success', icon: 'mdi-heart' },
-    down: { direction: 'down', action: props.labels.down?.text ?? 'down', color: 'error', icon: 'mdi-close' },
+    up: { direction: 'up', action: props.labels.up?.text ?? 'n/a', color: 'success', icon: 'mdi-heart' },
+    down: { direction: 'down', action: props.labels.down?.text ?? 'n/a', color: 'error', icon: 'mdi-close' },
     left: { direction: 'left', action: props.labels.left.text, color: 'warning', icon: 'mdi-clock' },
     right: { direction: 'right', action: props.labels.right.text, color: 'info', icon: 'mdi-share' },
   }
@@ -363,7 +370,17 @@
       if (Math.abs(delta.x) > Math.abs(delta.y)) {
         swipeDirection.value = delta.x > 0 ? 'right' : 'left'
       } else {
-        swipeDirection.value = delta.y > 0 ? 'down' : 'up'
+        const isDown = delta.y > 0
+
+        if (props.labels.up && !isDown) {
+          swipeDirection.value = 'up'
+        } else if (props.labels.down && isDown) {
+          swipeDirection.value = 'down'
+        } else if (delta.x > threshold) {
+          swipeDirection.value = delta.x > 0 ? 'right' : 'left'
+        }else {
+          swipeDirection.value = null
+        }
       }
     } else {
       swipeDirection.value = null
@@ -384,6 +401,15 @@
         direction = delta.x > 0 ? 'right' : 'left'
       } else {
         direction = delta.y > 0 ? 'down' : 'up'
+      }
+
+      if (direction === 'down' && !props.labels.down || direction === 'up' && !props.labels.up) {
+        if (delta.x > threshold) {
+          direction = delta.x > 0 ? 'right' : 'left'
+        } else {
+          swipeReset()
+          return
+        }
       }
 
       emit('swiped', <SwipeEvent>{
