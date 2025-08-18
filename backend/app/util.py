@@ -1,3 +1,6 @@
+import base64
+import hashlib
+import hmac
 import random
 import tarfile
 import zipfile
@@ -6,6 +9,8 @@ import qrcode
 import qrcode.image.styles.moduledrawers.svg
 import qrcode.image.svg
 from rest_framework.renderers import BaseRenderer
+
+from swan import settings
 
 
 def groups(request):
@@ -58,11 +63,14 @@ def extract_file_data(file_path, file_name):
     return file_data
 
 
-def seed_from(user, session, study):
-    if user.username == "anonymous":
-        return f"{session.session_key}--{study}"
-    else:
+def seed_from(user, session: str, study: str):
+    if session is None or session == "":
+        raise Exception("session must be set to a non-empty string")
+
+    if user.is_authenticated:
         return f"{user.id}--{study}"
+    else:
+        return f"{session}--{study}"
 
 
 def deterministic_shuffle(items: list[str], seed):
@@ -72,6 +80,15 @@ def deterministic_shuffle(items: list[str], seed):
     rng.shuffle(result)
 
     return result
+
+
+def create_tag(study: str) -> str:
+    code = hmac.new(settings.HMAC_KEY, study.encode("utf-8"), lambda: hashlib.blake2b(digest_size=settings.HMAC_SIZE))
+    return base64.urlsafe_b64encode(code.digest()).decode("utf-8").rstrip("=")
+
+
+def check_tag(study: str, code: str) -> bool:
+    return create_tag(study) == code
 
 
 def create_qr(data):
@@ -101,4 +118,12 @@ def create_qr(data):
         # embeded_image_path=None,
     )
 
-    return img.to_string(encoding="unicode")
+    xml: str = img.to_string(encoding="unicode")
+
+    if settings.DEBUG:
+        xml = xml.replace(
+            "</svg>",
+            f"<text x='10' y='10' font-size='4' fill='black'>{data[data.index("#") - 1:]}</text></svg>"
+        )
+
+    return xml

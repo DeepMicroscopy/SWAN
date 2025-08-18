@@ -34,6 +34,7 @@ class SolutionAdmin(admin.ModelAdmin):
         JSONField: {'widget': JSONEditorWidget},
     }
 
+
 @admin.register(Ui)
 class UiAdmin(admin.ModelAdmin):
     list_display = ['title']
@@ -41,23 +42,41 @@ class UiAdmin(admin.ModelAdmin):
         JSONField: {'widget': JSONEditorWidget},
     }
 
+
 @admin.register(Study)
 class StudyAdmin(admin.ModelAdmin):
-    list_display = ['title', 'pub_date', 'end_date', 'group', 'dataset', 'ui', 'share', 'export', 'educational']
+    list_display = ['title', 'start', 'end', 'group', 'anonymous', 'educational', 'share', 'export']
+
+    @staticmethod
+    def start(study):
+        return study.pub_date.strftime("%Y-%m-%d")
+
+    @staticmethod
+    def end(study):
+        return study.end_date.strftime("%Y-%m-%d")
 
     @staticmethod
     def share(study):
-        url = reverse("share-users", args=[study.id])
-        return format_html('<a href="{}" target="_blank">QR</a>', url)
+        if study.anonymous:
+            url = reverse("share-anonymous", args=[study.id])
+        else:
+            url = reverse("share-users", args=[study.id])
+
+        return format_html(
+            '<a href="{}" target="_blank">QR</a> / <a href="{}" target="_blank">URL<a/>',
+            url, reverse("share-link", args=[study.id])
+        )
 
     @staticmethod
     def export(study):
         url = reverse("export-csv", args=[study.id])
         return format_html('<a href="{}" target="_blank">CSV</a>', url)
 
-    @staticmethod
-    def educational(study):
+    def educational(self, study) -> bool:
         return study.solution is not None
+
+    educational.boolean = True
+
 
 class ClassificationAdmin(admin.ModelAdmin):
     actions = ["export_csv"]

@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+import hashlib
 import os
 from pathlib import Path
 
@@ -22,6 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", default="django-insecure-y+hye+(pesz^ew6i-m90q0s6&jd7gr72a#n*crc^#i@_xdq5h#")
+HMAC_KEY = hashlib.sha512(SECRET_KEY.encode("utf-8")).digest()
+HMAC_SIZE = 16
 
 # SECURITY WARNING: do not run with debug turned on in production!
 DEBUG = os.environ.get("PRODUCTION", default="false") == "false"
@@ -76,7 +79,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "swan.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -111,13 +113,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -132,7 +130,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
 
 # Custom
 

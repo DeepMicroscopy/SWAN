@@ -74,10 +74,11 @@ class Study(UUIDModel):
     image = models.FileField(upload_to=upload_to_image, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
 
-    pub_date = models.DateTimeField("publication date")
-    end_date = models.DateTimeField("date the study ends")
+    pub_date = models.DateTimeField()
+    end_date = models.DateTimeField()
 
-    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True)
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
+    anonymous = models.BooleanField(default=bool)
     dataset = models.ForeignKey(Dataset, on_delete=models.PROTECT)
 
     ui = models.ForeignKey(Ui, on_delete=models.PROTECT)

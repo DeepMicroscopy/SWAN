@@ -11,12 +11,15 @@ class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
 
+
 class StatusSerializer(serializers.Serializer):
     authenticated = serializers.BooleanField()
     username = serializers.CharField()
 
+
 class DetailSerializer(serializers.Serializer):
     detail = serializers.CharField()
+
 
 @extend_schema(tags=['Auth'])
 class AuthViewSet(viewsets.ViewSet):

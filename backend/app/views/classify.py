@@ -1,4 +1,5 @@
 import base64
+import uuid
 
 import magic
 from django.http import HttpResponse
@@ -7,11 +8,12 @@ from django.utils import timezone
 from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
 from rest_framework import viewsets, status
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
 from app import util
 from app.models import ClassificationUser, ClassificationAnonymous, Classification
-from app.models import Study
+from app.views.util import study_queryset_for_request
 
 
 class ClassifyInputSerializer(serializers.Serializer):
@@ -64,40 +66,54 @@ class ClassifyOutputSerializer(serializers.Serializer):
 class ClassifyViewSet(viewsets.ViewSet):
     queryset = ClassificationUser.objects.all()
 
+    def get_permissions(self):
+        if self.action == "create":
+            return [AllowAny()]
+        else:
+            return [IsAdminUser()]
+
     @extend_schema(
         request=ClassifyInputSerializer,
         responses=ClassifyOutputSerializer,
     )
     def create(self, request):
+        # should have been set by requesting an entry, so error out here
+        if not request.session.session_key:
+            return Response({"detail":"expected a session"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
         serializer = ClassifyInputSerializer(data=request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         data = serializer.validated_data
+        study_id: uuid.UUID = data["study"]
 
-        queryset = Study.objects.filter(group__in=util.groups(request)).select_related("dataset")
-        study = get_object_or_404(queryset, pk=data["study"])
+        if request.user.is_anonymous and not util.check_tag(str(study_id), request.COOKIES.get("anonymous")):
+            return Response({"detail": "invalid authentication tag"}, status=status.HTTP_403_FORBIDDEN)
+
+        queryset = study_queryset_for_request(request)
+        study = get_object_or_404(queryset.select_related("dataset"), pk=study_id)
 
         if data["index"] >= study.dataset.file_count:
             return HttpResponse("index too large", status=400)
 
         items = util.deterministic_shuffle(
             study.dataset.file_list,
-            util.seed_from(request.user, request.session, data["study"])
+            util.seed_from(request.user, request.session.session_key, data["study"])
         )
         file = items[data["index"]]
 
-        if request.user.username == "anonymous":
-            result, created = ClassificationAnonymous.objects.create(
-                date=timezone.now(),
-                session=request.session.session_key,
-                study_id=data["study"], file=file, choice=data["choice"], index=data["index"]
-            )
-        else:
+        if request.user.is_authenticated:
             result = ClassificationUser.objects.create(
                 date=timezone.now(),
                 user=request.user,
+                study_id=data["study"], file=file, choice=data["choice"], index=data["index"]
+            )
+        else:
+            result = ClassificationAnonymous.objects.create(
+                date=timezone.now(),
+                session=request.session.session_key,
                 study_id=data["study"], file=file, choice=data["choice"], index=data["index"]
             )
 
