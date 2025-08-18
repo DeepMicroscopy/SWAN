@@ -19,11 +19,11 @@
 
       <div class="cards-stack position-absolute">
         <div
-          v-for="(card, index) in visibleCards"
+          v-for="(card, i) in visibleCards"
           :key="card.index"
           class="card-wrapper"
-          :class="{ 'active-card': index === 0 }"
-          :style="getCardStyle(index)"
+          :class="{ 'active-card': i === 0 }"
+          :style="getCardStyle(i)"
           @mousedown.prevent="handleSwipeStartMouse"
           @mouseleave.prevent="handleSwipeEnd"
           @mousemove.prevent="handleSwipeMoveMouse"
@@ -34,7 +34,7 @@
         >
           <v-card
             class="card-item elevation-8"
-            :class="{ 'card-swiping': index === 0 && isSwiping }"
+            :class="{ 'card-swiping': i === 0 && isSwiping }"
           >
             <div class="image-container" @wheel.prevent="handleMouseWheel">
               <v-img
@@ -162,7 +162,7 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue'
   import { useRouter } from 'vue-router';
-  import type { UiLabels } from '@/api.ts';
+  import type { UiLabel } from '@/api.ts';
 
   const router = useRouter()
 
@@ -198,7 +198,7 @@
     title?: string
     cards?: Card[]
     index?: number
-    labels?: UiLabels
+    labels?: UiLabel
   }
 
   const props = withDefaults(defineProps<Props>(), {
@@ -218,7 +218,7 @@
       'down': {
         'text': 'n/a',
       },
-    }),
+    } as UiLabel),
   })
 
   const emit = defineEmits<{
@@ -347,7 +347,7 @@
   // Swipe events
   const handleSwipeStartTouch = (e: TouchEvent) => {
     if (e.touches.length === 1) {
-      swipeStart(e.touches[0])
+      swipeStart(e.touches[0]!)
     }
   }
 
@@ -366,7 +366,7 @@
 
   const handleSwipeMoveTouch = (e: TouchEvent) => {
     if (e.touches.length === 1 && isSwiping.value) {
-      swipeMove(e.touches[0])
+      swipeMove(e.touches[0]!)
     }
   }
 
@@ -455,7 +455,7 @@
   // Drag Events
   const handleDragStartTouch = (e: TouchEvent) => {
     if (e.touches.length === 1) {
-      dragStart(e.touches[0])
+      dragStart(e.touches[0]!)
     } else if (e.touches.length === 2) {
       zoomStart(e.touches)
     }
@@ -476,7 +476,7 @@
 
   const handleDragMoveTouch = (e: TouchEvent) => {
     if (e.touches.length === 1 && isDragging.value) {
-      dragMove(e.touches[0])
+      dragMove(e.touches[0]!)
     } else if (e.touches.length === 2) {
       zoomMove(e.touches)
     }
@@ -538,7 +538,7 @@
 
   const distance = (touches: TouchList) => {
     const [touch1, touch2] = touches;
-    return Math.hypot(touch1.clientX - touch2.clientX, touch1.clientY - touch2.clientY);
+    return Math.hypot(touch1!.clientX - touch2!.clientX, touch1!.clientY - touch2!.clientY);
   }
 </script>
 

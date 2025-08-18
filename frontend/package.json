@@ -9,14 +9,16 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "test:ts": "tsc --noEmit",
+    "api": "curl -s http://localhost:8000/api/schema/ | yarn run openapi-typescript -o src/api.v1.ts && eslint src/api.v1.ts --fix"
   },
   "dependencies": {
     "@fontsource/roboto": "5.2.5",
     "@mdi/font": "7.4.47",
-    "axios": "^1.11.0",
     "dompurify": "^3.2.6",
     "markdown-it": "^14.1.0",
+    "openapi-fetch": "^0.14.0",
     "vue": "^3.5.13",
     "vuetify": "^3.8.1"
   },
@@ -29,6 +31,7 @@
     "eslint": "^9.23.0",
     "eslint-config-vuetify": "^3.0.3",
     "npm-run-all2": "^7.0.2",
+    "openapi-typescript": "^7.9.1",
     "pinia": "^3.0.1",
     "sass-embedded": "^1.86.3",
     "typescript": "~5.8.2",

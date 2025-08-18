@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import { useAppStore } from '@/stores/app.ts';
-  import { default as axios } from 'axios';
   import { useRouter } from 'vue-router';
+  import client from '@/client.ts';
 
   const store = useAppStore()
   const router = useRouter()
@@ -14,7 +14,12 @@
   const failureMessage = ref(false)
 
   function login () {
-    axios.post('/v1/auth/login/', { username: username.value, password: password.value })
+    client.POST('/v1/auth/login/', {
+      body: {
+        username: username.value,
+        password: password.value,
+      },
+    })
       .then(() => {
         failureMessage.value = false
         store.logOn()

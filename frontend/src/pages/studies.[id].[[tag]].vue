@@ -5,10 +5,9 @@ meta:
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import type { StudyDetail } from '@/api.ts';
   import type { Card, SwipeEvent } from '@/components/CardSwiper.vue';
-  import { default as axios } from 'axios';
   import { useRoute } from 'vue-router';
+  import client from '@/client.ts';
 
   const route = useRoute<'/studies.[id].[[tag]]'>();
 
@@ -16,26 +15,31 @@ meta:
     document.cookie = `anonymous=${route.params.tag}; path=/; Secure`;
   }
 
-  const study = await axios.get<StudyDetail>(`/v1/studies/${route.params.id}/`);
+  const { data: study, error } = await client.GET('/v1/studies/{id}/', { params: { path: { id: route.params.id } } });
+  if (error) {
+    throw error;
+  }
 
   const result: Card[] = []
-  for (let index = 0; index < study.data.length; index++) {
-    result.push({ index, image: `/v1/studies/${study.data.id}/${index}/` })
+  for (let index = 0; index < study.length; index++) {
+    result.push({ index, image: `/v1/studies/${study.id}/${index}/` })
   }
 
   const cards = ref<Card[]>(result);
-  const index = ref(study.data.index + 1);
+  const index = ref(study.index + 1);
 
   const handleSwipe = (event: SwipeEvent) => {
     console.log(`card "${event.card.index}" swiped ${event.direction}`)
-    axios.post(`/v1/classify/`, {
-      'study': study.data.id,
-      'choice': event.direction,
-      'index': event.card.index,
-    }).then(response => console.log(response.data))
-      .catch(error => {
-        console.log(error)
-      })
+
+    client.POST('/v1/classify/', {
+      body: {
+        study: study.id,
+        choice: event.direction,
+        index: event.card.index,
+      },
+    })
+      .then(response => console.log(response.data))
+      .catch(error => console.log(error))
   }
 </script>
 
@@ -43,8 +47,8 @@ meta:
   <CardSwiper
     :cards="cards"
     :index="index"
-    :labels="study.data.ui.labels"
-    :title="study.data.title"
+    :labels="study.ui.labels"
+    :title="study.title"
     @swiped="handleSwipe"
   />
 </template>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { ref } from 'vue';
-  import { default as axios } from 'axios';
-  import type { StudyList } from '@/api.ts';
   import MarkdownIt from 'markdown-it';
   import DOMPurify from 'dompurify';
+  import client from '@/client.ts';
+  import type { StudyList } from '@/api.ts';
 
   const showDialog = ref(false)
   const dialog = ref<StudyList | null>(null)
@@ -13,9 +13,9 @@
   onMounted(() => {
     console.log('LOAD studies...')
 
-    axios.get('/v1/studies/')
-      .then(function (response) {
-        studies.value = response.data;
+    client.GET('/v1/studies/')
+      .then(response => {
+        studies.value = response.data as StudyList[];
 
         console.log('Studies:')
         studies.value.forEach((study: StudyList) => {
@@ -30,9 +30,7 @@
           console.groupEnd()
         })
       })
-      .catch(function (error) {
-        console.log(error);
-      })
+      .catch(error => console.log(error))
   })
 
   function formatDate (rawDate: string): string {
@@ -43,7 +41,7 @@
     });
   }
 
-  function formatMarkdown (description: string|undefined): string|undefined {
+  function formatMarkdown (description: string|undefined|null): string|undefined {
     if (!description) return;
 
     const md = new MarkdownIt();
@@ -126,8 +124,9 @@
       class="mx-auto"
     >
       <v-img
+        v-if="dialog?.image"
         cover
-        :src="dialog?.image"
+        :src="dialog.image"
       />
       <v-card-title>
         <v-icon icon="mdi-folder-information-outline" />

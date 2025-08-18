@@ -44,18 +44,16 @@
   import { ref } from 'vue'
   import { useAppStore } from '@/stores/app.ts';
   import { useRouter } from 'vue-router';
-  import { default as axios } from 'axios';
+  import client from '@/client.ts';
 
   const store = useAppStore()
   const router = useRouter()
   const drawer = ref(false)
 
   function logoff () {
-    axios.post('/v1/auth/logout/')
-      .catch(function (error) {
-        console.log(error);
-      })
-      .finally(function () {
+    client.POST('/v1/auth/logout/')
+      .catch(error => console.log(error))
+      .finally( () => {
         store.logOff()
         router.push('/login')
       })

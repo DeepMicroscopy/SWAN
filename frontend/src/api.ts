@@ -1,32 +1,5 @@
-export interface StudyList {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  pub_date: string;
-  end_date: string;
-}
+import type { components } from '@/api.v1.ts';
 
-export interface StudyDetail extends StudyList {
-  ui: Ui;
-  length: number;
-  index: number;
-}
-
-export interface Ui {
-  title: string;
-  labels: UiLabels;
-}
-
-export interface UiLabels {
-  left: UiDirection;
-  right: UiDirection;
-  up?: UiDirection;
-  down?: UiDirection;
-}
-
-export interface UiDirection {
-  text: string;
-  color?: string;
-  icon?: string;
-}
+export type Study = components['schemas']['Study'];
+export type StudyList = components['schemas']['StudyList'];
+export type UiLabel = components['schemas']['UiLabel'];
