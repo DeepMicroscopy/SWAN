@@ -27,4 +27,6 @@ export interface UiLabels {
 
 export interface UiDirection {
   text: string;
+  color?: string;
+  icon?: string;
 }

@@ -35,7 +35,7 @@ class ClassifyOutputSerializer(serializers.Serializer):
     study = serializers.UUIDField(source="study_id")
     choice = serializers.CharField()
     index = serializers.IntegerField()
-    education = serializers.SerializerMethodField(required=False, allow_null=True)
+    education = serializers.SerializerMethodField(allow_null=True)
 
     @staticmethod
     def get_education(obj: Classification) -> EducationSerializer:

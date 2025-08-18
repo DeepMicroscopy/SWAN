@@ -250,10 +250,30 @@
 
   // data holder
   const swipeDirections: Record<string, SwipeDirection> = {
-    up: { direction: 'up', action: props.labels.up?.text ?? 'n/a', color: 'success', icon: 'mdi-heart' },
-    down: { direction: 'down', action: props.labels.down?.text ?? 'n/a', color: 'error', icon: 'mdi-close' },
-    left: { direction: 'left', action: props.labels.left.text, color: 'warning', icon: 'mdi-clock' },
-    right: { direction: 'right', action: props.labels.right.text, color: 'info', icon: 'mdi-share' },
+    up: {
+      direction: 'up',
+      action: props.labels.up?.text ?? 'n/a',
+      color: props.labels.up?.color ?? 'white',
+      icon: props.labels.up?.icon ?? 'mdi-arrow-up-bold',
+    },
+    down: {
+      direction: 'down',
+      action: props.labels.down?.text ?? 'n/a',
+      color: props.labels.down?.color ?? 'white',
+      icon: props.labels.down?.icon ?? 'mdi-arrow-down-bold',
+    },
+    left: {
+      direction: 'left',
+      action: props.labels.left.text,
+      color: props.labels.left?.color ?? 'white',
+      icon: props.labels.left?.icon ?? 'mdi-arrow-left-bold',
+    },
+    right: {
+      direction: 'right',
+      action: props.labels.right.text,
+      color: props.labels.right?.color ?? 'white',
+      icon: props.labels.right?.icon ?? 'mdi-arrow-right-bold',
+    },
   }
 
   // Computed

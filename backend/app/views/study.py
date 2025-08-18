@@ -37,13 +37,20 @@ def get_index_for_request(request, pk):
         return result.index
 
 
-class UiSerializer(serializers.HyperlinkedModelSerializer):
-    class UiLabelSerializer(serializers.Serializer):
-        left = serializers.DictField()
-        right = serializers.DictField()
-        up = serializers.DictField(required=False)
-        down = serializers.DictField(required=False)
+class UiDirectionSerializer(serializers.Serializer):
+    text = serializers.CharField()
+    color = serializers.CharField(allow_null=True)
+    icon = serializers.CharField(allow_null=True)
 
+
+class UiLabelSerializer(serializers.Serializer):
+    left = UiDirectionSerializer()
+    right = UiDirectionSerializer()
+    up = UiDirectionSerializer(allow_null=True)
+    down = UiDirectionSerializer(allow_null=True)
+
+
+class UiSerializer(serializers.HyperlinkedModelSerializer):
     labels = UiLabelSerializer()
 
     class Meta:

@@ -58,7 +58,7 @@ class Dataset(UUIDModel):
 
 
 def ui_default():
-    return {'left': {'text': 'left'}, 'right': {'text': 'right'}}
+    return {'left': {'text': 'left', 'icon': None, 'color': None}, 'right': {'text': 'right'}}
 
 
 class Ui(UUIDModel):
