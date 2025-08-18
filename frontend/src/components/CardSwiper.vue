@@ -158,6 +158,7 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue'
   import { useRouter } from 'vue-router';
+  import type { UiLabels } from '@/api.ts';
   const router = useRouter()
 
   // TODO
@@ -191,11 +192,26 @@
   interface Props {
     cards?: Card[]
     index?: number
+    labels?: UiLabels
   }
 
   const props = withDefaults(defineProps<Props>(), {
     cards: () => [],
     index: () => 0,
+    labels: () => ({
+      'left': {
+        'text': 'left',
+      },
+      'right': {
+        'text': 'right',
+      },
+      'up': {
+        'text': 'up',
+      },
+      'down': {
+        'text': 'down',
+      },
+    }),
   })
 
   const emit = defineEmits<{
@@ -227,10 +243,10 @@
 
   // data holder
   const swipeDirections: Record<string, SwipeDirection> = {
-    up: { direction: 'up', action: 'Favorit', color: 'success', icon: 'mdi-heart' },
-    down: { direction: 'down', action: 'Ablehnen', color: 'error', icon: 'mdi-close' },
-    left: { direction: 'left', action: 'Später', color: 'warning', icon: 'mdi-clock' },
-    right: { direction: 'right', action: 'Teilen', color: 'info', icon: 'mdi-share' },
+    up: { direction: 'up', action: props.labels.up?.text ?? 'up', color: 'success', icon: 'mdi-heart' },
+    down: { direction: 'down', action: props.labels.down?.text ?? 'down', color: 'error', icon: 'mdi-close' },
+    left: { direction: 'left', action: props.labels.left.text, color: 'warning', icon: 'mdi-clock' },
+    right: { direction: 'right', action: props.labels.right.text, color: 'info', icon: 'mdi-share' },
   }
 
   // Computed

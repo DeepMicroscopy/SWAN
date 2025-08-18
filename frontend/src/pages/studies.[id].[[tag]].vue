@@ -5,7 +5,7 @@ meta:
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import type { Study } from '@/api.ts';
+  import type { StudyDetail } from '@/api.ts';
   import type { Card, SwipeEvent } from '@/components/CardSwiper.vue';
   import { default as axios } from 'axios';
   import { useRoute } from 'vue-router';
@@ -16,7 +16,7 @@ meta:
     document.cookie = `anonymous=${route.params.tag}; path=/; Secure`;
   }
 
-  const study = await axios.get<Study>(`/v1/studies/${route.params.id}/`);
+  const study = await axios.get<StudyDetail>(`/v1/studies/${route.params.id}/`);
 
   const result: Card[] = []
   for (let index = 0; index < study.data.length; index++) {
@@ -43,6 +43,7 @@ meta:
   <CardSwiper
     :cards="cards"
     :index="index"
+    :labels="study.data.ui.labels"
     @swiped="handleSwipe"
   />
 </template>
