@@ -167,13 +167,10 @@
   const router = useRouter()
 
   // TODO
-  // - clean up even more unused stuff (like active-card)
   // - dragging should be scaled to the zoom factor
   // - double click reset zoom factor
-  // - extract indicators to component (per-ui type)
-  // - extract help menu to component (per-ui type)
-  // - move threshold and config to props
-  // - implement lazy loading for cards (nextCard() -> (card, hasNext)
+  // - move threshold and position to props
+  // - add intro
 
   export interface Card {
     index: number
