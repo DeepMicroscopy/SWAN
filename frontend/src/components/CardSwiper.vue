@@ -91,6 +91,7 @@
 
         <v-btn
           color="white"
+          :disabled="!store.loggedIn"
           icon="mdi-close"
           @click="close"
         />
@@ -163,8 +164,10 @@
   import { computed, ref } from 'vue'
   import { useRouter } from 'vue-router';
   import type { UiLabel } from '@/api.ts';
+  import { useAppStore } from '@/stores/app.ts';
 
   const router = useRouter()
+  const store = useAppStore()
 
   // TODO
   // - dragging should be scaled to the zoom factor
