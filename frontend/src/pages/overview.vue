@@ -68,7 +68,7 @@
       class="text-white"
       cover
       height="250px"
-      src="@/assets/malignant-spindle-cell-neoplasm.jpg"
+      src="@/assets/image-title.jpg"
     >
       <div class="d-flex flex-column h-100">
         <v-card-title class="d-flex ga-2 px-2">
