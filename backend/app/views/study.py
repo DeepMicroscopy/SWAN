@@ -57,8 +57,18 @@ class UiSerializer(serializers.HyperlinkedModelSerializer):
         model = Ui
         fields = ["title", "labels"]
 
+class StudyListSerializer(serializers.HyperlinkedModelSerializer):
+    educational = serializers.SerializerMethodField()
 
-class StudySerializer(serializers.HyperlinkedModelSerializer):
+    @staticmethod
+    def get_educational(study: Study) -> bool:
+        return hasattr(study, "solution")
+
+    class Meta:
+        model = Study
+        fields = ["id", "title", "description", "image", "pub_date", "end_date", "educational"]
+
+class StudySerializer(StudyListSerializer):
     ui = UiSerializer()
     length = serializers.IntegerField(source="dataset.file_count")
     index = serializers.SerializerMethodField()
@@ -69,14 +79,7 @@ class StudySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Study
-        fields = ["id", "title", "description", "image", "pub_date", "end_date", "ui", "length", "index"]
-
-
-class StudyListSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Study
-        fields = ["id", "title", "description", "image", "pub_date", "end_date"]
-
+        fields = ["id", "title", "description", "image", "pub_date", "end_date", "educational", "ui", "length", "index"]
 
 @extend_schema(tags=['Study'])
 class StudyViewSet(viewsets.GenericViewSet):
