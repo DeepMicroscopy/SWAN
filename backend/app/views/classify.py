@@ -8,11 +8,12 @@ from django.utils import timezone
 from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
 from app import util
-from app.models import ClassificationUser, ClassificationAnonymous, Classification
+from app.models import ClassificationUser, ClassificationAnonymous, Classification, Study
 from app.views.util import study_queryset_for_request
 
 
@@ -64,13 +65,43 @@ class ClassifyOutputSerializer(serializers.Serializer):
 
 @extend_schema(tags=['Classify'])
 class ClassifyViewSet(viewsets.ViewSet):
-    queryset = ClassificationUser.objects.all()
+    def get_queryset(self):
+        if self.action == "create":
+            return ClassificationUser.objects.all()
+        elif self.action == "view":
+            return Study.objects.all()
+        else:
+            raise Exception()
 
     def get_permissions(self):
-        if self.action == "create":
+        if self.action == "create" or self.action == "view":
             return [AllowAny()]
         else:
             return [IsAdminUser()]
+
+    @extend_schema(
+        request=None,
+        responses=ClassifyOutputSerializer,
+    )
+    @action(detail=True, url_path='(?P<index>[0-9]+)')
+    def view(self, request, pk=None, index=None):
+        if request.user.is_anonymous and not util.check_tag(str(pk), request.COOKIES.get("anonymous")):
+            return Response({"detail": "invalid authentication tag"}, status=status.HTTP_403_FORBIDDEN)
+
+        queryset = study_queryset_for_request(request)
+        study = get_object_or_404(queryset, pk=pk)
+
+        if request.user.is_authenticated:
+            result = ClassificationUser.objects.filter(user=request.user, study=study, index=index)
+        else:
+            result = ClassificationAnonymous.objects.filter(session=request.session.session_key, study=study, index=index)
+
+        ordered = result.order_by("-date")
+        if ordered.count() == 0:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ClassifyOutputSerializer(ordered.first())
+        return Response(serializer.data)
 
     @extend_schema(
         request=ClassifyInputSerializer,
