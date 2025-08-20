@@ -23,7 +23,4 @@ const client = createClient<paths>()
 
 client.use(csrfMiddleware);
 
-// TODO store
-client.GET('/v1/auth/status/').then(res => console.log(res))
-
 export default client

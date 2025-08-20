@@ -1,10 +1,27 @@
 <template>
-  <v-navigation-drawer v-model="drawer">
+  <v-navigation-drawer v-if="store.loggedIn && drawer">
     <v-list nav>
-      <v-list-item link prepend-icon="mdi-duck" title="SWAN" />
+      <v-list-item link title="SWAN">
+        <template #prepend>
+          <SwanIcon class="mr-4" />
+        </template>
+      </v-list-item>
+
       <v-divider />
+
+      <v-list-item prepend-icon="mdi-home" to="/overview">
+        Home
+      </v-list-item>
+
+      <v-list-item disabled prepend-icon="mdi-account" to="/profile">
+        Profile
+      </v-list-item>
+
+      <v-list-item disabled prepend-icon="mdi-cog" to="/settings">
+        Settings
+      </v-list-item>
     </v-list>
-    <template v-if="store.loggedIn" #append>
+    <template #append>
       <v-divider />
       <v-list-item>
         <template #append>
@@ -27,13 +44,13 @@
   </v-navigation-drawer>
 
   <v-app-bar>
-    <template #prepend>
+    <template v-if="store.loggedIn" #prepend>
       <v-app-bar-nav-icon @click="drawer = !drawer" />
     </template>
-    <v-app-bar-title>SWAN App</v-app-bar-title>
+    <v-app-bar-title>Swipeable Annotations</v-app-bar-title>
   </v-app-bar>
 
-  <v-main>
+  <v-main class="mt-3">
     <router-view />
   </v-main>
 

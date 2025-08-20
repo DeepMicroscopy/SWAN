@@ -9,6 +9,7 @@ import { createRouter, createWebHashHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
 import { useAppStore } from '@/stores/app.ts';
+import client from '@/client.ts';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -32,11 +33,24 @@ router.onError((err, to) => {
 
 router.isReady().then(() => {
   localStorage.removeItem('vuetify:dynamic-reload')
+
+  const store = useAppStore()
+
+  if (store.loggedIn && router.currentRoute.value.name == '/') {
+    client.GET('/v1/auth/status/')
+      .then(res => {
+        if (res.data?.authenticated) {
+          router.push('/overview')
+        }
+      })
+      .catch(error => console.log(error))
+  }
 })
 
 router.beforeEach(to => {
   //Avoid access to the app if not logged in
   const store = useAppStore()
+
   if (!store.loggedIn && to.name !== '/login') {
     if (to.name === '/studies.[id].[[tag]]' && (to.params.tag?.length ?? 0) > 0) {
       return
