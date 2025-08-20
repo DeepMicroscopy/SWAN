@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.csrf import ensure_csrf_cookie
 from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
 from rest_framework import viewsets, status
@@ -33,7 +34,9 @@ class AuthViewSet(viewsets.ViewSet):
             "username": request.user.username if request.user.is_authenticated else None
         })
 
-        return Response(serializer.data)
+        response = Response(serializer.data)
+        ensure_csrf_cookie(lambda r: response)(request._request)
+        return response
 
     @extend_schema(request=LoginSerializer, responses=DetailSerializer)
     @action(detail=False, methods=['post'])
