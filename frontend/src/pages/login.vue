@@ -11,6 +11,7 @@
   const username = ref('')
   const password = ref('')
   const failureMessage = ref(false)
+  const dialog = ref(false)
 
   function login () {
     client.POST('/v1/auth/login/', {
@@ -49,7 +50,7 @@
         <v-text-field
           v-model="username"
           density="compact"
-          placeholder="you@example.com"
+          placeholder="Enter your email"
           prepend-inner-icon="mdi-account"
           variant="solo-filled"
         />
@@ -58,8 +59,7 @@
           <a
             class="text-caption text-decoration-none text-blue"
             href="#"
-            rel="noopener noreferrer"
-            target="_blank"
+            @click.prevent="dialog = true"
           >
             Forgot login password?</a>
         </div>
@@ -85,6 +85,25 @@
         </v-btn>
       </v-form>
     </v-sheet>
+
+    <v-dialog
+      v-model="dialog"
+      width="auto"
+    >
+      <v-card
+        prepend-icon="mdi-security"
+        text="Please send an email to the administrator."
+        title="Contact Administrator"
+      >
+        <template #actions>
+          <v-btn
+            class="ms-auto"
+            text="Ok"
+            @click="dialog = false"
+          />
+        </template>
+      </v-card>
+    </v-dialog>
   </v-container>
 
 </template>
