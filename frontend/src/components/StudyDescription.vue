@@ -51,8 +51,9 @@
       class="mx-auto"
     >
       <v-img
+        v-if="props.study?.image"
         cover
-        :src="props.study!.image!"
+        :src="props.study.image"
       />
       <v-card-title>
         <v-icon icon="mdi-folder-information-outline" />
