@@ -8,7 +8,6 @@
   const router = useRouter()
 
   const visible = ref(false)
-  const rememberMe = ref(false)
   const username = ref('')
   const password = ref('')
   const failureMessage = ref(false)
@@ -74,7 +73,6 @@
           variant="solo-filled"
           @click:append-inner="visible = !visible"
         />
-        <v-checkbox v-model="rememberMe" color="indigo" label="Remember me" />
         <v-btn
           block
           color="indigo"
