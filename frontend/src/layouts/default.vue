@@ -1,5 +1,8 @@
 <template>
-  <v-navigation-drawer v-if="store.loggedIn && drawer">
+  <v-navigation-drawer
+    v-if="store.loggedIn && drawer"
+    v-model="drawer"
+  >
     <v-list nav>
       <v-list-item link title="SWAN">
         <template #prepend>
