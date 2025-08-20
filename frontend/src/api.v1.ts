@@ -88,6 +88,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/classify/{id}/{index}/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['v1_classify_retrieve'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/datasets/': {
     parameters: {
       query?: never;
@@ -310,6 +326,7 @@ export interface components {
       pub_date: string;
       /** Format: date-time */
       end_date: string;
+      readonly educational: boolean;
       ui: components['schemas']['Ui'];
       length: number;
       readonly index: number;
@@ -325,6 +342,7 @@ export interface components {
       pub_date: string;
       /** Format: date-time */
       end_date: string;
+      readonly educational: boolean;
     };
     Ui: {
       title: string;
@@ -462,6 +480,29 @@ export interface operations {
     };
     responses: {
       201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ClassifyOutput'];
+        };
+      };
+    };
+  };
+  v1_classify_retrieve: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description A UUID string identifying this study. */
+        id: string;
+        index: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
         headers: {
           [name: string]: unknown;
         };

@@ -71,7 +71,7 @@
       height="250px"
       src="@/assets/image-title.jpg"
     >
-      <v-card-title class="text-white text-center">Your Studies</v-card-title>
+      <v-card-title class="text-white">Your Studies</v-card-title>
     </v-img>
 
     <v-list lines="two">
@@ -86,7 +86,7 @@
             class="mr-3"
             color="blue"
             density="default"
-            icon="mdi-clipboard-text"
+            :icon="study.educational ? 'mdi-clipboard-text' : 'mdi-microscope'"
             :to="{ name: '/studies.[id].[[tag]]', params: { id: study.id } }"
           />
         </template>
