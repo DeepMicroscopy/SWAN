@@ -65,23 +65,13 @@
     max-width="375"
   >
     <v-img
-      class="text-white"
+      class="text-white align-end"
       cover
+      gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
       height="250px"
       src="@/assets/image-title.jpg"
     >
-      <div class="d-flex flex-column h-100">
-        <v-card-title class="d-flex ga-2 px-2">
-          <v-btn color="indigo-darken-2" icon="mdi-chevron-left" variant="text" />
-          <v-spacer />
-          <v-btn color="indigo-darken-2" icon="mdi-pencil" variant="text" />
-          <v-btn color="indigo-darken-2" icon="mdi-dots-vertical" variant="text" />
-        </v-card-title>
-
-        <v-card-title class="pb-6 text-center text-indigo-darken-2">
-          <div class="text-h3 font-weight-black mt-5">Your Studies</div>
-        </v-card-title>
-      </div>
+      <v-card-title class="text-white text-center">Your Studies</v-card-title>
     </v-img>
 
     <v-list lines="two">
