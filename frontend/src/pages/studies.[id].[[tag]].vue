@@ -27,6 +27,11 @@ meta:
 
   const cards = ref<Card[]>(result);
   const index = ref(study.index + 1);
+  const showStudy = ref(false)
+
+  if (index.value === 0) {
+    showStudy.value = true
+  }
 
   const handleSwipe = (event: SwipeEvent) => {
     console.log(`card "${event.card.index}" swiped ${event.direction}`)
@@ -51,4 +56,6 @@ meta:
     :title="study.title"
     @swiped="handleSwipe"
   />
+
+  <StudyDescription :show="showStudy" :study="study" @close="showStudy = false" />
 </template>

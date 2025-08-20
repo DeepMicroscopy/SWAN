@@ -1,14 +1,13 @@
 <script setup lang="ts">
   import { ref } from 'vue';
-  import MarkdownIt from 'markdown-it';
-  import DOMPurify from 'dompurify';
   import client from '@/client.ts';
   import type { StudyList } from '@/api.ts';
+  import StudyDescription from '@/components/StudyDescription.vue';
 
-  const showDialog = ref(false)
-  const dialog = ref<StudyList | null>(null)
 
   const studies = ref<StudyList[]>([])
+  const study = ref<StudyList | null>(null)
+  const showStudy = ref(false)
 
   onMounted(() => {
     console.log('LOAD studies...')
@@ -41,20 +40,9 @@
     });
   }
 
-  function formatMarkdown (description: string|undefined|null): string|undefined {
-    if (!description) return;
-
-    const md = new MarkdownIt();
-    console.group('des')
-    console.log(md.render(description))
-    console.log(DOMPurify.sanitize(md.render(description)))
-    console.groupEnd()
-    return DOMPurify.sanitize(md.render(description));
-  }
-
-  function setDialog (study: StudyList) {
-    showDialog.value = true
-    dialog.value = study
+  function setStudy (s: StudyList) {
+    study.value = s
+    showStudy.value = true
   }
 
 </script>
@@ -96,7 +84,7 @@
             color="grey-lighten-1"
             icon="mdi-information"
             variant="text"
-            @click="setDialog(study)"
+            @click="setStudy(study)"
           />
         </template>
 
@@ -106,36 +94,7 @@
     </v-list>
   </v-card>
 
-  <v-dialog
-    v-model="showDialog"
-    width="auto"
-  >
-    <v-card
-      class="mx-auto"
-    >
-      <v-img
-        v-if="dialog?.image"
-        cover
-        :src="dialog.image"
-      />
-      <v-card-title>
-        <v-icon icon="mdi-folder-information-outline" />
-        Study Description
-      </v-card-title>
-      <v-card-text class="ma-3">
-        <div v-html="formatMarkdown(dialog?.description)" />
-      </v-card-text>
-
-      <template #actions>
-        <v-btn
-          class="ms-auto"
-          text="Ok"
-          @click="showDialog = false"
-        />
-      </template>
-    </v-card>
-  </v-dialog>
-
+  <StudyDescription :show="showStudy" :study="study" @close="showStudy = false" />
 </template>
 
 <style scoped lang="sass">

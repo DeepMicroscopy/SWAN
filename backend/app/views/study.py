@@ -32,7 +32,7 @@ def get_index_for_request(request, pk):
         ).order_by("-index").first()
 
     if result is None:
-        return 0
+        return -1
     else:
         return result.index
 
@@ -110,7 +110,7 @@ class StudyViewSet(viewsets.GenericViewSet):
             )
         )
 
-        serializer = StudyListSerializer(queryset, many=True)
+        serializer = StudyListSerializer(queryset, many=True, context={"request": request})
         return Response(serializer.data)
 
     @staticmethod
