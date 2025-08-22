@@ -27,12 +27,6 @@
       'right': {
         'text': 'n/a',
       },
-      'up': {
-        'text': 'n/a',
-      },
-      'down': {
-        'text': 'n/a',
-      },
     } as UiLabel),
   })
 

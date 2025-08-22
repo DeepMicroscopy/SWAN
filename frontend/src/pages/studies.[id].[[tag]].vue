@@ -8,6 +8,7 @@ meta:
   import type { Card, SwipeEvent } from '@/components/ImageSwiper.vue';
   import { useRoute } from 'vue-router';
   import client from '@/client.ts';
+  import type { UiLabel } from '@/api.ts';
 
   const route = useRoute<'/studies.[id].[[tag]]'>();
 
@@ -29,14 +30,18 @@ meta:
   const index = ref(study.index + 1);
   const showStudy = ref(false)
 
-  const decision = ref('')
+  const decisionText = ref('')
+  const decisionIcon = ref('mdi-checkbox-blank-off-outline')
   const showDecision = ref(false)
 
   if (index.value === 0) {
     showStudy.value = true
   }
 
-  const handleSwipe = (event: SwipeEvent) => {
+  const forward = (event: SwipeEvent) => {
+    index.value++
+    showDecision.value = false
+
     console.log(`card "${event.card.index}" swiped ${event.direction}`)
 
     client.POST('/v1/classify/', {
@@ -46,7 +51,43 @@ meta:
         index: event.card.index,
       },
     })
-      .then(response => console.log(response.data))
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(error => console.log(error))
+  }
+
+  function getIcon (choice: string):string {
+    return {
+      up: 'mdi-arrow-up-bold',
+      down: 'mdi-arrow-down-bold',
+      left: 'mdi-arrow-left-bold',
+      right: 'mdi-arrow-right-bold',
+    }[choice] ?? 'mdi-checkbox-blank-off-outline'
+  }
+
+  const backward = () => {
+    index.value--
+
+    client.GET('/v1/classify/{id}/{index}/', {
+      params: {
+        path: {
+          id: study.id,
+          index: index.value.toString(),
+        },
+      },
+    })
+      .then(response => {
+        if (!response.data) return
+
+        if (response.data.choice in study.ui.labels) {
+          const label = study.ui.labels[response.data.choice as keyof UiLabel]
+
+          showDecision.value = true
+          decisionText.value = `${label?.text}`
+          decisionIcon.value = label?.icon ?? getIcon(response.data.choice)
+        }
+      })
       .catch(error => console.log(error))
   }
 </script>
@@ -57,10 +98,24 @@ meta:
     :index="index"
     :labels="study.ui.labels"
     :title="study.title"
-    @swiped="handleSwipe"
+    @swiped="forward"
   />
 
   <StudyDescription :show="showStudy" :study="study" @close="showStudy = false" />
 
-  <PastDecision class="mb-6" :show="showDecision" :text="decision" />
+  <PastDecision
+    class="mb-6"
+    :icon="decisionIcon"
+    :show="showDecision"
+    :text="decisionText"
+    @close="showDecision = false"
+  />
+
+  <SwiperToolbar
+    :index="index"
+    :labels="study.ui.labels"
+    :title="study.title"
+    :total="cards.length"
+    @back="backward"
+  />
 </template>

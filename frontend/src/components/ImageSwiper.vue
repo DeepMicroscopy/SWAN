@@ -56,14 +56,6 @@
         </div>
       </div>
     </div>
-
-    <SwiperToolbar
-      :index="currentIndex"
-      :labels="labels"
-      :title="title"
-      :total="cards.length"
-      @back="currentIndex-- && zoomReset()"
-    />
   </v-container>
 </template>
 
@@ -118,20 +110,12 @@
       'right': {
         'text': 'n/a',
       },
-      'up': {
-        'text': 'n/a',
-      },
-      'down': {
-        'text': 'n/a',
-      },
     } as UiLabel),
   })
 
   const emit = defineEmits<{
     swiped: [event: SwipeEvent]
   }>()
-
-  const currentIndex = ref(props.index)
 
   // Card swipe
   const isSwiping = ref(false)
@@ -184,7 +168,7 @@
 
   // Computed
   const visibleCards = computed(() => {
-    return props.cards.slice(currentIndex.value, currentIndex.value + 2)
+    return props.cards.slice(props.index, props.index + 2)
   })
 
   // Methods
@@ -214,13 +198,6 @@
       transformOrigin: 'center center',
       transition: isDragging.value ? 'none' : 'transform 0.3s ease',
     }
-  }
-
-  const forward = () => {
-    currentIndex.value++
-
-    // unclear if needed
-    zoomReset()
   }
 
   const getSwipeIcon = (direction: string) => {
@@ -329,11 +306,9 @@
       }
 
       emit('swiped', <SwipeEvent>{
-        card: props.cards[currentIndex.value],
+        card: props.cards[props.index],
         direction,
       })
-
-      forward()
     }
 
     swipeReset();

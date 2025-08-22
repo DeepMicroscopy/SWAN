@@ -2,11 +2,13 @@
   interface Props {
     show?: boolean
     text?: string
+    icon?: string
   }
 
   const props = withDefaults(defineProps<Props>(), {
     show: () => false,
     text: () => '',
+    icon: () => '',
   })
 
   const emit = defineEmits<{
@@ -26,14 +28,19 @@
 <template>
   <v-snackbar
     v-model="showSnackbar"
-    color="green"
+    :close-on-back="false"
+    color="pink-accent-4"
+    timeout="-1"
   >
+    You classified:
+    <v-icon>{{ icon }}</v-icon>
     {{ text }}
 
     <template #actions>
       <v-btn
         color="white"
-        variant="text"
+        rounded="m"
+        variant="outlined"
         @click="showSnackbar = false"
       >
         Close
