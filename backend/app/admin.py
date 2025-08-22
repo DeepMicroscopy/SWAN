@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django_json_widget.widgets import JSONEditorWidget
 
+from app import util
 from app.models import User, Dataset, Study, ClassificationUser, ClassificationAnonymous, Solution, Ui
 
 django_engine = engines['django']
@@ -75,12 +76,14 @@ class StudyAdmin(admin.ModelAdmin):
     def share(study):
         if study.anonymous:
             url = reverse("share-anonymous", args=[study.id])
+            link = f"/#/studies/{study.id}/{util.create_tag(str(study.id))}"
         else:
             url = reverse("share-users", args=[study.id])
+            link = f"/#/studies/{study.id}"
 
         return format_html(
             '<a href="{}" target="_blank">QR</a> / <a href="{}" target="_blank">URL<a/>',
-            url, reverse("share-link", args=[study.id])
+            url, link
         )
 
     @staticmethod

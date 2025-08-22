@@ -10,7 +10,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
     FetchError: typeof import('./components/FetchError.vue')['default']
-    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     ImageSwiper: typeof import('./components/ImageSwiper.vue')['default']
     PastDecision: typeof import('./components/PastDecision.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

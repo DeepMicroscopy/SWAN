@@ -187,23 +187,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  '/v1/share/{study}/link/': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description A link to this study */
-    get: operations['v1_share_link_retrieve'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/v1/share/{study}/users/': {
     parameters: {
       query?: never;
@@ -598,27 +581,6 @@ export interface operations {
     };
   };
   v1_share_anonymous_retrieve: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        study: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'image/svg+xml': string;
-        };
-      };
-    };
-  };
-  v1_share_link_retrieve: {
     parameters: {
       query?: never;
       header?: never;
