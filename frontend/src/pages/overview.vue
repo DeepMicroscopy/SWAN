@@ -3,18 +3,25 @@
   import client from '@/client.ts';
   import type { StudyList } from '@/api.ts';
   import StudyDescription from '@/components/StudyDescription.vue';
+  import { type ErrorData, getError, setError } from '@/util/fetch-errors.ts';
 
 
   const studies = ref<StudyList[]>([])
   const study = ref<StudyList | null>(null)
   const showStudy = ref(false)
+  const error = ref<ErrorData>(getError())
 
   onMounted(() => {
     console.log('LOAD studies...')
 
     client.GET('/v1/studies/')
-      .then(response => {
-        studies.value = response.data as StudyList[];
+      .then(result => {
+        if (!result.response.ok) {
+          setError(error.value, result.error, result.response)
+          return
+        }
+
+        studies.value = result.data as StudyList[];
 
         console.log('Studies:')
         studies.value.forEach((study: StudyList) => {
@@ -29,7 +36,7 @@
           console.groupEnd()
         })
       })
-      .catch(error => console.log(error))
+      .catch(err => console.log(err))
   })
 
   function formatDate (rawDate: string): string {
@@ -95,6 +102,8 @@
   </v-card>
 
   <StudyDescription :show="showStudy" :study="study" @close="showStudy = false" />
+
+  <FetchError :code="error.code" :show="error.show" :text="error.text" @close="error.show = false" />
 </template>
 
 <style scoped lang="sass">

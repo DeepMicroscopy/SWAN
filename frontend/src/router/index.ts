@@ -36,10 +36,12 @@ router.isReady().then(() => {
 
   const store = useAppStore()
 
-  if (store.loggedIn && router.currentRoute.value.name == '/') {
+  if (store.loggedIn) {
     client.GET('/v1/auth/status/')
       .then(res => {
-        if (res.data?.authenticated) {
+        if (!res.data?.authenticated) {
+          router.push('/login')
+        } else if (router.currentRoute.value.name === '/') {
           router.push('/overview')
         }
       })
