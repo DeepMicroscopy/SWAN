@@ -13,7 +13,7 @@ from rest_framework.response import Response
 
 from app import util
 from app.models import Study, ClassificationAnonymous, ClassificationUser, Ui
-from app.views.util import study_queryset_for_request
+from app.views.util import study_queryset_for_request, session_for_request
 from swan import settings
 
 
@@ -27,7 +27,7 @@ def get_index_for_request(request, pk):
     else:
         result = ClassificationAnonymous.objects.filter(
             study=pk,
-            session=request.session.session_key,
+            session=session_for_request(request),
             study__group__in=util.groups(request)
         ).order_by("-index").first()
 
@@ -131,10 +131,6 @@ class StudyViewSet(viewsets.GenericViewSet):
     )
     @action(detail=True, url_path="(?P<index>[0-9]+)", renderer_classes=[util.FileRenderer])
     def entry(self, request, pk=None, index=None):
-        # ensure session exists for deterministic_shuffle
-        if not request.session.session_key:
-            request.session.create()
-
         if request.user.is_anonymous and not util.check_tag(pk, request.COOKIES.get("anonymous")):
             return Response({"detail": "invalid authentication tag"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -147,7 +143,7 @@ class StudyViewSet(viewsets.GenericViewSet):
 
         items = util.deterministic_shuffle(
             study.dataset.file_list,
-            util.seed_from(request.user, request.session.session_key, pk)
+            util.seed_from(request.user, session_for_request(request), pk)
         )
         file_data = util.extract_file_data(os.path.join(settings.MEDIA_ROOT, study.dataset.archive.path), items[index])
 

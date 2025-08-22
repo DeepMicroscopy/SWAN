@@ -1,3 +1,5 @@
+import uuid
+
 from django.db.models import Q
 
 from app import util
@@ -9,3 +11,15 @@ def study_queryset_for_request(request):
         return Study.objects.filter(Q(group__in=util.groups(request)) | Q(group__isnull=True))
     else:
         return Study.objects.filter(anonymous=True)
+
+
+def session_for_request(request) -> str:
+    if (
+            not request.session.session_key
+            or not "anonymous" in request.session
+            or not request.session["anonymous"]
+    ):
+        request.session.create()
+        request.session["anonymous"] = uuid.uuid4().hex
+
+    return request.session["anonymous"]

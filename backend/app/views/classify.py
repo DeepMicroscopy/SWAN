@@ -14,7 +14,7 @@ from rest_framework.response import Response
 
 from app import util
 from app.models import ClassificationUser, ClassificationAnonymous, Classification, Study
-from app.views.util import study_queryset_for_request
+from app.views.util import study_queryset_for_request, session_for_request
 
 
 class ClassifyInputSerializer(serializers.Serializer):
@@ -94,7 +94,7 @@ class ClassifyViewSet(viewsets.ViewSet):
         if request.user.is_authenticated:
             result = ClassificationUser.objects.filter(user=request.user, study=study, index=index)
         else:
-            result = ClassificationAnonymous.objects.filter(session=request.session.session_key, study=study, index=index)
+            result = ClassificationAnonymous.objects.filter(session=session_for_request(request), study=study, index=index)
 
         ordered = result.order_by("-date")
         if ordered.count() == 0:
@@ -108,10 +108,6 @@ class ClassifyViewSet(viewsets.ViewSet):
         responses=ClassifyOutputSerializer,
     )
     def create(self, request):
-        # should have been set by requesting an entry, so error out here
-        if not request.session.session_key:
-            return Response({"detail":"expected a session"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
         serializer = ClassifyInputSerializer(data=request.data)
 
         if not serializer.is_valid():
@@ -131,7 +127,7 @@ class ClassifyViewSet(viewsets.ViewSet):
 
         items = util.deterministic_shuffle(
             study.dataset.file_list,
-            util.seed_from(request.user, request.session.session_key, data["study"])
+            util.seed_from(request.user, session_for_request(request), data["study"])
         )
         file = items[data["index"]]
 
@@ -144,7 +140,7 @@ class ClassifyViewSet(viewsets.ViewSet):
         else:
             result = ClassificationAnonymous.objects.create(
                 date=timezone.now(),
-                session=request.session.session_key,
+                session=session_for_request(request),
                 study_id=data["study"], file=file, choice=data["choice"], index=data["index"]
             )
 
