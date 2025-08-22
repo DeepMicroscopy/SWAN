@@ -50,27 +50,16 @@ class UiAdmin(admin.ModelAdmin):
 @admin.register(Study)
 class StudyAdmin(admin.ModelAdmin):
     list_display = [
-        'title', 'created', 'updated', 'group',
-        'start', 'end', 'anonymous', 'educational',
-        'share', 'export'
+        'title', 'group', 'pub_date', 'end_date',
+        'anonymous', 'educational', 'share', 'export',
+        'created_at', 'updated_at',
     ]
     ordering = ['-updated_at']
 
-    @staticmethod
-    def created(study):
-        return study.created_at.strftime("%Y-%m-%d")
+    def educational(self, study) -> bool:
+        return study.solution is not None
 
-    @staticmethod
-    def updated(study):
-        return study.updated_at.strftime("%Y-%m-%d")
-
-    @staticmethod
-    def start(study):
-        return study.pub_date.strftime("%Y-%m-%d")
-
-    @staticmethod
-    def end(study):
-        return study.end_date.strftime("%Y-%m-%d")
+    educational.boolean = True
 
     @staticmethod
     def share(study):
@@ -91,10 +80,10 @@ class StudyAdmin(admin.ModelAdmin):
         url = reverse("export-csv", args=[study.id])
         return format_html('<a href="{}" target="_blank">CSV</a>', url)
 
-    def educational(self, study) -> bool:
-        return study.solution is not None
-
-    educational.boolean = True
+    class Media:
+        css = {
+            "all": ("admin/css/wide_table.css",)
+        }
 
 
 class ClassificationAdmin(admin.ModelAdmin):

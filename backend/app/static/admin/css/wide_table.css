@@ -1,0 +1,9 @@
+.change-list .results {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.change-list .results table {
+    table-layout: auto;
+    white-space: nowrap;
+}

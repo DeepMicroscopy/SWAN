@@ -117,13 +117,17 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
+FORMAT_MODULE_PATH = [
+    "swan.formats"
+]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "static"
 STATICFILES_DIRS = [
-    BASE_DIR / ".." / "frontend" / "dist"
+    BASE_DIR / ".." / "frontend" / "dist",
 ]
 
 # Default primary key field type

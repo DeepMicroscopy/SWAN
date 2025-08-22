@@ -81,8 +81,8 @@ class Study(UUIDModel, DecoratorMixin):
     image = models.ImageField(upload_to=upload_to_image, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
 
-    pub_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    pub_date = models.DateTimeField("Start")
+    end_date = models.DateTimeField("End")
 
     group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
     anonymous = models.BooleanField(default=bool)
