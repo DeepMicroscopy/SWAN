@@ -91,6 +91,8 @@
 
 <style scoped lang="scss">
 .min-width-images {
+  min-width: 350px;
+
   @media (max-width: 425px) {
     min-width: 300px;
   }
@@ -98,8 +100,6 @@
   @media (max-width: 375px) {
     min-width: 250px;
   }
-
-  min-width: 350px;
 
   @media (min-width: 1200px) {
     min-width: 425px;
