@@ -68,8 +68,6 @@ meta:
           return
         }
 
-        console.log(result.data)
-
         if (result.data?.education) {
           currentImage.value = cards.value[index.value - 1]?.image ?? ''
           education.value = result.data?.education

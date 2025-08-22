@@ -12,8 +12,6 @@
   const error = ref<ErrorData>(getError())
 
   onMounted(() => {
-    console.log('LOAD studies...')
-
     client.GET('/v1/studies/')
       .then(result => {
         if (!result.response.ok) {
@@ -22,19 +20,6 @@
         }
 
         studies.value = result.data as StudyList[];
-
-        console.log('Studies:')
-        studies.value.forEach((study: StudyList) => {
-          console.group(`id: ${study.id}`)
-
-          const entries = Object.entries(study)
-
-          for (const key in entries) {
-            console.log(key + ':', entries[key])
-          }
-
-          console.groupEnd()
-        })
       })
       .catch(err => console.log(err))
   })
