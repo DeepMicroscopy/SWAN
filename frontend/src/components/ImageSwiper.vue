@@ -57,118 +57,19 @@
       </div>
     </div>
 
-    <v-container class="pt-2" width="auto">
-      <v-progress-linear
-        class="progress-bar"
-        color="green"
-        :model-value="progress"
-        rounded
-      />
-
-      <v-toolbar
-        class="pa-2"
-        color="rgba(0,0,0,0.5)"
-        density="compact"
-        rounded
-      >
-        <v-btn
-          color="white"
-          :disabled="currentIndex === 0"
-          icon="mdi-arrow-left"
-          @click="backward"
-        />
-
-        <v-spacer />
-
-        <p>{{ props.title }}</p>
-
-        <v-btn
-          color="white"
-          icon="mdi-help-circle"
-          @click="showHelp = true"
-        />
-
-        <v-spacer />
-
-        <v-btn
-          color="white"
-          :disabled="!store.loggedIn"
-          icon="mdi-close"
-          @click="close"
-        />
-      </v-toolbar>
-    </v-container>
-
-    <v-dialog v-model="showHelp" width="auto">
-      <v-card>
-        <v-card-title class="text-h5">
-          <v-icon class="mr-2">mdi-help-circle</v-icon>
-
-          Help
-        </v-card-title>
-
-        <v-card-text>
-          <v-list>
-            <v-list-subheader>User Controls</v-list-subheader>
-
-            <v-list-subheader inset>Swipe or Drag</v-list-subheader>
-            <v-list-item
-              v-if="props.labels.up"
-              prepend-icon="mdi-arrow-up"
-              :subtitle="`Classify as ${props.labels.up.text}`"
-              title="Swipe Up"
-            />
-            <v-list-item
-              v-if="props.labels.down"
-              prepend-icon="mdi-arrow-down"
-              :subtitle="`Classify as ${props.labels.down.text}`"
-              title="Swipe Down"
-            />
-            <v-list-item
-              prepend-icon="mdi-arrow-left"
-              :subtitle="`Classify as ${props.labels.left.text}`"
-              title="Swipe Left"
-            />
-            <v-list-item
-              prepend-icon="mdi-arrow-right"
-              :subtitle="`Classify as ${props.labels.right.text}`"
-              title="Swipe Right"
-            />
-
-            <v-divider />
-
-            <v-list-subheader inset>Inspect</v-list-subheader>
-            <v-list-item
-              prepend-icon="mdi-magnify"
-              subtitle="Pinch or Mouse-Wheel"
-              title="Zoom"
-            />
-            <v-list-item
-              prepend-icon="mdi-magnify-expand"
-              subtitle="Double-Tap or -Click"
-              title="Reset"
-            />
-          </v-list>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" @click="showHelp = false">
-            OK
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <SwiperToolbar
+      :index="currentIndex"
+      :labels="labels"
+      :title="title"
+      :total="cards.length"
+      @back="currentIndex-- && zoomReset()"
+    />
   </v-container>
 </template>
 
 <script setup lang="ts">
   import { computed, ref } from 'vue'
-  import { useRouter } from 'vue-router';
   import type { UiLabel } from '@/api.ts';
-  import { useAppStore } from '@/stores/app.ts';
-
-  const router = useRouter()
-  const store = useAppStore()
 
   // TODO
   // - dragging should be scaled to the zoom factor
@@ -231,7 +132,6 @@
   }>()
 
   const currentIndex = ref(props.index)
-  const showHelp = ref(false)
 
   // Card swipe
   const isSwiping = ref(false)
@@ -287,10 +187,6 @@
     return props.cards.slice(currentIndex.value, currentIndex.value + 2)
   })
 
-  const progress = computed(() => {
-    return 100 * (currentIndex.value / props.cards.length)
-  })
-
   // Methods
   const getCardStyle = (index: number) => {
     const baseTransform = `translateZ(${-index * 10}px) scale(${1 - index * 0.05})`
@@ -325,17 +221,6 @@
 
     // unclear if needed
     zoomReset()
-  }
-
-  const backward = () => {
-    currentIndex.value--
-
-    // unclear if needed
-    zoomReset()
-  }
-
-  const close = () => {
-    router.back()
   }
 
   const getSwipeIcon = (direction: string) => {

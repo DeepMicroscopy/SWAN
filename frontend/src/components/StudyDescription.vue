@@ -17,10 +17,6 @@
     close: [event: void]
   }>()
 
-  console.log(props)
-  console.log(props.study)
-  console.log(props.study?.image)
-
   const showStudy = computed({
     get () {
       return props.show

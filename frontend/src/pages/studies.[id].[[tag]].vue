@@ -5,7 +5,7 @@ meta:
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import type { Card, SwipeEvent } from '@/components/CardSwiper.vue';
+  import type { Card, SwipeEvent } from '@/components/ImageSwiper.vue';
   import { useRoute } from 'vue-router';
   import client from '@/client.ts';
 
@@ -29,6 +29,9 @@ meta:
   const index = ref(study.index + 1);
   const showStudy = ref(false)
 
+  const decision = ref('')
+  const showDecision = ref(false)
+
   if (index.value === 0) {
     showStudy.value = true
   }
@@ -49,7 +52,7 @@ meta:
 </script>
 
 <template>
-  <CardSwiper
+  <ImageSwiper
     :cards="cards"
     :index="index"
     :labels="study.ui.labels"
@@ -58,4 +61,6 @@ meta:
   />
 
   <StudyDescription :show="showStudy" :study="study" @close="showStudy = false" />
+
+  <PastDecision class="mb-6" :show="showDecision" :text="decision" />
 </template>

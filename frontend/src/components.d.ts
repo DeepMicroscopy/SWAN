@@ -11,9 +11,13 @@ declare module 'vue' {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
     CardSwiper: typeof import('./components/CardSwiper.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    ImageSwiper: typeof import('./components/ImageSwiper.vue')['default']
+    PastDecision: typeof import('./components/PastDecision.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     StudyDescription: typeof import('./components/StudyDescription.vue')['default']
     SwanIcon: typeof import('./components/SwanIcon.vue')['default']
+    SwiperHelp: typeof import('./components/SwiperHelp.vue')['default']
+    SwiperToolbar: typeof import('./components/SwiperToolbar.vue')['default']
   }
 }
