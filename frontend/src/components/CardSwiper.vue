@@ -24,6 +24,7 @@
           class="card-wrapper"
           :class="{ 'active-card': i === 0 }"
           :style="getCardStyle(i)"
+          @dblclick="zoomReset"
           @mousedown.prevent="handleSwipeStartMouse"
           @mouseleave.prevent="handleSwipeEnd"
           @mousemove.prevent="handleSwipeMoveMouse"
@@ -171,9 +172,12 @@
 
   // TODO
   // - dragging should be scaled to the zoom factor
-  // - double click reset zoom factor
-  // - move threshold and position to props
+  // - move threshold and position to user-settings
   // - add intro
+
+  // in ms
+  const thresholdSwipe = 100
+  const thresholdDoubleTap = 500
 
   export interface Card {
     index: number
@@ -247,6 +251,7 @@
   const isZooming = ref(false)
   const imageZoom = ref(1)
   const currentDistance = ref(0)
+  const lastTap = ref(Date.now())
 
   // data holder
   const swipeDirections: Record<string, SwipeDirection> = {
@@ -398,7 +403,7 @@
           swipeDirection.value = 'down'
         } else if (delta.x > threshold) {
           swipeDirection.value = delta.x > 0 ? 'right' : 'left'
-        }else {
+        } else {
           swipeDirection.value = null
         }
       }
@@ -408,13 +413,18 @@
   }
 
   const handleSwipeEnd = () => {
+    if ((Date.now() - lastTap.value) < thresholdDoubleTap) {
+      zoomReset()
+      return
+    } else {
+      lastTap.value = Date.now()
+    }
+
     if (!isSwiping.value) return
 
     const delta = { x: currentX.value - startX.value, y: currentY.value - startY.value }
 
-    const threshold = 100
-
-    if (Math.abs(delta.x) > threshold || Math.abs(delta.y) > threshold) {
+    if (Math.abs(delta.x) > thresholdSwipe || Math.abs(delta.y) > thresholdSwipe) {
       let direction
 
       if (Math.abs(delta.x) > Math.abs(delta.y)) {
@@ -424,7 +434,7 @@
       }
 
       if (direction === 'down' && !props.labels.down || direction === 'up' && !props.labels.up) {
-        if (delta.x > threshold) {
+        if (delta.x > thresholdSwipe) {
           direction = delta.x > 0 ? 'right' : 'left'
         } else {
           swipeReset()
