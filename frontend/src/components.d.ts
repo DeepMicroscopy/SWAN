@@ -17,6 +17,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     StudyDescription: typeof import('./components/StudyDescription.vue')['default']
+    StudySolution: typeof import('./components/StudySolution.vue')['default']
     SwanIcon: typeof import('./components/SwanIcon.vue')['default']
     SwiperHelp: typeof import('./components/SwiperHelp.vue')['default']
     SwiperToolbar: typeof import('./components/SwiperToolbar.vue')['default']

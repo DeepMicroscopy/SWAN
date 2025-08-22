@@ -30,10 +30,6 @@
     if (!description) return;
 
     const md = new MarkdownIt();
-    console.group('des')
-    console.log(md.render(description))
-    console.log(DOMPurify.sanitize(md.render(description)))
-    console.groupEnd()
     return DOMPurify.sanitize(md.render(description));
   }
 </script>

@@ -8,7 +8,7 @@ meta:
   import type { Card, SwipeEvent } from '@/components/ImageSwiper.vue';
   import { useRoute } from 'vue-router';
   import client from '@/client.ts';
-  import type { UiLabel } from '@/api.ts';
+  import type { Education, UiLabel } from '@/api.ts';
   import { type ErrorData, getError, setError } from '@/util/fetch-errors.ts';
 
   const route = useRoute<'/studies.[id].[[tag]]'>();
@@ -40,6 +40,10 @@ meta:
   const decisionIcon = ref('mdi-checkbox-blank-off-outline')
   const showDecision = ref(false)
 
+  const currentImage = ref('')
+  const education = ref<Education>({} as Education)
+  const showSolution = ref(false)
+
   if (index.value === 0) {
     showStudy.value = true
   }
@@ -65,6 +69,12 @@ meta:
         }
 
         console.log(result.data)
+
+        if (result.data?.education) {
+          currentImage.value = cards.value[index.value - 1]?.image ?? ''
+          education.value = result.data?.education
+          showSolution.value = true
+        }
       })
       .catch(error => console.log(error))
   }
@@ -135,6 +145,15 @@ meta:
       @back="backward"
     />
   </v-container>
+
+  <StudySolution
+    v-if="study.educational"
+    :current="currentImage"
+    :education="education"
+    :show="showSolution"
+    :study="study"
+    @close="showSolution = false"
+  />
 
   <StudyDescription :show="showStudy" :study="study" @close="showStudy = false" />
 
