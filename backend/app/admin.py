@@ -22,30 +22,46 @@ class CustomUserAdmin(UserAdmin):
 
 @admin.register(Dataset)
 class DatasetAdmin(admin.ModelAdmin):
-    list_display = ['title', 'archive', 'file_count']
+    list_display = ['title', 'archive', 'file_count', 'created_at', 'updated_at']
     exclude = ['file_count']
     readonly_fields = ['file_list']
+    ordering = ['-updated_at']
 
 
 @admin.register(Solution)
 class SolutionAdmin(admin.ModelAdmin):
-    list_display = ['study', 'archive']
+    list_display = ['study', 'created_at', 'updated_at', 'archive']
     formfield_overrides = {
         JSONField: {'widget': JSONEditorWidget},
     }
+    ordering = ['-updated_at']
 
 
 @admin.register(Ui)
 class UiAdmin(admin.ModelAdmin):
-    list_display = ['title']
+    list_display = ['title', 'created_at', 'updated_at']
     formfield_overrides = {
         JSONField: {'widget': JSONEditorWidget},
     }
+    ordering = ['-updated_at']
 
 
 @admin.register(Study)
 class StudyAdmin(admin.ModelAdmin):
-    list_display = ['title', 'start', 'end', 'group', 'anonymous', 'educational', 'share', 'export']
+    list_display = [
+        'title', 'created', 'updated', 'group',
+        'start', 'end', 'anonymous', 'educational',
+        'share', 'export'
+    ]
+    ordering = ['-updated_at']
+
+    @staticmethod
+    def created(study):
+        return study.created_at.strftime("%Y-%m-%d")
+
+    @staticmethod
+    def updated(study):
+        return study.updated_at.strftime("%Y-%m-%d")
 
     @staticmethod
     def start(study):
@@ -107,6 +123,7 @@ class ClassificationAdmin(admin.ModelAdmin):
 class ClassificationUserAdmin(ClassificationAdmin):
     list_filter = ['study__title', 'user']
     list_display = ['date', 'study', 'user', 'index', 'choice']
+    ordering = ['-date']
 
     def csv_header(self):
         return ["user"]
@@ -119,6 +136,7 @@ class ClassificationUserAdmin(ClassificationAdmin):
 class ClassificationAnonymousAdmin(ClassificationAdmin):
     list_filter = ['study__title', 'session']
     list_display = ['date', 'study', 'session', 'index', 'choice']
+    ordering = ['-date']
 
     def csv_header(self):
         return ["session"]

@@ -20,6 +20,13 @@ class UUIDModel(models.Model):
     class Meta:
         abstract = True
 
+class DecoratorMixin(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
 
 def upload_to(name):
     today = datetime.date.today()
@@ -38,7 +45,7 @@ def upload_to_image(instance, filename):
     return upload_to("image")
 
 
-class Dataset(UUIDModel):
+class Dataset(UUIDModel, DecoratorMixin):
     title = models.CharField(max_length=200)
     archive = models.FileField(upload_to=upload_to_dataset)
     file_count = models.PositiveIntegerField(null=True, blank=True)
@@ -61,7 +68,7 @@ def ui_default():
     return {'left': {'text': 'left', 'icon': None, 'color': None}, 'right': {'text': 'right'}}
 
 
-class Ui(UUIDModel):
+class Ui(UUIDModel, DecoratorMixin):
     title = models.CharField(max_length=200)
     labels = models.JSONField(default=ui_default)
 
@@ -69,7 +76,7 @@ class Ui(UUIDModel):
         return self.title
 
 
-class Study(UUIDModel):
+class Study(UUIDModel, DecoratorMixin):
     title = models.CharField(max_length=200)
     image = models.ImageField(upload_to=upload_to_image, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
@@ -87,7 +94,7 @@ class Study(UUIDModel):
         return self.title
 
 
-class Solution(models.Model):
+class Solution(DecoratorMixin):
     study = models.OneToOneField(Study, on_delete=models.CASCADE, primary_key=True)
     archive = models.FileField(upload_to=upload_to_solution)
     config = models.JSONField(default=dict, blank=True)
@@ -97,7 +104,7 @@ class Solution(models.Model):
 
 
 class Classification(UUIDModel):
-    date = models.DateTimeField("entry time")
+    date = models.DateTimeField()
     study = models.ForeignKey(Study, on_delete=models.CASCADE)
     file = models.CharField(max_length=200)
     choice = models.CharField(max_length=200)
