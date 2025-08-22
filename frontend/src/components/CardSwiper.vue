@@ -173,6 +173,7 @@
   // TODO
   // - dragging should be scaled to the zoom factor
   // - move threshold and position to user-settings
+  // - also add image-rendering to some settings
   // - add intro
 
   // in ms
@@ -598,6 +599,7 @@
   object-fit: cover;
   user-select: none;
   -webkit-user-drag: none;
+  image-rendering: pixelated;
 }
 
 .swipe-indicator {
