@@ -22,7 +22,6 @@ def get_index_for_request(request, pk):
         result = ClassificationUser.objects.filter(
             study=pk,
             user=request.user,
-            study__group__in=util.groups(request)
         ).order_by("-index").first()
     else:
         result = ClassificationAnonymous.objects.filter(
