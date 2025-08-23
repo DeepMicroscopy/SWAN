@@ -99,6 +99,11 @@ class Solution(DecoratorMixin):
     archive = models.FileField(upload_to=upload_to_solution)
     config = models.JSONField(default=dict, blank=True)
 
+    label_current = models.CharField(max_length=200, null=True, blank=True, help_text="(optional) The label displayed for the classified image. Defaults to 'Current' in the frontend.")
+    label_proof = models.CharField(max_length=200, null=True, blank=True, help_text="(optional) The label displayed for the proof. Defaults to 'Proof' in the frontend.")
+    css_row = models.CharField(max_length=200, null=True, blank=True, help_text="(optional) The CSS class for the row. Overrides the frontend defaults.")
+    css_column = models.CharField(max_length=200, null=True, blank=True, help_text="(optional) The CSS class for the column. Additional modifiers that are added to the frontend defaults.")
+
     def __str__(self):
         return str(self.study)
 

@@ -1,15 +1,14 @@
 <script setup lang="ts">
-  import type { StudyList } from '@/api.ts';
+  import type { Study, StudyList } from '@/api.ts';
   import MarkdownIt from 'markdown-it';
   import DOMPurify from 'dompurify';
 
   interface Props {
-    study?: StudyList | null
+    study?: StudyList | Study | null
     show?: boolean
   }
 
   const props = withDefaults(defineProps<Props>(), {
-    study: () => ({} as StudyList),
     show: () => false,
   })
 

@@ -12,7 +12,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 from app import util
-from app.models import Study, ClassificationAnonymous, ClassificationUser, Ui
+from app.models import Study, ClassificationAnonymous, ClassificationUser, Ui, Solution
 from app.views.util import study_queryset_for_request, session_for_request
 from swan import settings
 
@@ -57,6 +57,12 @@ class UiSerializer(serializers.HyperlinkedModelSerializer):
         model = Ui
         fields = ["title", "labels"]
 
+class SolutionConfigSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Solution
+        fields = ["label_current", "label_proof", "css_row", "css_column"]
+
+
 class StudyListSerializer(serializers.HyperlinkedModelSerializer):
     educational = serializers.SerializerMethodField()
 
@@ -72,6 +78,7 @@ class StudySerializer(StudyListSerializer):
     ui = UiSerializer()
     length = serializers.IntegerField(source="dataset.file_count")
     index = serializers.SerializerMethodField()
+    solution = SolutionConfigSerializer(allow_null=True)
 
     def get_index(self, study: Study) -> int:
         request = self.context.get("request")
@@ -79,7 +86,7 @@ class StudySerializer(StudyListSerializer):
 
     class Meta:
         model = Study
-        fields = ["id", "title", "description", "image", "pub_date", "end_date", "educational", "ui", "length", "index"]
+        fields = ["id", "title", "description", "image", "pub_date", "end_date", "solution", "ui", "length", "index"]
 
 @extend_schema(tags=['Study'])
 class StudyViewSet(viewsets.GenericViewSet):

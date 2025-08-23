@@ -294,6 +294,16 @@ export interface components {
     Solution: {
       text: string;
     };
+    SolutionConfig: {
+      /** @description (optional) The label displayed for the classified image. Defaults to 'Current' in the frontend. */
+      label_current?: string | null;
+      /** @description (optional) The label displayed for the proof. Defaults to 'Proof' in the frontend. */
+      label_proof?: string | null;
+      /** @description (optional) The CSS class for the row. Overrides the frontend defaults. */
+      css_row?: string | null;
+      /** @description (optional) The CSS class for the column. Additional modifiers that are added to the frontend defaults. */
+      css_column?: string | null;
+    };
     Status: {
       authenticated: boolean;
       username: string;
@@ -302,14 +312,24 @@ export interface components {
       /** Format: uuid */
       readonly id: string;
       title: string;
+      /** @description (optional) A short description of the study. Markdown is supported. */
       description?: string | null;
-      /** Format: uri */
+      /**
+             * Format: uri
+             * @description (optional) A title image for the study.
+             */
       image?: string | null;
-      /** Format: date-time */
+      /**
+             * Start
+             * Format: date-time
+             */
       pub_date: string;
-      /** Format: date-time */
+      /**
+             * End
+             * Format: date-time
+             */
       end_date: string;
-      readonly educational: boolean;
+      solution: components['schemas']['SolutionConfig'] | null;
       ui: components['schemas']['Ui'];
       length: number;
       readonly index: number;
@@ -318,12 +338,22 @@ export interface components {
       /** Format: uuid */
       readonly id: string;
       title: string;
+      /** @description (optional) A short description of the study. Markdown is supported. */
       description?: string | null;
-      /** Format: uri */
+      /**
+             * Format: uri
+             * @description (optional) A title image for the study.
+             */
       image?: string | null;
-      /** Format: date-time */
+      /**
+             * Start
+             * Format: date-time
+             */
       pub_date: string;
-      /** Format: date-time */
+      /**
+             * End
+             * Format: date-time
+             */
       end_date: string;
       readonly educational: boolean;
     };

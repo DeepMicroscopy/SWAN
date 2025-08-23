@@ -1,20 +1,18 @@
 <script setup lang="ts">
-  import type { Education, StudyList } from '@/api.ts';
+  import type { Education, SolutionConfig, Study } from '@/api.ts';
   import MarkdownIt from 'markdown-it';
   import DOMPurify from 'dompurify';
 
   interface Props {
+    config?: SolutionConfig | null
     education?: Education | null
-    study?: StudyList | null
+    study?: Study | null
     show?: boolean
     current?: string
   }
 
   const props = withDefaults(defineProps<Props>(), {
-    education: () => ({} as Education),
-    study: () => ({} as StudyList),
     show: () => false,
-    current: () => '',
   })
 
   const emit = defineEmits<{
@@ -51,12 +49,12 @@
         {{ props.study?.title }}
       </v-card-title>
       <v-card-text class="ma-3 min-width-images">
-        <v-row v-if="props.education?.proof" class="text-center text-decoration-underline font-weight-bold">
-          <v-col cols="6">Current</v-col>
+        <v-row v-if="props.education?.proof" :class="props.config?.css_row ?? 'text-center text-decoration-underline font-weight-bold'">
+          <v-col :class="props.config?.css_column" cols="6">{{ props.config?.label_current ?? "Current" }}</v-col>
 
-          <v-col cols="6">Proof</v-col>
+          <v-col :class="props.config?.css_column" cols="6">{{ props.config?.label_proof ?? "Proof" }}</v-col>
 
-          <v-col cols="6">
+          <v-col :class="props.config?.css_column" cols="6">
             <v-img
               aspect-ratio="1"
               cover
@@ -64,7 +62,7 @@
             />
           </v-col>
 
-          <v-col cols="6">
+          <v-col :class="props.config?.css_column" cols="6">
             <v-img
               aspect-ratio="1"
               cover

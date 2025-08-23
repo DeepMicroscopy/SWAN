@@ -4,6 +4,7 @@ import csv
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.db.models import JSONField
+from django.forms import model_to_dict
 from django.http import HttpResponse
 from django.template import engines
 from django.urls import reverse
@@ -14,6 +15,15 @@ from app import util
 from app.models import User, Dataset, Study, ClassificationUser, ClassificationAnonymous, Solution, Ui
 
 django_engine = engines['django']
+
+def fieldset(model, stuff):
+    changed_fields = [t for s in stuff if s[1]["fields"] for t in s[1]["fields"]]
+    forbidden_fields = ["id", "created_at", "updated_at"]
+
+    fields = list(model_to_dict(model).keys())
+    return (
+        (None, {"fields": [f for f in fields if f not in changed_fields and f not in forbidden_fields]}),
+    ) + stuff
 
 
 @admin.register(User)
@@ -37,6 +47,12 @@ class SolutionAdmin(admin.ModelAdmin):
     }
     ordering = ['-updated_at']
 
+    def get_fieldsets(self, request, obj=None):
+        return fieldset(self.model,(
+            ("General", {"fields": ["study", "archive", "config"]}),
+            ("Interface", {"fields": ["label_current", "label_proof", "css_row", "css_column"], "classes": ["collapse"]}),
+        ))
+
 
 @admin.register(Ui)
 class UiAdmin(admin.ModelAdmin):
@@ -57,17 +73,12 @@ class StudyAdmin(admin.ModelAdmin):
     ordering = ['-updated_at']
 
     def get_fieldsets(self, request, obj=None):
-        fields = [f.name for f in self.model._meta.fields]
-
-        forbidden_fields = ["id", "created_at", "updated_at"]
-        changed_fields = ["title", "image", "description", "pub_date", "end_date", "dataset", "ui", "group", "anonymous"]
-        return (
-            (None, {"fields": [f for f in fields if f not in changed_fields and f not in forbidden_fields]}),
+        return fieldset(self.model, (
             ("General", {"fields": ["title", "image", "description"]}),
             ("Configuration", {"fields": ["dataset", "ui"]}),
             ("Publication", {"fields": ["pub_date", "end_date"]}),
             ("Access", {"fields": ["group", "anonymous"]}),
-        )
+        ))
 
     def educational(self, study) -> bool:
         return study.solution is not None

@@ -41,7 +41,7 @@ meta:
   const showDecision = ref(false)
 
   const currentImage = ref('')
-  const education = ref<Education>({} as Education)
+  const currentEducation = ref<Education>({} as Education)
   const showSolution = ref(false)
 
   if (index.value === 0) {
@@ -69,9 +69,9 @@ meta:
         }
 
         if (result.data?.education) {
-          currentImage.value = cards.value[index.value - 1]?.image ?? ''
-          education.value = result.data?.education
           showSolution.value = true
+          currentImage.value = cards.value[index.value - 1]?.image ?? ''
+          currentEducation.value = result.data?.education
         }
       })
       .catch(error => console.log(error))
@@ -145,9 +145,10 @@ meta:
   </v-container>
 
   <StudySolution
-    v-if="study.educational"
+    v-if="study.solution"
+    :config="study.solution"
     :current="currentImage"
-    :education="education"
+    :education="currentEducation"
     :show="showSolution"
     :study="study"
     @close="showSolution = false"
