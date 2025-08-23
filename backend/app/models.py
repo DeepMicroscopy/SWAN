@@ -126,6 +126,10 @@ class ClassificationUser(Classification):
         verbose_name = "Classification (User)"
         verbose_name_plural = "Classifications (User)"
 
+        indexes = [
+            models.Index(fields=["user", "study", "index", "-date"]),
+        ]
+
 
 class ClassificationAnonymous(Classification):
     session = models.CharField(max_length=200)
@@ -133,3 +137,7 @@ class ClassificationAnonymous(Classification):
     class Meta:
         verbose_name = "Classification (Anonymous)"
         verbose_name_plural = "Classifications (Anonymous)"
+
+        indexes = [
+            models.Index(fields=["session", "study", "index", "-date"]),
+        ]
