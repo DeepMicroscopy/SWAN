@@ -56,6 +56,19 @@ class StudyAdmin(admin.ModelAdmin):
     ]
     ordering = ['-updated_at']
 
+    def get_fieldsets(self, request, obj=None):
+        fields = [f.name for f in self.model._meta.fields]
+
+        forbidden_fields = ["id", "created_at", "updated_at"]
+        changed_fields = ["title", "image", "description", "pub_date", "end_date", "dataset", "ui", "group", "anonymous"]
+        return (
+            (None, {"fields": [f for f in fields if f not in changed_fields and f not in forbidden_fields]}),
+            ("General", {"fields": ["title", "image", "description"]}),
+            ("Configuration", {"fields": ["dataset", "ui"]}),
+            ("Publication", {"fields": ["pub_date", "end_date"]}),
+            ("Access", {"fields": ["group", "anonymous"]}),
+        )
+
     def educational(self, study) -> bool:
         return study.solution is not None
 

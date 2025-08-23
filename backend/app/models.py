@@ -78,17 +78,17 @@ class Ui(UUIDModel, DecoratorMixin):
 
 class Study(UUIDModel, DecoratorMixin):
     title = models.CharField(max_length=200)
-    image = models.ImageField(upload_to=upload_to_image, null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
+    image = models.ImageField(upload_to=upload_to_image, null=True, blank=True, help_text="(optional) An title image for the study.")
+    description = models.TextField(null=True, blank=True, help_text="(optional) A short description of the study. Markdown is supported.")
 
     pub_date = models.DateTimeField("Start")
     end_date = models.DateTimeField("End")
 
-    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
-    anonymous = models.BooleanField(default=bool)
-    dataset = models.ForeignKey(Dataset, on_delete=models.PROTECT)
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True, help_text="(optional) Limit access to members of this group.")
+    anonymous = models.BooleanField(default=bool, help_text="Adds an authentication tag to the URL allowing anonymous access.")
+    dataset = models.ForeignKey(Dataset, on_delete=models.PROTECT, help_text="This should not be changed later.")
 
-    ui = models.ForeignKey(Ui, on_delete=models.PROTECT)
+    ui = models.ForeignKey(Ui, on_delete=models.PROTECT, help_text="This should not be changed later.")
 
     def __str__(self):
         return self.title
@@ -105,7 +105,7 @@ class Solution(DecoratorMixin):
 
 class Classification(UUIDModel):
     date = models.DateTimeField()
-    study = models.ForeignKey(Study, on_delete=models.CASCADE)
+    study = models.ForeignKey(Study, on_delete=models.PROTECT)
     file = models.CharField(max_length=200)
     choice = models.CharField(max_length=200)
     index = models.PositiveIntegerField()
