@@ -34,9 +34,14 @@ class CustomUserAdmin(UserAdmin):
 @admin.register(Dataset)
 class DatasetAdmin(admin.ModelAdmin):
     list_display = ['title', 'archive', 'file_count', 'created_at', 'updated_at']
-    exclude = ['file_count']
-    readonly_fields = ['file_list']
+    readonly_fields = ['file_count', 'file_list']
     ordering = ['-updated_at']
+
+    def get_fieldsets(self, request, obj=None):
+        return fieldset(self.model,(
+            ("General", {"fields": ["title", "archive"]}),
+            ("Internal", {"fields": ["file_count", "file_list"], "classes": ["collapse"]}),
+        ))
 
 
 @admin.register(Solution)
@@ -61,6 +66,16 @@ class UiAdmin(admin.ModelAdmin):
         JSONField: {'widget': JSONEditorWidget},
     }
     ordering = ['-updated_at']
+
+    def get_fieldsets(self, request, obj=None):
+        return fieldset(self.model,(
+            ("General", {"fields": ["title", "labels"]}),
+        ))
+
+    class Media:
+        css = {
+            "all": ("admin/css/white_space.css",)
+        }
 
 
 @admin.register(Study)

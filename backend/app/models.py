@@ -46,10 +46,10 @@ def upload_to_image(instance, filename):
 
 
 class Dataset(UUIDModel, DecoratorMixin):
-    title = models.CharField(max_length=200)
-    archive = models.FileField(upload_to=upload_to_dataset)
-    file_count = models.PositiveIntegerField(null=True, blank=True)
-    file_list = models.JSONField(null=True, blank=True)
+    title = models.CharField(max_length=200, help_text="Only used for display purposes in the study creation.")
+    archive = models.FileField(upload_to=upload_to_dataset, help_text="The dataset archive. Files are registered by their full path inside the archive.")
+    file_count = models.PositiveIntegerField(null=True, blank=True, help_text="The number of files in the dataset. Calculated automatically.")
+    file_list = models.JSONField(null=True, blank=True, help_text="A list of all files in the dataset. Calculated automatically.")
 
     def __str__(self):
         return self.title
@@ -69,20 +69,21 @@ def ui_default():
 
 
 class Ui(UUIDModel, DecoratorMixin):
-    title = models.CharField(max_length=200)
-    labels = models.JSONField(default=ui_default)
+    title = models.CharField(max_length=200, help_text="Only used for display purposes in the study creation.")
+    labels = models.JSONField(default=ui_default, help_text="""A dictionary mapping the directions 'up', 'down', 'left' and 'right' to an object.
+The object has the keys 'text', 'icon' and 'color' - 'label' can be used to rename the label in the export.""")
 
     def __str__(self):
         return self.title
 
 
 class Study(UUIDModel, DecoratorMixin):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, help_text="The title of the study. Visible in all interfaces.")
     image = models.ImageField(upload_to=upload_to_image, null=True, blank=True, help_text="(optional) A title image for the study.")
     description = models.TextField(null=True, blank=True, help_text="(optional) A short description of the study. Markdown is supported.")
 
-    pub_date = models.DateTimeField("Start")
-    end_date = models.DateTimeField("End")
+    pub_date = models.DateTimeField("Start", help_text="The study will be visible on the overview at this time.")
+    end_date = models.DateTimeField("End", help_text="The study will be removed from the overview at this time.")
 
     group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True, help_text="(optional) Limit access to members of this group.")
     anonymous = models.BooleanField(default=bool, help_text="Adds an authentication tag to the URL allowing anonymous access.")
@@ -95,9 +96,9 @@ class Study(UUIDModel, DecoratorMixin):
 
 
 class Solution(DecoratorMixin):
-    study = models.OneToOneField(Study, on_delete=models.CASCADE, primary_key=True)
-    archive = models.FileField(upload_to=upload_to_solution)
-    config = models.JSONField(default=dict, blank=True)
+    study = models.OneToOneField(Study, on_delete=models.CASCADE, primary_key=True, help_text="The study that this solution belongs to.")
+    archive = models.FileField(upload_to=upload_to_solution, help_text="The solution archive. Solution images must have the same names as the dataset images.")
+    config = models.JSONField(default=dict, blank=True, help_text="A dictionary mapping file names in the dataset to an object. The object has the key 'text'. Markdown is supported.")
 
     label_current = models.CharField(max_length=200, null=True, blank=True, help_text="(optional) The label displayed for the classified image. Defaults to 'Current' in the frontend.")
     label_proof = models.CharField(max_length=200, null=True, blank=True, help_text="(optional) The label displayed for the proof. Defaults to 'Proof' in the frontend.")
@@ -109,18 +110,24 @@ class Solution(DecoratorMixin):
 
 
 class Classification(UUIDModel):
-    date = models.DateTimeField()
-    study = models.ForeignKey(Study, on_delete=models.PROTECT)
-    file = models.CharField(max_length=200)
-    choice = models.CharField(max_length=200)
-    index = models.PositiveIntegerField()
+    class Directions(models.TextChoices):
+        LEFT = "left", "left"
+        RIGHT = "right", "right"
+        UP = "up", "up"
+        DOWN = "down", "down"
+
+    date = models.DateTimeField(help_text="The time the image was classified.")
+    study = models.ForeignKey(Study, on_delete=models.PROTECT, help_text="The study that this classification belongs to.")
+    file = models.CharField(max_length=200, help_text="The name of the file that was classified at the index of this dataset.")
+    choice = models.CharField(max_length=200, choices=Directions, help_text="The direction the user swiped for the classification.")
+    index = models.PositiveIntegerField(help_text="The index of the image based on the shuffled dataset for the user of this study.")
 
     class Meta:
         abstract = True
 
 
 class ClassificationUser(Classification):
-    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, help_text="The user who classified the image.")
 
     class Meta:
         verbose_name = "Classification (User)"
@@ -132,7 +139,7 @@ class ClassificationUser(Classification):
 
 
 class ClassificationAnonymous(Classification):
-    session = models.CharField(max_length=200)
+    session = models.CharField(max_length=200, help_text="A unique identifier for the user's session, but not the session-id.")
 
     class Meta:
         verbose_name = "Classification (Anonymous)"
