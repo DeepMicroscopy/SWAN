@@ -28,7 +28,6 @@ def get_index_for_request(request, pk):
         result = ClassificationAnonymous.objects.filter(
             study=pk,
             session=session_for_request(request),
-            study__group__in=util.groups(request)
         ).order_by("-index").first()
 
     if result is None:
