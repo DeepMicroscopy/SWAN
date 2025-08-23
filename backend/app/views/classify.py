@@ -19,7 +19,7 @@ from app.views.util import study_queryset_for_request, session_for_request
 
 class ClassifyInputSerializer(serializers.Serializer):
     study = serializers.UUIDField(required=True)
-    choice = serializers.CharField(required=True)
+    choice = serializers.ChoiceField(required=True, choices=("up", "down", "left", "right"))
     index = serializers.IntegerField(required=True)
 
 
