@@ -119,7 +119,7 @@ class Classification(UUIDModel):
     date = models.DateTimeField(help_text="The time the image was classified.")
     study = models.ForeignKey(Study, on_delete=models.PROTECT, help_text="The study that this classification belongs to.")
     file = models.CharField(max_length=200, help_text="The name of the file that was classified at the index of this dataset.")
-    choice = models.CharField(max_length=200, choices=Directions, help_text="The direction the user swiped for the classification.")
+    choice = models.CharField(max_length=5, choices=Directions, help_text="The direction the user swiped for the classification.")
     index = models.PositiveIntegerField(help_text="The index of the image based on the shuffled dataset for the user of this study.")
 
     class Meta:
@@ -139,7 +139,7 @@ class ClassificationUser(Classification):
 
 
 class ClassificationAnonymous(Classification):
-    session = models.CharField(max_length=200, help_text="A unique identifier for the user's session, but not the session-id.")
+    session = models.CharField(max_length=32, help_text="A unique identifier for the user's session, but not the session-id.")
 
     class Meta:
         verbose_name = "Classification (Anonymous)"
