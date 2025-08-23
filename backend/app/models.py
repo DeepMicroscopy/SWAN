@@ -78,7 +78,7 @@ class Ui(UUIDModel, DecoratorMixin):
 
 class Study(UUIDModel, DecoratorMixin):
     title = models.CharField(max_length=200)
-    image = models.ImageField(upload_to=upload_to_image, null=True, blank=True, help_text="(optional) An title image for the study.")
+    image = models.ImageField(upload_to=upload_to_image, null=True, blank=True, help_text="(optional) A title image for the study.")
     description = models.TextField(null=True, blank=True, help_text="(optional) A short description of the study. Markdown is supported.")
 
     pub_date = models.DateTimeField("Start")
