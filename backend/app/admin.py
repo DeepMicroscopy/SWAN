@@ -143,11 +143,11 @@ class ClassificationAdmin(admin.ModelAdmin):
 
     @abc.abstractmethod
     def csv_header(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     @abc.abstractmethod
     def csv_data(self, entry):
-        raise NotImplemented
+        raise NotImplementedError
 
 
 @admin.register(ClassificationUser)

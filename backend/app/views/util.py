@@ -16,7 +16,7 @@ def study_queryset_for_request(request):
 def session_for_request(request) -> str:
     if (
             not request.session.session_key
-            or not "anonymous" in request.session
+            or "anonymous" not in request.session
             or not request.session["anonymous"]
     ):
         request.session.create()
