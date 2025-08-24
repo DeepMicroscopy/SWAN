@@ -75,6 +75,14 @@ This project is built with [Vuetify](https://vuetifyjs.com/en/), a UI Library wi
 - [Becoming a subscriber on Tidelift](https://tidelift.com/subscription/npm/vuetify)
 - [Making a one-time donation with Paypal](https://paypal.me/vuetify)
 
+## Testing
+
+Testing is done with Cypress.
+
+```sh
+yarn cypress open --config watchForFileChanges=false
+```
+
 ## 📑 License
 [MIT](http://opensource.org/licenses/MIT)
 
