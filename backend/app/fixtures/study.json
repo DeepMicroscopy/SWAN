@@ -1,0 +1,89 @@
+[
+  {
+    "model": "app.dataset",
+    "pk": "570f18ae-8b9b-4be9-aeb0-000000000001",
+    "fields": {
+      "created_at": "2025-08-22T16:58:28.787Z",
+      "updated_at": "2025-08-22T16:58:28.789Z",
+      "title": "test-dataset",
+      "archive": "dataset/test",
+      "file_count": 1,
+      "file_list": [
+        "SWAN/MIDOG21_141.png"
+      ]
+    }
+  },
+  {
+    "model": "app.ui",
+    "pk": "16315980-c11d-49d5-9e44-000000000001",
+    "fields": {
+      "created_at": "2025-08-22T16:58:28.804Z",
+      "updated_at": "2025-08-23T18:05:55.140Z",
+      "title": "test-ui",
+      "labels": {
+        "left": {
+          "text": "left"
+        },
+        "right": {
+          "text": "right"
+        }
+      }
+    }
+  },
+  {
+    "model": "app.study",
+    "pk": "d8c03784-682d-4f44-97a6-000000000001",
+    "fields": {
+      "created_at": "2025-08-22T16:58:28.798Z",
+      "updated_at": "2025-08-23T14:54:06.997Z",
+      "title": "Educational",
+      "image": "image/test",
+      "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n\r\n(/3.png)[/4.png]",
+      "pub_date": "2025-01-01T10:10:10Z",
+      "end_date": "2035-01-01T10:10:10Z",
+      "group": null,
+      "anonymous": true,
+      "dataset": "570f18ae-8b9b-4be9-aeb0-000000000001",
+      "ui": "16315980-c11d-49d5-9e44-000000000001"
+    }
+  },
+  {
+    "model": "app.study",
+    "pk": "d8c03784-682d-4f44-97a6-000000000002",
+    "fields": {
+      "created_at": "2025-08-22T16:58:28.798Z",
+      "updated_at": "2025-08-23T14:30:10.153Z",
+      "title": "Normal",
+      "image": "image/test",
+      "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n(/3.png)[/4.png]",
+      "pub_date": "2025-02-02T20:20:20Z",
+      "end_date": "2035-02-02T20:20:20Z",
+      "group": null,
+      "anonymous": false,
+      "dataset": "570f18ae-8b9b-4be9-aeb0-000000000001",
+      "ui": "16315980-c11d-49d5-9e44-000000000001"
+    }
+  },
+  {
+    "model": "app.solution",
+    "pk": "d8c03784-682d-4f44-97a6-000000000001",
+    "fields": {
+      "created_at": "2025-08-22T16:58:28.798Z",
+      "updated_at": "2025-08-23T14:30:10.153Z",
+      "archive": "solution/test",
+      "config": {
+        "SWAN/MIDOG21_141.png": {
+          "text": "text"
+        }
+      }
+    }
+  },
+  {
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+      "name": "Experts",
+      "permissions": []
+    }
+  }
+]

@@ -10,6 +10,16 @@
 - give feedback for choices
 - template for texts / studies
 
+## Testing
+
+We will need a fixture generator, so we don't need to check database fixtures into git.
+
+The test output fixtures should be though. This way we can also spot actual changes in the responses.
+
+```sh
+./manage.py test app.tests
+```
+
 ## Docker
 
 ```shell
