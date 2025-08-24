@@ -11,7 +11,7 @@
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --fix",
     "test:ts": "tsc --noEmit",
-    "api": "curl -s http://localhost:8000/api/schema/ | yarn run openapi-typescript -o src/api.v1.ts && eslint src/api.v1.ts --fix"
+    "api": "yarn run openapi-typescript -o src/api.v1.ts ../docs/openapi.yaml"
   },
   "dependencies": {
     "@fontsource/roboto": "5.2.5",

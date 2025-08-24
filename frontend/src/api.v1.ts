@@ -257,10 +257,18 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    /**
+         * @description * `up` - up
+         *     * `down` - down
+         *     * `left` - left
+         *     * `right` - right
+         * @enum {string}
+         */
+    ChoiceEnum: 'up' | 'down' | 'left' | 'right';
     ClassifyInput: {
       /** Format: uuid */
       study: string;
-      choice: string;
+      choice: components['schemas']['ChoiceEnum'];
       index: number;
     };
     ClassifyOutput: {
@@ -273,11 +281,19 @@ export interface components {
     Dataset: {
       /** Format: uuid */
       readonly id: string;
+      /** @description Only used for display purposes in the study creation. */
       title: string;
-      /** Format: uri */
+      /**
+             * Format: uri
+             * @description The dataset archive. Files are registered by their full path inside the archive.
+             */
       archive: string;
-      /** Format: int64 */
+      /**
+             * Format: int64
+             * @description The number of files in the dataset. Calculated automatically.
+             */
       file_count?: number | null;
+      /** @description A list of all files in the dataset. Calculated automatically. */
       file_list?: unknown;
     };
     Detail: {
@@ -311,6 +327,7 @@ export interface components {
     Study: {
       /** Format: uuid */
       readonly id: string;
+      /** @description The title of the study. Visible in all interfaces. */
       title: string;
       /** @description (optional) A short description of the study. Markdown is supported. */
       description?: string | null;
@@ -322,11 +339,13 @@ export interface components {
       /**
              * Start
              * Format: date-time
+             * @description The study will be visible on the overview at this time.
              */
       pub_date: string;
       /**
              * End
              * Format: date-time
+             * @description The study will be removed from the overview at this time.
              */
       end_date: string;
       solution: components['schemas']['SolutionConfig'] | null;
@@ -337,6 +356,7 @@ export interface components {
     StudyList: {
       /** Format: uuid */
       readonly id: string;
+      /** @description The title of the study. Visible in all interfaces. */
       title: string;
       /** @description (optional) A short description of the study. Markdown is supported. */
       description?: string | null;
@@ -348,16 +368,19 @@ export interface components {
       /**
              * Start
              * Format: date-time
+             * @description The study will be visible on the overview at this time.
              */
       pub_date: string;
       /**
              * End
              * Format: date-time
+             * @description The study will be removed from the overview at this time.
              */
       end_date: string;
       readonly educational: boolean;
     };
     Ui: {
+      /** @description Only used for display purposes in the study creation. */
       title: string;
       labels: components['schemas']['UiLabel'];
     };

@@ -1,0 +1,761 @@
+openapi: 3.0.3
+info:
+  title: SWAN API
+  version: 1.0.0
+  description: Auto-generated API documentation
+paths:
+  /api/schema/:
+    get:
+      operationId: api_schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /v1/auth/login/:
+    post:
+      operationId: v1_auth_login_create
+      tags:
+      - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Detail'
+          description: ''
+  /v1/auth/logout/:
+    post:
+      operationId: v1_auth_logout_create
+      tags:
+      - Auth
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Detail'
+          description: ''
+  /v1/auth/status/:
+    get:
+      operationId: v1_auth_status_retrieve
+      tags:
+      - Auth
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: ''
+  /v1/classify/:
+    post:
+      operationId: v1_classify_create
+      tags:
+      - Classify
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassifyInput'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClassifyInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClassifyInput'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassifyOutput'
+          description: ''
+  /v1/classify/{id}/{index}/:
+    get:
+      operationId: v1_classify_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this study.
+        required: true
+      - in: path
+        name: index
+        schema:
+          type: string
+          pattern: ^[0-9]+$
+        required: true
+      tags:
+      - Classify
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassifyOutput'
+          description: ''
+  /v1/datasets/:
+    get:
+      operationId: v1_datasets_list
+      tags:
+      - Dataset
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dataset'
+          description: ''
+  /v1/datasets/{id}/:
+    get:
+      operationId: v1_datasets_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this dataset.
+        required: true
+      tags:
+      - Dataset
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dataset'
+          description: ''
+  /v1/datasets/{id}/{index}/:
+    get:
+      operationId: v1_datasets_retrieve_entry
+      description: The file at the index of the dataset
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this dataset.
+        required: true
+      - in: path
+        name: index
+        schema:
+          type: string
+          pattern: ^\d+$
+        required: true
+      tags:
+      - Dataset
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+          description: ''
+  /v1/export/{study}/csv/:
+    get:
+      operationId: v1_export_csv_retrieve
+      description: A QR code linking to this study
+      parameters:
+      - in: path
+        name: study
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Export
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+          description: ''
+  /v1/share/{study}/anonymous/:
+    get:
+      operationId: v1_share_anonymous_retrieve
+      description: A QR code linking to this study with an authorization for anonymous
+        access
+      parameters:
+      - in: path
+        name: study
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Share
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+          description: ''
+  /v1/share/{study}/users/:
+    get:
+      operationId: v1_share_users_retrieve
+      description: A QR code linking to this study
+      parameters:
+      - in: path
+        name: study
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Share
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+          description: ''
+  /v1/studies/:
+    get:
+      operationId: v1_studies_list
+      tags:
+      - Study
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudyList'
+          description: ''
+  /v1/studies/{id}/:
+    get:
+      operationId: v1_studies_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this study.
+        required: true
+      tags:
+      - Study
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Study'
+          description: ''
+  /v1/studies/{id}/{index}/:
+    get:
+      operationId: v1_studies_retrieve_entry
+      description: The file at the index of the dataset based on the user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this study.
+        required: true
+      - in: path
+        name: index
+        schema:
+          type: string
+          pattern: ^[0-9]+$
+        required: true
+      tags:
+      - Study
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+          description: ''
+components:
+  schemas:
+    ChoiceEnum:
+      enum:
+      - up
+      - down
+      - left
+      - right
+      type: string
+      description: |-
+        * `up` - up
+        * `down` - down
+        * `left` - left
+        * `right` - right
+    ClassifyInput:
+      type: object
+      properties:
+        study:
+          type: string
+          format: uuid
+        choice:
+          $ref: '#/components/schemas/ChoiceEnum'
+        index:
+          type: integer
+      required:
+      - choice
+      - index
+      - study
+    ClassifyOutput:
+      type: object
+      properties:
+        study:
+          type: string
+          format: uuid
+        choice:
+          type: string
+        index:
+          type: integer
+        education:
+          allOf:
+          - $ref: '#/components/schemas/Education'
+          readOnly: true
+          nullable: true
+      required:
+      - choice
+      - education
+      - index
+      - study
+    Dataset:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          description: Only used for display purposes in the study creation.
+          maxLength: 200
+        archive:
+          type: string
+          format: uri
+          description: The dataset archive. Files are registered by their full path
+            inside the archive.
+        file_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+          description: The number of files in the dataset. Calculated automatically.
+        file_list:
+          nullable: true
+          description: A list of all files in the dataset. Calculated automatically.
+      required:
+      - archive
+      - id
+      - title
+    Detail:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    Education:
+      type: object
+      properties:
+        solution:
+          $ref: '#/components/schemas/Solution'
+        proof:
+          type: string
+          nullable: true
+      required:
+      - proof
+      - solution
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    Solution:
+      type: object
+      properties:
+        text:
+          type: string
+      required:
+      - text
+    SolutionConfig:
+      type: object
+      properties:
+        label_current:
+          type: string
+          nullable: true
+          description: (optional) The label displayed for the classified image. Defaults
+            to 'Current' in the frontend.
+          maxLength: 200
+        label_proof:
+          type: string
+          nullable: true
+          description: (optional) The label displayed for the proof. Defaults to 'Proof'
+            in the frontend.
+          maxLength: 200
+        css_row:
+          type: string
+          nullable: true
+          description: (optional) The CSS class for the row. Overrides the frontend
+            defaults.
+          maxLength: 200
+        css_column:
+          type: string
+          nullable: true
+          description: (optional) The CSS class for the column. Additional modifiers
+            that are added to the frontend defaults.
+          maxLength: 200
+    Status:
+      type: object
+      properties:
+        authenticated:
+          type: boolean
+        username:
+          type: string
+      required:
+      - authenticated
+      - username
+    Study:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          description: The title of the study. Visible in all interfaces.
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+          description: (optional) A short description of the study. Markdown is supported.
+        image:
+          type: string
+          format: uri
+          nullable: true
+          description: (optional) A title image for the study.
+        pub_date:
+          type: string
+          format: date-time
+          title: Start
+          description: The study will be visible on the overview at this time.
+        end_date:
+          type: string
+          format: date-time
+          title: End
+          description: The study will be removed from the overview at this time.
+        solution:
+          allOf:
+          - $ref: '#/components/schemas/SolutionConfig'
+          nullable: true
+        ui:
+          $ref: '#/components/schemas/Ui'
+        length:
+          type: integer
+        index:
+          type: integer
+          readOnly: true
+      required:
+      - end_date
+      - id
+      - index
+      - length
+      - pub_date
+      - solution
+      - title
+      - ui
+    StudyList:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          description: The title of the study. Visible in all interfaces.
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+          description: (optional) A short description of the study. Markdown is supported.
+        image:
+          type: string
+          format: uri
+          nullable: true
+          description: (optional) A title image for the study.
+        pub_date:
+          type: string
+          format: date-time
+          title: Start
+          description: The study will be visible on the overview at this time.
+        end_date:
+          type: string
+          format: date-time
+          title: End
+          description: The study will be removed from the overview at this time.
+        educational:
+          type: boolean
+          readOnly: true
+      required:
+      - educational
+      - end_date
+      - id
+      - pub_date
+      - title
+    Ui:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Only used for display purposes in the study creation.
+          maxLength: 200
+        labels:
+          $ref: '#/components/schemas/UiLabel'
+      required:
+      - labels
+      - title
+    UiDirection:
+      type: object
+      properties:
+        text:
+          type: string
+        color:
+          type: string
+          nullable: true
+        icon:
+          type: string
+          nullable: true
+      required:
+      - color
+      - icon
+      - text
+    UiLabel:
+      type: object
+      properties:
+        left:
+          $ref: '#/components/schemas/UiDirection'
+        right:
+          $ref: '#/components/schemas/UiDirection'
+        up:
+          allOf:
+          - $ref: '#/components/schemas/UiDirection'
+          nullable: true
+        down:
+          allOf:
+          - $ref: '#/components/schemas/UiDirection'
+          nullable: true
+      required:
+      - down
+      - left
+      - right
+      - up
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
