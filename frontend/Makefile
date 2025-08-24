@@ -8,7 +8,7 @@ all: install api check-dev
 .PHONY: install
 install: node_modules/
 node_modules/:
-	yarn install -A
+	yarn install -A --frozen-lockfile
 
 .PHONY: api
 api:
