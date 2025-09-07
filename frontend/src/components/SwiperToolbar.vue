@@ -4,6 +4,8 @@
   import { useRouter } from 'vue-router';
   import SwiperHelp from '@/components/SwiperHelp.vue';
   import type { UiLabel } from '@/api.ts';
+  import 'driver.js/dist/driver.css';
+  import { useIntro } from '@/composables/useIntro.ts';
 
 
   const router = useRouter()
@@ -47,11 +49,20 @@
   const close = () => {
     router.back()
   }
+
+  useIntro([
+    { ref: 'title-study', title: 'Title', description: 'Description' },
+    { ref: 'button-help', title: 'Help', description: 'Description' },
+    { ref: 'button-back', title: 'Back', description: 'Description' },
+    { ref: 'progress-bar', title: 'Progress', description: 'Description' },
+    { ref: 'button-exit', title: 'Exit', description: 'Description' },
+  ])
 </script>
 
 <template>
   <v-container class="pt-2" width="auto">
     <v-progress-linear
+      ref="progress-bar"
       class="progress-bar"
       color="green"
       :model-value="progress"
@@ -65,6 +76,7 @@
       rounded
     >
       <v-btn
+        ref="button-back"
         color="white"
         :disabled="props.index === 0"
         icon="mdi-arrow-left"
@@ -73,9 +85,10 @@
 
       <v-spacer />
 
-      <p>{{ props.title }}</p>
+      <p ref="title-study">{{ props.title }}</p>
 
       <v-btn
+        ref="button-help"
         color="white"
         icon="mdi-help-circle"
         @click="showHelp = true"
@@ -84,6 +97,7 @@
       <v-spacer />
 
       <v-btn
+        ref="button-exit"
         color="white"
         :disabled="!store.loggedIn"
         icon="mdi-close"

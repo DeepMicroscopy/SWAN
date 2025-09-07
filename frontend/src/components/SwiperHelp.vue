@@ -69,7 +69,7 @@
             title="Swipe Right"
           />
 
-          <v-divider />
+          <v-divider class="mt-2" />
 
           <v-list-subheader inset>Inspect</v-list-subheader>
           <v-list-item
