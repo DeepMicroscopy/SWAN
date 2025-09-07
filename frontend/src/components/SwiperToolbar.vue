@@ -50,12 +50,14 @@
     router.back()
   }
 
+  const buttonActive = ref(true)
+
   useIntro([
     { ref: 'title-study', title: 'Title', description: 'Description' },
     { ref: 'button-help', title: 'Help', description: 'Description' },
     { ref: 'button-back', title: 'Back', description: 'Description' },
     { ref: 'progress-bar', title: 'Progress', description: 'Description' },
-    { ref: 'button-exit', title: 'Exit', description: 'Description' },
+    { ref: 'button-exit', title: 'Exit', description: 'Description', onEnter: () => buttonActive.value = false, onExit: () => buttonActive.value = true },
   ])
 </script>
 
@@ -89,6 +91,7 @@
 
       <v-btn
         ref="button-help"
+        class="ml-2"
         color="white"
         icon="mdi-help-circle"
         @click="showHelp = true"
@@ -99,7 +102,7 @@
       <v-btn
         ref="button-exit"
         color="white"
-        :disabled="!store.loggedIn"
+        :disabled="!store.loggedIn || !buttonActive"
         icon="mdi-close"
         @click="close"
       />

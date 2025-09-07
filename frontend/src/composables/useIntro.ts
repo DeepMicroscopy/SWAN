@@ -1,16 +1,16 @@
-import { driver, type Driver, type DriveStep } from 'driver.js';
+import { type Driver, driver, type DriveStep, type Popover } from 'driver.js';
 
-export interface IntroStep {
+export type IntroStep = {
   ref: string
-  title: string
-  description: string
-}
+  onEnter?: () => void
+  onExit?: () => void
+} & Popover
 
 export function useIntro (steps: IntroStep[]): Driver {
   const intro = driver(
     {
       showProgress: true,
-      allowClose: false,
+      stagePadding: 5,
     }
   )
 
@@ -38,15 +38,40 @@ export function useIntro (steps: IntroStep[]): Driver {
         return {
           element: el,
           popover: {
-            title: step.title,
-            description: step.description,
+            ...step,
+            onPopoverRender: () =>{
+              if (step.onEnter) {
+                step.onEnter()
+              }
+            },
+            onNextClick: () => {
+              intro.moveNext()
+
+              if (step.onExit) {
+                step.onExit()
+              }
+            },
+            onPrevClick: () => {
+              intro.movePrevious()
+
+              if (step.onExit) {
+                step.onExit()
+              }
+            },
+            onCloseClick: () => {
+              intro.destroy()
+
+              if (step.onExit) {
+                step.onExit()
+              }
+            },
           },
         } as DriveStep
       })
     )
 
     intro.drive()
-  })
 
+  })
   return intro
 }
