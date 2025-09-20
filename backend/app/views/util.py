@@ -5,6 +5,12 @@ from django.db.models import Q
 from app import util
 from app.models import Study
 
+from rest_framework import serializers
+
+
+class ErrorSerializer(serializers.Serializer):
+    detail = serializers.CharField()
+
 
 def study_queryset_for_request(request):
     if request.user.is_authenticated:

@@ -176,6 +176,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Detail'
           description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
   /v1/auth/logout/:
     post:
       operationId: v1_auth_logout_create
@@ -563,6 +569,13 @@ components:
       required:
       - proof
       - solution
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
     Login:
       type: object
       properties:

@@ -11,7 +11,10 @@
   const username = ref('')
   const password = ref('')
   const failureMessage = ref(false)
+  const failureText = ref('')
   const dialog = ref(false)
+
+  const unexpectedFailure = 'An unexpected error has occurred. Please send an email to the administrator.'
 
   function login () {
     client.POST('/v1/auth/login/', {
@@ -20,7 +23,13 @@
         password: password.value,
       },
     })
-      .then(() => {
+      .then(({ error, response }) => {
+        if (!response.ok) {
+          failureMessage.value = true
+          failureText.value = error ? error.detail : unexpectedFailure
+          return
+        }
+
         failureMessage.value = false
         store.logOn()
         router.push('/overview')
@@ -40,17 +49,17 @@
       <v-alert
         v-model="failureMessage"
         class="mb-5"
-        text="We couldn’t sign you in. Please check your credentials."
+        :text="failureText"
         type="error"
         variant="tonal"
       />
       <v-form>
 
-        <div class="text-subtitle-1 text-medium-emphasis">Email address</div>
+        <div class="text-subtitle-1 text-medium-emphasis">Username</div>
         <v-text-field
           v-model="username"
           density="compact"
-          placeholder="Enter your email"
+          placeholder="Enter Username"
           prepend-inner-icon="mdi-account"
           variant="solo-filled"
         />

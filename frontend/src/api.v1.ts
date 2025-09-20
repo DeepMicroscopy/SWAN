@@ -303,6 +303,9 @@ export interface components {
       solution: components['schemas']['Solution'];
       proof: string | null;
     };
+    Error: {
+      detail: string;
+    };
     Login: {
       username: string;
       password: string;
@@ -458,6 +461,14 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['Detail'];
+        };
+      };
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Error'];
         };
       };
     };

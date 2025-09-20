@@ -7,6 +7,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from app.views.util import ErrorSerializer
+
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
@@ -38,7 +40,10 @@ class AuthViewSet(viewsets.ViewSet):
         ensure_csrf_cookie(lambda r: response)(request._request)
         return response
 
-    @extend_schema(request=LoginSerializer, responses=DetailSerializer)
+    @extend_schema(request=LoginSerializer, responses={
+        200: DetailSerializer,
+        401: ErrorSerializer,
+    })
     @action(detail=False, methods=['post'])
     def login(self, request):
         serializer = LoginSerializer(data=request.data)

@@ -7,7 +7,7 @@
 
 
   const studies = ref<StudyList[]>([])
-  const study = ref<StudyList | null>(null)
+  const current = ref<StudyList | null>(null)
   const showStudy = ref(false)
   const error = ref<ErrorData>(getError())
 
@@ -33,7 +33,7 @@
   }
 
   function setStudy (s: StudyList) {
-    study.value = s
+    current.value = s
     showStudy.value = true
   }
 
@@ -86,7 +86,7 @@
     </v-list>
   </v-card>
 
-  <StudyDescription :show="showStudy" :study="study" @close="showStudy = false" />
+  <StudyDescription :show="showStudy" :study="current" @close="showStudy = false" />
 
   <FetchError :code="error.code" :show="error.show" :text="error.text" @close="error.show = false" />
 </template>
