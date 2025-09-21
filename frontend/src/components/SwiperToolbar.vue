@@ -53,11 +53,11 @@
   const buttonActive = ref(true)
 
   useIntro([
-    { ref: 'title-study', title: 'Title', description: 'Description' },
-    { ref: 'button-help', title: 'Help', description: 'Description' },
-    { ref: 'button-back', title: 'Back', description: 'Description' },
-    { ref: 'progress-bar', title: 'Progress', description: 'Description' },
-    { ref: 'button-exit', title: 'Exit', description: 'Description', onEnter: () => buttonActive.value = false, onExit: () => buttonActive.value = true },
+    { ref: 'title-study', title: 'Title', description: 'Title of the current study.' },
+    { ref: 'button-help', title: 'Help', description: 'View a guide to the user controls.' },
+    { ref: 'button-back', title: 'Back', description: 'Navigate back to the previous image and decision point in the study' },
+    { ref: 'progress-bar', title: 'Progress', description: 'This indicates your progress through the current study.' },
+    { ref: 'button-exit', title: 'Exit', description: 'Close the study and return to the overview page. Your progress will be saved.', onEnter: () => buttonActive.value = false, onExit: () => buttonActive.value = true },
   ])
 </script>
 
