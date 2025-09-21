@@ -23,6 +23,8 @@ meta:
   const error = ref<ErrorData>(getError())
   const failed = ref(false)
 
+  const showOverlay = ref(true);
+
   const { data: study, error: err, response } = await client.GET('/v1/studies/{id}/', { params: { path: { id: route.params.id } } });
   if (err) {
     setError(fatalError.value, err, response)
@@ -178,4 +180,9 @@ meta:
     :timeout="-1"
     @close="fatalError.show = false"
   />
+
+  <Overlay :is-visible="showOverlay" @close="showOverlay = false">
+    <HandSwipingAnimation />
+  </Overlay>
+
 </template>
