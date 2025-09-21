@@ -74,7 +74,10 @@ meta:
           currentEducation.value = result.data?.education
         }
       })
-      .catch(error => console.log(error))
+      .catch(error => {
+        console.log('FORWARD ERROR', error)
+        index.value--
+      })
   }
 
   function getIcon (choice: string):string {
