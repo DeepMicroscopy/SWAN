@@ -1,123 +1,96 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
+  interface Props {
+    vertical?: boolean
+  }
 
-  const showDynamicElement = ref(true);
-
+  const props = withDefaults(defineProps<Props>(), {
+    vertical: () => false,
+  })
 </script>
 
 <template>
-  <div id="highlight-me" class="hand-wrapper">
-    <v-img
-      v-if="showDynamicElement"
-      ref="hand-icon"
-      alt="Hand Icon"
-      class="hand"
-      src="@/assets/hand_no_touching.svg"
-    />
-    <!--    <v-img alt="Hand Icon" class="hand_touching" src="@/assets/hand_with_touching.svg" />-->
-  </div>
-
+  <v-img
+    ref="hand-icon"
+    alt="Hand Icon"
+    class="hand-switch"
+    :class="props.vertical ? 'hand-vertical' : 'hand-horizontal'"
+    src="@/assets/hand_no_touching.svg"
+  />
 </template>
 
 <style scoped lang="scss">
-
-.hand-wrapper {
-  position: relative;
-  display: flex;
-  //display: none;
-  justify-content: center; /* Horizontale Zentrierung */
-  align-items: center; /* Vertikale Zentrierung */
-  height: 80vh; /* Beispiel: Ganze Viewport-Höhe */
-}
-
-.hand {
+.hand-switch {
   z-index: 0;
   position: absolute;
-  top: 35%;
-  left: 55%;
   width: 100px;
-  height: auto;
-  animation: gesture 3s ease-in-out infinite;
+  height: 128px;
+  margin-top: 64px;
   transform-origin: center;
 }
 
-.hand_touching {
-  z-index: 1;
-  position: absolute;
-  top: 35%;
-  left: 55%;
-  width: 100px;
-  height: auto;
-  animation: touching_point 3s ease-in-out infinite;
-  transform-origin: center;
+.hand-switch.hand-horizontal {
+  animation: gesture 3s ease-in-out infinite alternate;
+}
+
+.hand-switch.hand-vertical {
+  animation: gesture-up-down 3s ease-in-out infinite alternate;
 }
 
 @keyframes gesture {
   0% {
-    transform: translate(0, 0) scale(1.5) rotate(-20deg);
-
+    transform: translate(-50px, 0px) scale(1.5) rotate(-20deg);
   }
 
   10% {
-    transform: translate(0, 10px) scale(1) rotate(-10deg);
-    /* Touch down */
+    transform: translate(-50px, 0px) scale(1.5) rotate(-20deg);
   }
 
   30% {
-    transform: translate(0, 10px) scale(1) rotate(-10deg);
+    transform: translate(-50px, 10px) scale(1.0) rotate(-10deg);
     /* Hold */
   }
 
-  60% {
-    transform: translate(80px, 10px) rotate(10deg);
-    /* Slide right while held */
+  70% {
+    transform: translate(50px, 10px) scale(1.0) rotate(10deg);
+    /* Slide */
   }
 
   90% {
-    transform: translate(80px, 0px) scale(1.5) rotate(0deg);
-    /* Lift slightly up (release) */
+    transform: translate(50px, 0px) scale(1.5) rotate(0deg);
+    /* Lift */
   }
 
   100% {
-    transform: translate(0, 0) scale(1.5) rotate(-20deg);
+    transform: translate(50px, 0px) scale(1.5) rotate(0deg);
   }
 }
 
-@keyframes touching_point {
+@keyframes gesture-up-down {
   0% {
-    transform: translate(0, 0) scale(1.5) rotate(-20deg);
-    opacity: 0;
-
+    transform: translate(0px, -50px) scale(1.5) rotate(-20deg);
   }
 
-  10% {
-    transform: translate(0, 10px) scale(1) rotate(-10deg);
-    opacity: 1;
-    /* Touch down */
+  20% {
+    transform: translate(0px, -50px) scale(1.5) rotate(-20deg);
   }
 
   30% {
-    transform: translate(0, 10px) scale(1) rotate(-10deg);
-    opacity: 1;
+    transform: translate(10px, -50px) scale(1.0) rotate(-10deg);
     /* Hold */
   }
 
-  60% {
-    transform: translate(80px, 10px) rotate(10deg);
-    opacity: 1;
-    /* Slide right while held */
+  70% {
+    transform: translate(10px, 50px) scale(1.0) rotate(10deg);
+    /* Slide */
   }
 
-  90% {
-    transform: translate(80px, 0px) scale(1.5) rotate(0deg);
-    opacity: 0;
-    /* Lift slightly up (release) */
+  80% {
+    transform: translate(0px, 50px) scale(1.5) rotate(0deg);
+    /* Lift */
   }
 
   100% {
-    transform: translate(0, 0) scale(1.5) rotate(-20deg);
-    opacity: 0;
-
+    transform: translate(0px, 50px) scale(1.5) rotate(0deg);
   }
 }
 </style>

@@ -5,7 +5,6 @@
   import SwiperHelp from '@/components/SwiperHelp.vue';
   import type { UiLabel } from '@/api.ts';
   import 'driver.js/dist/driver.css';
-  import { useIntro } from '@/composables/useIntro.ts';
 
 
   const router = useRouter()
@@ -38,6 +37,20 @@
 
   const showHelp = ref(false)
 
+  const titleStudy = useTemplateRef('title-study')
+  const buttonHelp = useTemplateRef('button-help')
+  const buttonBack = useTemplateRef('button-back')
+  const progressBar = useTemplateRef('progress-bar')
+  const buttonExit = useTemplateRef('button-exit')
+
+  defineExpose({
+    titleStudy,
+    buttonHelp,
+    buttonBack,
+    progressBar,
+    buttonExit,
+  });
+
   const progress = computed(() => {
     return 100 * (props.index / props.total)
   })
@@ -49,16 +62,6 @@
   const close = () => {
     router.back()
   }
-
-  const buttonActive = ref(true)
-
-  useIntro([
-    { ref: 'title-study', title: 'Title', description: 'Title of the current study.' },
-    { ref: 'button-help', title: 'Help', description: 'View a guide to the user controls.' },
-    { ref: 'button-back', title: 'Back', description: 'Navigate back to the previous image and decision point in the study' },
-    { ref: 'progress-bar', title: 'Progress', description: 'This indicates your progress through the current study.' },
-    { ref: 'button-exit', title: 'Exit', description: 'Close the study and return to the overview page. Your progress will be saved.', onEnter: () => buttonActive.value = false, onExit: () => buttonActive.value = true },
-  ])
 </script>
 
 <template>
@@ -102,7 +105,7 @@
       <v-btn
         ref="button-exit"
         color="white"
-        :disabled="!store.loggedIn || !buttonActive"
+        :disabled="!store.loggedIn"
         icon="mdi-close"
         @click="close"
       />

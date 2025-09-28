@@ -12,6 +12,7 @@ declare module 'vue' {
     FetchError: typeof import('./components/FetchError.vue')['default']
     HandSwipingAnimation: typeof import('./components/HandSwipingAnimation.vue')['default']
     ImageSwiper: typeof import('./components/ImageSwiper.vue')['default']
+    IntroOverlay: typeof import('./components/IntroOverlay.vue')['default']
     Overlay: typeof import('./components/Overlay.vue')['default']
     PastDecision: typeof import('./components/PastDecision.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

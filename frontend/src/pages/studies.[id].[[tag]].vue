@@ -10,6 +10,7 @@ meta:
   import client from '@/client.ts';
   import type { Education, UiLabel } from '@/api.ts';
   import { type ErrorData, getError, setError } from '@/util/fetch-errors.ts';
+  import { useIntro } from '@/composables/useIntro.ts';
 
   const route = useRoute<'/studies.[id].[[tag]]'>();
 
@@ -23,7 +24,7 @@ meta:
   const error = ref<ErrorData>(getError())
   const failed = ref(false)
 
-  const showOverlay = ref(true);
+  const showOverlay = ref(false);
 
   const { data: study, error: err, response } = await client.GET('/v1/studies/{id}/', { params: { path: { id: route.params.id } } });
   if (err) {
@@ -122,6 +123,30 @@ meta:
       })
       .catch(error => console.log(error))
   }
+
+  useIntro([
+    { child: 'toolbar', ref: 'titleStudy', title: 'Title', description: 'Title of the current study.' },
+    { child: 'toolbar', ref: 'buttonHelp', title: 'Help', description: 'View a guide to the user controls.' },
+    {
+      child: 'toolbar',
+      ref: 'buttonBack',
+      title: 'Back',
+      description: 'Navigate back to the previous image and decision point in the study.',
+    },
+    {
+      child: 'toolbar',
+      ref: 'progressBar',
+      title: 'Progress',
+      description: 'This indicates your progress through the current study.',
+    },
+    {
+      child: 'toolbar',
+      ref: 'buttonExit',
+      title: 'Exit',
+      description: 'Close the study and return to the overview page. Your progress will be saved.',
+      onExit: () => showOverlay.value = true,
+    },
+  ])
 </script>
 
 <template>
@@ -143,6 +168,7 @@ meta:
     />
 
     <SwiperToolbar
+      ref="toolbar"
       :index="index"
       :labels="study.ui.labels"
       :title="study.title"
@@ -181,8 +207,5 @@ meta:
     @close="fatalError.show = false"
   />
 
-  <Overlay :is-visible="showOverlay" @close="showOverlay = false">
-    <HandSwipingAnimation />
-  </Overlay>
-
+  <IntroOverlay :is-visible="showOverlay" @close="showOverlay = false" />
 </template>

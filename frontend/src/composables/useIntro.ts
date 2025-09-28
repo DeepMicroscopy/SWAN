@@ -1,10 +1,13 @@
 import { type Driver, driver, type DriveStep, type Popover } from 'driver.js';
 
-export type IntroStep = {
+type Step = {
+  child: string
   ref: string
-  onEnter?: () => void
-  onExit?: () => void
-} & Popover
+  onEnter?: (step: IntroStep) => void
+  onExit?: (step: IntroStep) => void
+}
+
+export type IntroStep = Step & Popover
 
 export function useIntro (steps: IntroStep[]): Driver {
   const intro = driver(
@@ -22,7 +25,12 @@ export function useIntro (steps: IntroStep[]): Driver {
       steps.map(step => {
         let el: Element | null = null
 
-        const component = instance.refs[step.ref]
+        const child = instance.refs[step.child]
+        if (!child) {
+          throw new Error('child not found')
+        }
+
+        const component = (child as never)[step.ref] as object
         if (component) {
           if (component instanceof HTMLElement) {
             el = component
@@ -39,30 +47,30 @@ export function useIntro (steps: IntroStep[]): Driver {
           element: el,
           popover: {
             ...step,
-            onPopoverRender: () =>{
+            onPopoverRender: () => {
               if (step.onEnter) {
-                step.onEnter()
+                step.onEnter(step)
               }
             },
             onNextClick: () => {
-              intro.moveNext()
-
               if (step.onExit) {
-                step.onExit()
+                step.onExit(step)
               }
+
+              intro.moveNext()
             },
             onPrevClick: () => {
               intro.movePrevious()
 
               if (step.onExit) {
-                step.onExit()
+                step.onExit(step)
               }
             },
             onCloseClick: () => {
               intro.destroy()
 
               if (step.onExit) {
-                step.onExit()
+                step.onExit(step)
               }
             },
           },
