@@ -220,13 +220,21 @@ meta:
   color: #BA68C8;
 }
 .driver-popover-footer button {
+  font: initial;
   color: #F3E5F5;
   background-color: #c51162 !important;
   text-shadow: initial;
+  height: 28px;
   min-width: 50px;
+  padding: 0 12px;
+  margin-left: 5px;
   border-radius: 4px;
-  line-height: initial;
   box-sizing: initial;
-  font-size: 15px;
+  letter-spacing: 0.09em;
+  line-height: normal;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 80%;
+  text-transform: uppercase;
 }
 </style>
