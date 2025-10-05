@@ -144,7 +144,7 @@ meta:
       ref: 'buttonExit',
       title: 'Exit',
       description: 'Close the study and return to the overview page. Your progress will be saved.',
-      onExit: () => showOverlay.value = true,
+      onNext: () => showOverlay.value = true,
     },
   ])
 </script>

@@ -4,7 +4,9 @@ type Step = {
   child: string
   ref: string
   onEnter?: (step: IntroStep) => void
-  onExit?: (step: IntroStep) => void
+  onPrev?: (step: IntroStep) => void
+  onNext?: (step: IntroStep) => void
+  onClose?: (step: IntroStep) => void
 }
 
 export type IntroStep = Step & Popover
@@ -53,8 +55,8 @@ export function useIntro (steps: IntroStep[]): Driver {
               }
             },
             onNextClick: () => {
-              if (step.onExit) {
-                step.onExit(step)
+              if (step.onNext) {
+                step.onNext(step)
               }
 
               intro.moveNext()
@@ -62,15 +64,15 @@ export function useIntro (steps: IntroStep[]): Driver {
             onPrevClick: () => {
               intro.movePrevious()
 
-              if (step.onExit) {
-                step.onExit(step)
+              if (step.onPrev) {
+                step.onPrev(step)
               }
             },
             onCloseClick: () => {
               intro.destroy()
 
-              if (step.onExit) {
-                step.onExit(step)
+              if (step.onClose) {
+                step.onClose(step)
               }
             },
           },
