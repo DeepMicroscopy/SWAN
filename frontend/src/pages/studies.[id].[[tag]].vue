@@ -125,7 +125,7 @@ meta:
   }
 
   useIntro([
-    { child: 'toolbar', ref: 'titleStudy', title: 'Title', description: 'Title of the current study.' },
+    { child: 'toolbar', ref: 'titleStudy', title: 'Title', description: 'Here you can see the title of the current study.' },
     { child: 'toolbar', ref: 'buttonHelp', title: 'Help', description: 'View a guide to the user controls.' },
     {
       child: 'toolbar',
@@ -209,3 +209,24 @@ meta:
 
   <IntroOverlay :is-visible="showOverlay" @close="showOverlay = false" />
 </template>
+
+<style lang="scss">
+.driver-popover {
+  color: #4A148C;
+  background-color: #F3E5F5;
+}
+
+.driver-popover-progress-text {
+  color: #BA68C8;
+}
+.driver-popover-footer button {
+  color: #F3E5F5;
+  background-color: #c51162 !important;
+  text-shadow: initial;
+  min-width: 50px;
+  border-radius: 4px;
+  line-height: initial;
+  box-sizing: initial;
+  font-size: 15px;
+}
+</style>
