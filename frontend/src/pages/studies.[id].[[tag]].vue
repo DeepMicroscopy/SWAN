@@ -39,7 +39,7 @@ meta:
 
   const cards = ref<Card[]>(result);
   const index = ref(study?.index + 1);
-  const showStudy = ref(false)
+  const showDescription = ref(false)
 
   const decisionText = ref('')
   const decisionIcon = ref('mdi-checkbox-blank-off-outline')
@@ -49,11 +49,19 @@ meta:
   const currentEducation = ref<Education>({} as Education)
   const showSolution = ref(false)
 
+  const showAppreciation = ref(false)
+
   if (index.value === 0) {
-    showStudy.value = true
+    showDescription.value = true
   }
 
   const infoPromise = client.GET('/v1/auth/info/')
+
+  watch(index, () => {
+    if (index.value === cards.value.length) {
+      showAppreciation.value = true
+    }
+  }, { immediate: true })
 
   const forward = (event: SwipeEvent) => {
     index.value++
@@ -130,7 +138,7 @@ meta:
   const currentIntroSwiping = 1
 
   const closeDescription = async () => {
-    showStudy.value = false
+    showDescription.value = false
 
     infoPromise.then(result => {
       if (!result.response.ok) {
@@ -241,7 +249,9 @@ meta:
     @close="showSolution = false"
   />
 
-  <StudyDescription :show="showStudy" :study="study" @close="closeDescription" />
+  <StudyDescription :overtime="study.ui.overtime" :show="showDescription" :study="study" @close="closeDescription" />
+
+  <StudyAppreciation :overtime="!!study.ui.overtime" :show="showAppreciation" :study="study" @close="showAppreciation = false" />
 
   <FetchError
     class="mb-6"

@@ -273,6 +273,8 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    /** @enum {unknown} */
+    BlankEnum: '';
     /**
          * @description * `up` - up
          *     * `down` - down
@@ -334,6 +336,16 @@ export interface components {
       username: string;
       password: string;
     };
+    /** @enum {unknown} */
+    NullEnum: null;
+    /**
+         * @description * `left` - left
+         *     * `right` - right
+         *     * `up` - up
+         *     * `down` - down
+         * @enum {string}
+         */
+    OvertimeEnum: 'left' | 'right' | 'up' | 'down';
     Solution: {
       text: string;
     };
@@ -410,15 +422,22 @@ export interface components {
       /** @description Only used for display purposes in the study creation. */
       title: string;
       labels: components['schemas']['UiLabel'];
+      /** @description (optional) The direction to mark images for another round of classification.
+             *
+             *     * `left` - left
+             *     * `right` - right
+             *     * `up` - up
+             *     * `down` - down */
+      overtime?: (components['schemas']['OvertimeEnum'] | components['schemas']['BlankEnum'] | components['schemas']['NullEnum']) | null;
     };
     UiDirection: {
-      text: string;
+      text: string | null;
       color: string | null;
       icon: string | null;
     };
     UiLabel: {
-      left: components['schemas']['UiDirection'];
-      right: components['schemas']['UiDirection'];
+      left: components['schemas']['UiDirection'] | null;
+      right: components['schemas']['UiDirection'] | null;
       up: components['schemas']['UiDirection'] | null;
       down: components['schemas']['UiDirection'] | null;
     };

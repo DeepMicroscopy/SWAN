@@ -16,6 +16,7 @@ declare module 'vue' {
     PastDecision: typeof import('./components/PastDecision.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StudyAppreciation: typeof import('./components/StudyAppreciation.vue')['default']
     StudyDescription: typeof import('./components/StudyDescription.vue')['default']
     StudySolution: typeof import('./components/StudySolution.vue')['default']
     SwanIcon: typeof import('./components/SwanIcon.vue')['default']

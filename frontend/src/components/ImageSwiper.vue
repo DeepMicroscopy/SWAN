@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
   import { computed, ref } from 'vue'
-  import type { UiLabel } from '@/api.ts';
+  import type { UiDirection, UiLabel } from '@/api.ts';
 
   // TODO
   // - dragging should be scaled to the zoom factor
@@ -73,6 +73,8 @@
   const thresholdSwipe = 100
   const thresholdDoubleTap = 500
 
+  type Direction = 'up' | 'down' | 'left' | 'right'
+
   export interface Card {
     index: number
     image: string
@@ -81,7 +83,7 @@
   }
 
   interface SwipeDirection {
-    direction: 'up' | 'down' | 'left' | 'right'
+    direction: Direction
     action: string
     color: string
     icon: string
@@ -89,7 +91,7 @@
 
   export interface SwipeEvent {
     card: Card
-    direction: 'up' | 'down' | 'left' | 'right'
+    direction: Direction
   }
 
   interface Props {
@@ -103,14 +105,7 @@
     title: () => 'n/a',
     cards: () => [],
     index: () => -1,
-    labels: () => ({
-      'left': {
-        'text': 'n/a',
-      },
-      'right': {
-        'text': 'n/a',
-      },
-    } as UiLabel),
+    labels: () => ({} as UiLabel),
   })
 
   const emit = defineEmits<{
@@ -138,32 +133,21 @@
   const currentDistance = ref(0)
   const lastTap = ref(Date.now())
 
+
+  function labelToDirection (direction: Direction, label: UiDirection | null): SwipeDirection {
+    return {
+      direction,
+      action: label?.text ?? 'n/a',
+      color: label?.color ?? 'white',
+      icon: label?.icon ?? `mdi-arrow-${direction}-bold`,
+    }
+  }
   // data holder
   const swipeDirections: Record<string, SwipeDirection> = {
-    up: {
-      direction: 'up',
-      action: props.labels.up?.text ?? 'n/a',
-      color: props.labels.up?.color ?? 'white',
-      icon: props.labels.up?.icon ?? 'mdi-arrow-up-bold',
-    },
-    down: {
-      direction: 'down',
-      action: props.labels.down?.text ?? 'n/a',
-      color: props.labels.down?.color ?? 'white',
-      icon: props.labels.down?.icon ?? 'mdi-arrow-down-bold',
-    },
-    left: {
-      direction: 'left',
-      action: props.labels.left.text,
-      color: props.labels.left?.color ?? 'white',
-      icon: props.labels.left?.icon ?? 'mdi-arrow-left-bold',
-    },
-    right: {
-      direction: 'right',
-      action: props.labels.right.text,
-      color: props.labels.right?.color ?? 'white',
-      icon: props.labels.right?.icon ?? 'mdi-arrow-right-bold',
-    },
+    up: labelToDirection('up', props.labels.up),
+    down: labelToDirection('down', props.labels.down),
+    left: labelToDirection('left', props.labels.left),
+    right: labelToDirection('right', props.labels.right),
   }
 
   // Computed
@@ -252,9 +236,7 @@
 
     const delta = { x: currentX.value - startX.value, y: currentY.value - startY.value }
 
-    const threshold = 50;
-
-    if (Math.abs(delta.x) > threshold || Math.abs(delta.y) > threshold) {
+    if (Math.abs(delta.x) > thresholdSwipe || Math.abs(delta.y) > thresholdSwipe) {
       if (Math.abs(delta.x) > Math.abs(delta.y)) {
         swipeDirection.value = delta.x > 0 ? 'right' : 'left'
       } else {
@@ -264,7 +246,7 @@
           swipeDirection.value = 'up'
         } else if (props.labels.down && isDown) {
           swipeDirection.value = 'down'
-        } else if (delta.x > threshold) {
+        } else if (delta.x > thresholdSwipe) {
           swipeDirection.value = delta.x > 0 ? 'right' : 'left'
         } else {
           swipeDirection.value = null

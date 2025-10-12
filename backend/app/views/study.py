@@ -36,14 +36,14 @@ def get_index_for_request(request, pk):
 
 
 class UiDirectionSerializer(serializers.Serializer):
-    text = serializers.CharField()
+    text = serializers.CharField(allow_null=True)
     color = serializers.CharField(allow_null=True)
     icon = serializers.CharField(allow_null=True)
 
 
 class UiLabelSerializer(serializers.Serializer):
-    left = UiDirectionSerializer()
-    right = UiDirectionSerializer()
+    left = UiDirectionSerializer(allow_null=True)
+    right = UiDirectionSerializer(allow_null=True)
     up = UiDirectionSerializer(allow_null=True)
     down = UiDirectionSerializer(allow_null=True)
 
@@ -53,7 +53,7 @@ class UiSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ui
-        fields = ["title", "labels"]
+        fields = ["title", "labels", "overtime"]
 
 class SolutionConfigSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

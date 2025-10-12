@@ -67,14 +67,24 @@ class Dataset(UUIDModel, DecoratorMixin):
             super().save(update_fields=['file_list', 'file_count'])
 
 
+class Directions(models.TextChoices):
+    LEFT = "left", "left"
+    RIGHT = "right", "right"
+    UP = "up", "up"
+    DOWN = "down", "down"
+
+    class Meta:
+        abstract = True
+
 def ui_default():
-    return {'left': {'text': 'left', 'icon': None, 'color': None}, 'right': {'text': 'right'}}
+    return {'left': {'text': 'left', 'icon': None, 'color': None}, 'right': {'text': 'right', 'label': 'bad'}}
 
 
 class Ui(UUIDModel, DecoratorMixin):
     title = models.CharField(max_length=200, help_text="Only used for display purposes in the study creation.")
     labels = models.JSONField(default=ui_default, help_text="""A dictionary mapping the directions 'up', 'down', 'left' and 'right' to an object.
 The object has the keys 'text', 'icon' and 'color' - 'label' can be used to rename the label in the export.""")
+    overtime = models.CharField(max_length=200, choices=Directions, help_text="(optional) The direction to mark images for another round of classification.", null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -113,12 +123,6 @@ class Solution(DecoratorMixin):
 
 
 class Classification(UUIDModel):
-    class Directions(models.TextChoices):
-        LEFT = "left", "left"
-        RIGHT = "right", "right"
-        UP = "up", "up"
-        DOWN = "down", "down"
-
     date = models.DateTimeField(help_text="The time the image was classified.")
     study = models.ForeignKey(Study, on_delete=models.PROTECT, help_text="The study that this classification belongs to.")
     file = models.CharField(max_length=200, help_text="The name of the file that was classified at the index of this dataset.")

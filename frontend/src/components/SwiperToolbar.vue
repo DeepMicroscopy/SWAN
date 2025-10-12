@@ -69,7 +69,7 @@
     <v-progress-linear
       ref="progress-bar"
       class="progress-bar"
-      color="green"
+      :color="props.index > props.total ? 'blue' : 'green'"
       :model-value="progress"
       rounded
     />

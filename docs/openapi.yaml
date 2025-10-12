@@ -512,6 +512,9 @@ paths:
           description: ''
 components:
   schemas:
+    BlankEnum:
+      enum:
+      - ''
     ChoiceEnum:
       enum:
       - up
@@ -641,6 +644,21 @@ components:
       required:
       - password
       - username
+    NullEnum:
+      enum:
+      - null
+    OvertimeEnum:
+      enum:
+      - left
+      - right
+      - up
+      - down
+      type: string
+      description: |-
+        * `left` - left
+        * `right` - right
+        * `up` - up
+        * `down` - down
     Solution:
       type: object
       properties:
@@ -783,6 +801,19 @@ components:
           maxLength: 200
         labels:
           $ref: '#/components/schemas/UiLabel'
+        overtime:
+          nullable: true
+          description: |-
+            (optional) The direction to mark images for another round of classification.
+
+            * `left` - left
+            * `right` - right
+            * `up` - up
+            * `down` - down
+          oneOf:
+          - $ref: '#/components/schemas/OvertimeEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
       required:
       - labels
       - title
@@ -791,6 +822,7 @@ components:
       properties:
         text:
           type: string
+          nullable: true
         color:
           type: string
           nullable: true
@@ -805,9 +837,13 @@ components:
       type: object
       properties:
         left:
-          $ref: '#/components/schemas/UiDirection'
+          allOf:
+          - $ref: '#/components/schemas/UiDirection'
+          nullable: true
         right:
-          $ref: '#/components/schemas/UiDirection'
+          allOf:
+          - $ref: '#/components/schemas/UiDirection'
+          nullable: true
         up:
           allOf:
           - $ref: '#/components/schemas/UiDirection'
