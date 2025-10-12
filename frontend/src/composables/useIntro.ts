@@ -79,9 +79,7 @@ export function useIntro (steps: IntroStep[]): Driver {
         } as DriveStep
       })
     )
-
-    intro.drive()
-
   })
+
   return intro
 }

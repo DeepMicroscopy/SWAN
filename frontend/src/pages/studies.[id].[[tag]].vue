@@ -124,7 +124,7 @@ meta:
       .catch(error => console.log(error))
   }
 
-  useIntro([
+  const intro = useIntro([
     { child: 'toolbar', ref: 'titleStudy', title: 'Title', description: 'Here you can see the title of the current study.' },
     { child: 'toolbar', ref: 'buttonHelp', title: 'Help', description: 'View a guide to the user controls.' },
     {
@@ -147,6 +147,11 @@ meta:
       onNext: () => showOverlay.value = true,
     },
   ])
+
+  const closeDescription = () => {
+    showStudy.value = false
+    intro.drive()
+  }
 </script>
 
 <template>
@@ -187,7 +192,7 @@ meta:
     @close="showSolution = false"
   />
 
-  <StudyDescription :show="showStudy" :study="study" @close="showStudy = false" />
+  <StudyDescription :show="showStudy" :study="study" @close="closeDescription" />
 
   <FetchError
     class="mb-6"
