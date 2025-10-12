@@ -8,14 +8,7 @@
 
   const props = withDefaults(defineProps<Props>(), {
     show: () => false,
-    labels: () => ({
-      'left': {
-        'text': 'n/a',
-      },
-      'right': {
-        'text': 'n/a',
-      },
-    } as UiLabel),
+    labels: () => ({} as UiLabel),
   })
 
   const emit = defineEmits<{
@@ -59,11 +52,13 @@
             title="Swipe Down"
           />
           <v-list-item
+            v-if="props.labels.left"
             prepend-icon="mdi-arrow-left"
             :subtitle="`Classify as ${props.labels.left.text}`"
             title="Swipe Left"
           />
           <v-list-item
+            v-if="props.labels.right"
             prepend-icon="mdi-arrow-right"
             :subtitle="`Classify as ${props.labels.right.text}`"
             title="Swipe Right"
