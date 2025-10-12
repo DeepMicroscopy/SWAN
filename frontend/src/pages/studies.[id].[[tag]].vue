@@ -14,11 +14,9 @@ meta:
 
   const route = useRoute<'/studies.[id].[[tag]]'>();
 
-  onBeforeMount(() => {
-    if ((route.params.tag?.length ?? 0) > 0) {
-      document.cookie = `anonymous=${route.params.tag}; path=/; Secure`;
-    }
-  })
+  if ((route.params.tag?.length ?? 0) > 0) {
+    document.cookie = `anonymous=${route.params.tag}; path=/; Secure`;
+  }
 
   const fatalError = ref<ErrorData>(getError())
   const error = ref<ErrorData>(getError())

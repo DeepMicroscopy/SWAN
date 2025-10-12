@@ -156,6 +156,7 @@ paths:
       - Auth
       security:
       - cookieAuth: []
+      - {}
       responses:
         '200':
           content:
@@ -180,6 +181,7 @@ paths:
               $ref: '#/components/schemas/InfoRequest'
       security:
       - cookieAuth: []
+      - {}
       responses:
         '200':
           content:

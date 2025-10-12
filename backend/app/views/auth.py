@@ -39,7 +39,7 @@ class AuthViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
     def get_permissions(self):
-        if self.action == "status" or self.action == "login":
+        if self.action == "status" or self.action == "login" or self.action == "info":
             return [AllowAny()]
         else:
             return [IsAuthenticated()]
@@ -87,7 +87,7 @@ class AuthViewSet(viewsets.ViewSet):
     @extend_schema(request=InfoRequestSerializer, responses=InfoResponseSerializer)
     @action(detail=False, methods=['get', 'post'])
     def info(self, request):
-        if request.method == 'POST':
+        if request.user.is_authenticated and request.method == 'POST':
             serializer = InfoRequestSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
@@ -100,8 +100,8 @@ class AuthViewSet(viewsets.ViewSet):
             request.user.save()
 
         serializer = InfoResponseSerializer({
-            "intro_general": request.user.intro_general,
-            "intro_swiping": request.user.intro_swiping,
+            "intro_general": request.user.intro_general if request.user.is_authenticated else 0,
+            "intro_swiping": request.user.intro_swiping if request.user.is_authenticated else 0,
         })
 
         return Response(serializer.data)
