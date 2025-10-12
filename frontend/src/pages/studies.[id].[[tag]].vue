@@ -53,6 +53,8 @@ meta:
     showStudy.value = true
   }
 
+  const infoPromise = client.GET('/v1/auth/info/')
+
   const forward = (event: SwipeEvent) => {
     index.value++
     showDecision.value = false
@@ -85,7 +87,7 @@ meta:
       })
   }
 
-  function getIcon (choice: string):string {
+  function getIcon (choice: string): string {
     return {
       up: 'mdi-arrow-up-bold',
       down: 'mdi-arrow-down-bold',
@@ -124,9 +126,61 @@ meta:
       .catch(error => console.log(error))
   }
 
+  const currentIntroGeneral = 1
+  const currentIntroSwiping = 1
+
+  const closeDescription = async () => {
+    showStudy.value = false
+
+    infoPromise.then(result => {
+      if (!result.response.ok) {
+        setError(error.value, result.error, result.response)
+        return
+      }
+
+      const lastIntroGeneral = result.data?.intro_general ?? 0
+      const lastIntroSwiping = result.data?.intro_swiping ?? 0
+      if (lastIntroGeneral < currentIntroGeneral) {
+        intro.drive()
+      } else if (lastIntroSwiping < currentIntroSwiping) {
+        showOverlay.value = true
+      }
+    })
+  }
+
+  const closeIntro = () => {
+    showOverlay.value = true
+
+    client.POST('/v1/auth/info/', {
+      body: {
+        intro_general: currentIntroGeneral,
+      },
+    })
+  }
+
+  const closeOverlay = () => {
+    showOverlay.value = false
+
+    client.POST('/v1/auth/info/', {
+      body: {
+        intro_swiping: currentIntroSwiping,
+      },
+    })
+  }
+
   const intro = useIntro([
-    { child: 'toolbar', ref: 'titleStudy', title: 'Title', description: 'Here you can see the title of the current study.' },
-    { child: 'toolbar', ref: 'buttonHelp', title: 'Help', description: 'View a guide to the user controls.' },
+    {
+      child: 'toolbar',
+      ref: 'titleStudy',
+      title: 'Title',
+      description: 'Here you can see the title of the current study.',
+    },
+    {
+      child: 'toolbar',
+      ref: 'buttonHelp',
+      title: 'Help',
+      description: 'View a guide to the user controls.',
+    },
     {
       child: 'toolbar',
       ref: 'buttonBack',
@@ -144,14 +198,9 @@ meta:
       ref: 'buttonExit',
       title: 'Exit',
       description: 'Close the study and return to the overview page. Your progress will be saved.',
-      onNext: () => showOverlay.value = true,
+      onNext: closeIntro,
     },
   ])
-
-  const closeDescription = () => {
-    showStudy.value = false
-    intro.drive()
-  }
 </script>
 
 <template>
@@ -212,7 +261,7 @@ meta:
     @close="fatalError.show = false"
   />
 
-  <IntroOverlay :is-visible="showOverlay" @close="showOverlay = false" />
+  <IntroOverlay :is-visible="showOverlay" @close="closeOverlay" />
 </template>
 
 <style lang="scss">
@@ -224,8 +273,8 @@ meta:
 .driver-popover-progress-text {
   color: #BA68C8;
 }
+
 .driver-popover-footer button {
-  font: initial;
   color: #F3E5F5;
   background-color: #c51162 !important;
   text-shadow: initial;
@@ -237,7 +286,6 @@ meta:
   box-sizing: initial;
   letter-spacing: 0.09em;
   line-height: normal;
-  font-family: "Roboto", sans-serif;
   font-weight: 500;
   font-size: 80%;
   text-transform: uppercase;

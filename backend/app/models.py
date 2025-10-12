@@ -11,6 +11,9 @@ from swan.settings import AUTH_USER_MODEL
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
+    intro_general = models.PositiveSmallIntegerField(default=0)
+    intro_swiping = models.PositiveSmallIntegerField(default=0)
+
 
 class UUIDModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

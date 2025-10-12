@@ -4,20 +4,30 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import serializers
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from app.views.util import ErrorSerializer
 
 
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
-    password = serializers.CharField(required=True, write_only=True)
-
-
 class StatusSerializer(serializers.Serializer):
     authenticated = serializers.BooleanField()
     username = serializers.CharField()
+
+
+class InfoRequestSerializer(serializers.Serializer):
+    intro_general = serializers.IntegerField(required=False)
+    intro_swiping = serializers.IntegerField(required=False)
+
+
+class InfoResponseSerializer(serializers.Serializer):
+    intro_general = serializers.IntegerField()
+    intro_swiping = serializers.IntegerField()
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
 
 
 class DetailSerializer(serializers.Serializer):
@@ -27,6 +37,12 @@ class DetailSerializer(serializers.Serializer):
 @extend_schema(tags=['Auth'])
 class AuthViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
+
+    def get_permissions(self):
+        if self.action == "status" or self.action == "login":
+            return [AllowAny()]
+        else:
+            return [IsAuthenticated()]
 
     @extend_schema(request=None, responses=StatusSerializer)
     @action(detail=False, methods=['get'])
@@ -67,3 +83,25 @@ class AuthViewSet(viewsets.ViewSet):
         logout(request)
 
         return Response({"detail": "Logged out successfully"})
+
+    @extend_schema(request=InfoRequestSerializer, responses=InfoResponseSerializer)
+    @action(detail=False, methods=['get', 'post'])
+    def info(self, request):
+        if request.method == 'POST':
+            serializer = InfoRequestSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            if "intro_general" in serializer.validated_data:
+                request.user.intro_general = serializer.validated_data["intro_general"]
+
+            if "intro_swiping" in serializer.validated_data:
+                request.user.intro_swiping = serializer.validated_data["intro_swiping"]
+
+            request.user.save()
+
+        serializer = InfoResponseSerializer({
+            "intro_general": request.user.intro_general,
+            "intro_swiping": request.user.intro_swiping,
+        })
+
+        return Response(serializer.data)

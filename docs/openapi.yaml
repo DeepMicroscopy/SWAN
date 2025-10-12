@@ -149,6 +149,44 @@ paths:
                 type: object
                 additionalProperties: {}
           description: ''
+  /v1/auth/info/:
+    get:
+      operationId: v1_auth_info_retrieve
+      tags:
+      - Auth
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoResponse'
+          description: ''
+    post:
+      operationId: v1_auth_info_create
+      tags:
+      - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfoRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InfoRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InfoRequest'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoResponse'
+          description: ''
   /v1/auth/login/:
     post:
       operationId: v1_auth_login_create
@@ -189,7 +227,6 @@ paths:
       - Auth
       security:
       - cookieAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -576,6 +613,23 @@ components:
           type: string
       required:
       - detail
+    InfoRequest:
+      type: object
+      properties:
+        intro_general:
+          type: integer
+        intro_swiping:
+          type: integer
+    InfoResponse:
+      type: object
+      properties:
+        intro_general:
+          type: integer
+        intro_swiping:
+          type: integer
+      required:
+      - intro_general
+      - intro_swiping
     Login:
       type: object
       properties:

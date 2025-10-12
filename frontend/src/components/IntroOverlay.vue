@@ -29,7 +29,7 @@
       </div>
 
       <div v-if="showUpDown" id="right-decision">
-        <p>In this study you can also swipe up or down to classify the image.</p>
+        <p>In some studies you can also swipe up or down to classify the image.</p>
         <v-btn class="mt-3" color="pink-accent-4" size="small" @click="close">close</v-btn>
       </div>
     </div>

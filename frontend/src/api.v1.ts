@@ -24,6 +24,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/auth/info/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['v1_auth_info_retrieve'];
+    put?: never;
+    post: operations['v1_auth_info_create'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/auth/login/': {
     parameters: {
       query?: never;
@@ -306,6 +322,14 @@ export interface components {
     Error: {
       detail: string;
     };
+    InfoRequest: {
+      intro_general?: number;
+      intro_swiping?: number;
+    };
+    InfoResponse: {
+      intro_general: number;
+      intro_swiping: number;
+    };
     Login: {
       username: string;
       password: string;
@@ -436,6 +460,50 @@ export interface operations {
           'application/json': {
             [key: string]: unknown;
           };
+        };
+      };
+    };
+  };
+  v1_auth_info_retrieve: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InfoResponse'];
+        };
+      };
+    };
+  };
+  v1_auth_info_create: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['InfoRequest'];
+        'application/x-www-form-urlencoded': components['schemas']['InfoRequest'];
+        'multipart/form-data': components['schemas']['InfoRequest'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InfoResponse'];
         };
       };
     };
