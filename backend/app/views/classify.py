@@ -98,7 +98,7 @@ class ClassifyViewSet(viewsets.ViewSet):
 
         ordered = result.order_by("-date")
         if ordered.count() == 0:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         serializer = ClassifyOutputSerializer(ordered.first())
         return Response(serializer.data)
