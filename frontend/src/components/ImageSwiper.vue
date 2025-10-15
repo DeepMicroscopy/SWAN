@@ -18,6 +18,14 @@
       </v-fade-transition>
 
       <div class="cards-stack position-absolute">
+        <div class="absolute-center">
+          <v-icon color="white" size="64">mdi-cancel</v-icon>
+
+          <p class="mt-2">
+            No more images
+          </p>
+        </div>
+
         <div
           v-for="(card, i) in visibleCards"
           :key="card.index"
@@ -512,5 +520,19 @@
   50% {
     transform: translate(-50%, -50%) translateX(10px);
   }
+}
+
+.absolute-center {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
 }
 </style>
