@@ -1,4 +1,5 @@
 import { type Driver, driver, type DriveStep, type Popover } from 'driver.js';
+import 'driver.js/dist/driver.css';
 
 type Step = {
   child: string

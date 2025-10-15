@@ -4,8 +4,6 @@
   import { useRouter } from 'vue-router';
   import SwiperHelp from '@/components/SwiperHelp.vue';
   import type { UiLabel } from '@/api.ts';
-  import 'driver.js/dist/driver.css';
-
 
   const router = useRouter()
   const store = useAppStore()
