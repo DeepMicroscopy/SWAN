@@ -110,7 +110,7 @@ class StudyViewSet(viewsets.GenericViewSet):
     queryset = Study.objects.all()
 
     def get_permissions(self):
-        if self.action == "retrieve" or self.action == "entry":
+        if self.action == "retrieve" or self.action == "entry" or self.action == "postponed":
             return [AllowAny()]
         elif self.action == "list":
             return [IsAuthenticated()]

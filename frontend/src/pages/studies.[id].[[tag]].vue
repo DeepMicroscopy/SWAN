@@ -64,6 +64,8 @@ meta:
   const closeAppreciation = async () => {
     showAppreciation.value = false
 
+    if (!study.ui.postpone) return
+
     const { data: postponed, error: err, response } = await client.GET('/v1/studies/{id}/postponed/', { params: { path: { id: route.params.id } } })
     if (err) {
       setError(error.value, err, response)
