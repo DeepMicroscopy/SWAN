@@ -232,8 +232,8 @@ meta:
     <ImageSwiper
       :cards="cards"
       :index="index"
-      :labels="study.ui.labels"
       :title="study.title"
+      :ui="study.ui"
       @swiped="forward"
     />
 

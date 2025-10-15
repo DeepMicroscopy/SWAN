@@ -6,3 +6,7 @@ export type Study = components['schemas']['Study'];
 export type StudyList = components['schemas']['StudyList'];
 export type UiLabel = components['schemas']['UiLabel'];
 export type UiDirection = components['schemas']['UiDirection'];
+export type Ui = components['schemas']['Ui'];
+
+
+export type Direction = 'up' | 'down' | 'left' | 'right'

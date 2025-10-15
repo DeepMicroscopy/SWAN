@@ -69,7 +69,7 @@
 
 <script setup lang="ts">
   import { computed, ref } from 'vue'
-  import type { UiDirection, UiLabel } from '@/api.ts';
+  import type { Direction, Ui, UiDirection } from '@/api.ts';
 
   // TODO
   // - dragging should be scaled to the zoom factor
@@ -80,8 +80,6 @@
   // in ms
   const thresholdSwipe = 100
   const thresholdDoubleTap = 500
-
-  type Direction = 'up' | 'down' | 'left' | 'right'
 
   export interface Card {
     index: number
@@ -106,14 +104,14 @@
     title?: string
     cards?: Card[]
     index?: number
-    labels?: UiLabel
+    ui?: Ui
   }
 
   const props = withDefaults(defineProps<Props>(), {
     title: () => 'n/a',
     cards: () => [],
     index: () => -1,
-    labels: () => ({} as UiLabel),
+    ui: () => ({} as Ui),
   })
 
   const emit = defineEmits<{
@@ -152,10 +150,10 @@
   }
   // data holder
   const swipeDirections: Record<string, SwipeDirection> = {
-    up: labelToDirection('up', props.labels.up),
-    down: labelToDirection('down', props.labels.down),
-    left: labelToDirection('left', props.labels.left),
-    right: labelToDirection('right', props.labels.right),
+    up: labelToDirection('up', props.ui.labels.up),
+    down: labelToDirection('down', props.ui.labels.down),
+    left: labelToDirection('left', props.ui.labels.left),
+    right: labelToDirection('right', props.ui.labels.right),
   }
 
   // Computed
@@ -236,33 +234,37 @@
     }
   }
 
+  function directionForDeltas (x: number, y: number): Direction|null {
+    if (Math.abs(x) > thresholdSwipe || Math.abs(y) > thresholdSwipe) {
+      if (Math.abs(x) > Math.abs(y)) {
+        const isRight = x > 0
+
+        if (props.ui.labels.left && !isRight) {
+          return 'left'
+        } else if (props.ui.labels.right && isRight) {
+          return 'right'
+        }
+      } else {
+        const isDown = y > 0
+
+        if (props.ui.labels.up && !isDown) {
+          return 'up'
+        } else if (props.ui.labels.down && isDown) {
+          return 'down'
+        }
+      }
+    }
+
+    return null
+  }
+
   const swipeMove = (e: MouseEvent | Touch) => {
     if (!isSwiping.value) return
 
     currentX.value = e.clientX
     currentY.value = e.clientY
 
-    const delta = { x: currentX.value - startX.value, y: currentY.value - startY.value }
-
-    if (Math.abs(delta.x) > thresholdSwipe || Math.abs(delta.y) > thresholdSwipe) {
-      if (Math.abs(delta.x) > Math.abs(delta.y)) {
-        swipeDirection.value = delta.x > 0 ? 'right' : 'left'
-      } else {
-        const isDown = delta.y > 0
-
-        if (props.labels.up && !isDown) {
-          swipeDirection.value = 'up'
-        } else if (props.labels.down && isDown) {
-          swipeDirection.value = 'down'
-        } else if (delta.x > thresholdSwipe) {
-          swipeDirection.value = delta.x > 0 ? 'right' : 'left'
-        } else {
-          swipeDirection.value = null
-        }
-      }
-    } else {
-      swipeDirection.value = null
-    }
+    swipeDirection.value = directionForDeltas(currentX.value - startX.value, currentY.value - startY.value)
   }
 
   const handleSwipeEnd = () => {
@@ -275,33 +277,16 @@
 
     if (!isSwiping.value) return
 
-    const delta = { x: currentX.value - startX.value, y: currentY.value - startY.value }
+    const direction = directionForDeltas(currentX.value - startX.value, currentY.value - startY.value)
 
-    if (Math.abs(delta.x) > thresholdSwipe || Math.abs(delta.y) > thresholdSwipe) {
-      let direction
-
-      if (Math.abs(delta.x) > Math.abs(delta.y)) {
-        direction = delta.x > 0 ? 'right' : 'left'
-      } else {
-        direction = delta.y > 0 ? 'down' : 'up'
-      }
-
-      if (direction === 'down' && !props.labels.down || direction === 'up' && !props.labels.up) {
-        if (delta.x > thresholdSwipe) {
-          direction = delta.x > 0 ? 'right' : 'left'
-        } else {
-          swipeReset()
-          return
-        }
-      }
-
+    if (direction !== null) {
       emit('swiped', <SwipeEvent>{
         card: props.cards[props.index],
         direction,
       })
     }
 
-    swipeReset();
+    swipeReset()
   }
 
   function swipeReset () {
