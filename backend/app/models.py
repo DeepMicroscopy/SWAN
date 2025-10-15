@@ -85,6 +85,8 @@ class Ui(UUIDModel, DecoratorMixin):
     labels = models.JSONField(default=ui_default, help_text="""A dictionary mapping the directions 'up', 'down', 'left' and 'right' to an object.
 The object has the keys 'text', 'icon' and 'color' - 'label' can be used to rename the label in the export.""")
     postpone = models.CharField(max_length=200, choices=Directions, help_text="(optional) The direction to mark images for another round of classification.", null=True, blank=True)
+    pixelated = models.BooleanField(default=True, help_text="Use 'pixelated' image-rendering.")
+    default_scale = models.PositiveSmallIntegerField(default=100, help_text="The default scale of images in the study. Values in percent.")
 
     def __str__(self):
         return self.title

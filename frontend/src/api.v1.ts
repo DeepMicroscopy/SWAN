@@ -448,6 +448,13 @@ export interface components {
              *     * `up` - up
              *     * `down` - down */
       postpone?: (components['schemas']['PostponeEnum'] | components['schemas']['BlankEnum'] | components['schemas']['NullEnum']) | null;
+      /** @description Use 'pixelated' image-rendering. */
+      pixelated?: boolean;
+      /**
+             * Format: int64
+             * @description The default scale of images in the study. Values in percent.
+             */
+      default_scale?: number;
     };
     UiDirection: {
       text: string | null;

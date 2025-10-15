@@ -70,6 +70,7 @@ class UiAdmin(admin.ModelAdmin):
     def get_fieldsets(self, request, obj=None):
         return fieldset(self.model,(
             ("General", {"fields": ["title", "labels", "postpone"]}),
+            ("Style", {"fields": ["default_scale", "pixelated"]}),
         ))
 
     class Media:

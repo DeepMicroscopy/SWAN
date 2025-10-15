@@ -847,6 +847,15 @@ components:
           - $ref: '#/components/schemas/PostponeEnum'
           - $ref: '#/components/schemas/BlankEnum'
           - $ref: '#/components/schemas/NullEnum'
+        pixelated:
+          type: boolean
+          description: Use 'pixelated' image-rendering.
+        default_scale:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: The default scale of images in the study. Values in percent.
       required:
       - labels
       - title

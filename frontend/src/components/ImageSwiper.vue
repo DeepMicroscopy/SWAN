@@ -49,6 +49,7 @@
               <v-img
                 :alt="card.title"
                 class="image-zoom"
+                :class="props.ui.pixelated ? 'image-pixelated' : ''"
                 :src="card.image"
                 :style="getImageStyle()"
                 @mousedown.prevent="handleStartMouse"
@@ -136,6 +137,7 @@
   // Image zoom
   const isZooming = ref(false)
   const imageZoom = ref(1)
+  const imageScale = ref((props.ui.default_scale ?? 100) / 100)
   const currentDistance = ref(0)
   const lastTap = ref(Date.now())
 
@@ -184,7 +186,7 @@
 
   const getImageStyle = () => {
     return {
-      transform: `scale(${imageZoom.value}) translate(${imageX.value}px, ${imageY.value}px)`,
+      transform: `scale(${imageZoom.value * imageScale.value}) translate(${imageX.value}px, ${imageY.value}px)`,
       transformOrigin: 'center center',
       transition: isDragging.value ? 'none' : 'transform 0.3s ease',
     }
@@ -434,6 +436,9 @@
   object-fit: cover;
   user-select: none;
   -webkit-user-drag: none;
+}
+
+.image-pixelated {
   image-rendering: pixelated;
 }
 

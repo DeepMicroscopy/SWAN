@@ -65,7 +65,7 @@ class UiSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ui
-        fields = ["title", "labels", "postpone"]
+        fields = ["title", "labels", "postpone", "pixelated", "default_scale"]
 
 
 class SolutionConfigSerializer(serializers.HyperlinkedModelSerializer):
