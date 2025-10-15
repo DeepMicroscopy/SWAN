@@ -18,7 +18,7 @@
       </v-fade-transition>
 
       <div class="cards-stack position-absolute">
-        <div class="absolute-center">
+        <div v-if="props.index === props.cards.length" class="absolute-center">
           <v-icon color="white" size="64">mdi-cancel</v-icon>
 
           <p class="mt-2">
@@ -174,13 +174,13 @@
 
       return {
         transform: `${baseTransform} translateX(${deltaX}px) translateY(${deltaY}px) rotateZ(${rotation}deg)`,
-        opacity: 1 - Math.abs(deltaX) / 1000 - Math.abs(deltaY) / 1000,
+        opacity: 1,
       }
     }
 
     return {
       transform: baseTransform,
-      opacity: 1 - index * 0.2,
+      opacity: 1 - index * 0.5,
     }
   }
 
