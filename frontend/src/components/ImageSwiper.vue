@@ -368,7 +368,7 @@
   }
 
   const zoomChange = (dir: boolean) => {
-    imageZoom.value = Math.max(1, Math.min(3, imageZoom.value + (dir ? -0.1 : 0.1)))
+    imageZoom.value = Math.max(0.1, Math.min(3, imageZoom.value + (dir ? -0.1 : 0.1)))
 
     if (imageZoom.value === 1) {
       zoomReset()
