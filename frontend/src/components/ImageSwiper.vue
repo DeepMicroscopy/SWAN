@@ -212,7 +212,9 @@
   }
 
   const handleSwipeStartMouse = (e: MouseEvent) => {
-    swipeStart(e)
+    if (e.button === 0) {
+      swipeStart(e)
+    }
   }
 
   const swipeStart = (e: MouseEvent | Touch) => {
