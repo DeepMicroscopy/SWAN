@@ -35,6 +35,8 @@
 
   const showHelp = ref(false)
 
+  const initialLength = props.total
+
   const titleStudy = useTemplateRef('title-study')
   const buttonHelp = useTemplateRef('button-help')
   const buttonBack = useTemplateRef('button-back')
@@ -50,7 +52,11 @@
   });
 
   const progress = computed(() => {
-    return 100 * (props.index / props.total)
+    return 100 * (props.index / initialLength)
+  })
+
+  const progressExtra = computed(() => {
+    return 100 * ((props.index - initialLength) / (props.total - initialLength))
   })
 
   const backward = () => {
@@ -65,9 +71,19 @@
 <template>
   <v-container class="pt-2" width="auto">
     <v-progress-linear
+      v-if="props.total > initialLength"
       ref="progress-bar"
       class="progress-bar"
-      :color="props.index > props.total ? 'blue' : 'green'"
+      color="blue"
+      :model-value="progressExtra"
+      rounded
+    />
+
+    <v-progress-linear
+      v-if="props.total <= initialLength"
+      ref="progress-bar"
+      class="progress-bar"
+      color="green"
       :model-value="progress"
       rounded
     />
