@@ -30,8 +30,10 @@
     <v-card
       class="mx-auto"
     >
-      <v-card-title class="text-center">
+      <v-card-title class="text-center text-wrap">
         <v-icon icon="mdi-heart" />
+
+        <br>
 
         <span v-if="props.postpone">
           You have seen all images
