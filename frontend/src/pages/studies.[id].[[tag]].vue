@@ -61,6 +61,24 @@ meta:
     }
   }, { immediate: true })
 
+  const closeAppreciation = async () => {
+    showAppreciation.value = false
+
+    const { data: postponed, error: err, response } = await client.GET('/v1/studies/{id}/postponed/', { params: { path: { id: route.params.id } } })
+    if (err) {
+      setError(error.value, err, response)
+      return
+    }
+
+    const result: Card[] = []
+
+    for (const index of postponed.images) {
+      result.push({ index, image: `/v1/studies/${study.id}/${index}/` })
+    }
+
+    cards.value = cards.value.concat(result)
+  }
+
   const forward = (event: SwipeEvent) => {
     index.value++
     showDecision.value = false
@@ -93,15 +111,6 @@ meta:
       })
   }
 
-  function getIcon (choice: string): string {
-    return {
-      up: 'mdi-arrow-up-bold',
-      down: 'mdi-arrow-down-bold',
-      left: 'mdi-arrow-left-bold',
-      right: 'mdi-arrow-right-bold',
-    }[choice] ?? 'mdi-checkbox-blank-off-outline'
-  }
-
   const backward = () => {
     index.value--
 
@@ -130,6 +139,15 @@ meta:
         }
       })
       .catch(error => console.log(error))
+  }
+
+  function getIcon (choice: string): string {
+    return {
+      up: 'mdi-arrow-up-bold',
+      down: 'mdi-arrow-down-bold',
+      left: 'mdi-arrow-left-bold',
+      right: 'mdi-arrow-right-bold',
+    }[choice] ?? 'mdi-checkbox-blank-off-outline'
   }
 
   const currentIntroGeneral = 1
@@ -247,9 +265,9 @@ meta:
     @close="showSolution = false"
   />
 
-  <StudyDescription :overtime="study.ui.overtime" :show="showDescription" :study="study" @close="closeDescription" />
+  <StudyDescription :postpone="study.ui.postpone" :show="showDescription" :study="study" @close="closeDescription" />
 
-  <StudyAppreciation :overtime="!!study.ui.overtime" :show="showAppreciation" :study="study" @close="showAppreciation = false" />
+  <StudyAppreciation :postpone="!!study.ui.postpone" :show="showAppreciation" :study="study" @close="closeAppreciation" />
 
   <FetchError
     class="mb-6"

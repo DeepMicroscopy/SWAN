@@ -13,19 +13,20 @@ from rest_framework.response import Response
 
 from app import util
 from app.models import Study, ClassificationAnonymous, ClassificationUser, Ui, Solution
+from app.views.export import get_queryset_users, get_queryset_anonymous
 from app.views.util import study_queryset_for_request, session_for_request
 from swan import settings
 
 
-def get_index_for_request(request, pk):
+def get_index_for_request(request, study):
     if request.user.is_authenticated:
         result = ClassificationUser.objects.filter(
-            study=pk,
+            study=study,
             user=request.user,
         ).order_by("-index").first()
     else:
         result = ClassificationAnonymous.objects.filter(
-            study=pk,
+            study=study,
             session=session_for_request(request),
         ).order_by("-index").first()
 
@@ -33,6 +34,17 @@ def get_index_for_request(request, pk):
         return -1
     else:
         return result.index
+
+
+def get_postponed_for_request(request, study, direction):
+    if request.user.is_authenticated:
+        queryset = get_queryset_users(study).filter(user=request.user)
+    else:
+        queryset = get_queryset_anonymous(study).filter(session=session_for_request(request))
+
+    queryset = queryset.filter(choice=direction)
+
+    return queryset.order_by("index").values_list("index", flat=True)
 
 
 class UiDirectionSerializer(serializers.Serializer):
@@ -53,7 +65,8 @@ class UiSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ui
-        fields = ["title", "labels", "overtime"]
+        fields = ["title", "labels", "postpone"]
+
 
 class SolutionConfigSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -72,6 +85,7 @@ class StudyListSerializer(serializers.HyperlinkedModelSerializer):
         model = Study
         fields = ["id", "title", "description", "image", "pub_date", "end_date", "educational"]
 
+
 class StudySerializer(StudyListSerializer):
     ui = UiSerializer()
     length = serializers.IntegerField(source="dataset.file_count")
@@ -86,6 +100,11 @@ class StudySerializer(StudyListSerializer):
         model = Study
         fields = ["id", "title", "description", "image", "pub_date", "end_date", "solution", "ui", "length", "index"]
 
+
+class PostponedSerializer(serializers.Serializer):
+    images = serializers.ListField(child=serializers.IntegerField())
+
+
 @extend_schema(tags=['Study'])
 class StudyViewSet(viewsets.GenericViewSet):
     queryset = Study.objects.all()
@@ -99,7 +118,9 @@ class StudyViewSet(viewsets.GenericViewSet):
             return [IsAdminUser()]
 
     def get_serializer(self, context):
-        if self.action == "list":
+        if self.action == "postponed":
+            return PostponedSerializer
+        elif self.action == "list":
             return StudyListSerializer
         else:
             return StudySerializer
@@ -153,3 +174,17 @@ class StudyViewSet(viewsets.GenericViewSet):
         file_data = util.extract_file_data(os.path.join(settings.MEDIA_ROOT, study.dataset.archive.path), items[index])
 
         return HttpResponse(file_data, content_type=magic.from_buffer(file_data, mime=True))
+
+    @action(detail=True)
+    def postponed(self, request, pk=None):
+        if request.user.is_anonymous and not util.check_tag(pk, request.COOKIES.get("anonymous")):
+            return Response({"detail": "invalid authentication tag"}, status=status.HTTP_403_FORBIDDEN)
+
+        queryset = study_queryset_for_request(request)
+        ui = get_object_or_404(queryset, pk=pk).ui
+
+        if ui.postpone is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = PostponedSerializer({"images": get_postponed_for_request(request, pk, ui.postpone)})
+        return Response(serializer.data)

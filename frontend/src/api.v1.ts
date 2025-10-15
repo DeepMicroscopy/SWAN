@@ -269,6 +269,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/studies/{id}/postponed/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['v1_studies_postponed_retrieve'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -345,7 +361,10 @@ export interface components {
          *     * `down` - down
          * @enum {string}
          */
-    OvertimeEnum: 'left' | 'right' | 'up' | 'down';
+    PostponeEnum: 'left' | 'right' | 'up' | 'down';
+    Postponed: {
+      images: number[];
+    };
     Solution: {
       text: string;
     };
@@ -428,7 +447,7 @@ export interface components {
              *     * `right` - right
              *     * `up` - up
              *     * `down` - down */
-      overtime?: (components['schemas']['OvertimeEnum'] | components['schemas']['BlankEnum'] | components['schemas']['NullEnum']) | null;
+      postpone?: (components['schemas']['PostponeEnum'] | components['schemas']['BlankEnum'] | components['schemas']['NullEnum']) | null;
     };
     UiDirection: {
       text: string | null;
@@ -833,6 +852,28 @@ export interface operations {
         };
         content: {
           'application/octet-stream': string;
+        };
+      };
+    };
+  };
+  v1_studies_postponed_retrieve: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description A UUID string identifying this study. */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Postponed'];
         };
       };
     };

@@ -84,7 +84,7 @@ class Ui(UUIDModel, DecoratorMixin):
     title = models.CharField(max_length=200, help_text="Only used for display purposes in the study creation.")
     labels = models.JSONField(default=ui_default, help_text="""A dictionary mapping the directions 'up', 'down', 'left' and 'right' to an object.
 The object has the keys 'text', 'icon' and 'color' - 'label' can be used to rename the label in the export.""")
-    overtime = models.CharField(max_length=200, choices=Directions, help_text="(optional) The direction to mark images for another round of classification.", null=True, blank=True)
+    postpone = models.CharField(max_length=200, choices=Directions, help_text="(optional) The direction to mark images for another round of classification.", null=True, blank=True)
 
     def __str__(self):
         return self.title

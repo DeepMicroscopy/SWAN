@@ -17,6 +17,7 @@ TABLE_NAMES = ["date"] + FIELD_NAMES.copy()
 TABLE_NAMES.remove("time")
 TABLE_NAMES.remove("label")
 
+
 def get_queryset_users(study):
     latest = ClassificationUser.objects.filter(
         user=OuterRef("user"),
@@ -47,8 +48,6 @@ def get_data(study):
     ).values(*TABLE_NAMES)
 
     return itertools.chain(users, anonymous)
-
-
 
 
 @extend_schema(tags=['Export'], parameters=[OpenApiParameter("study", OpenApiTypes.UUID, OpenApiParameter.PATH)])

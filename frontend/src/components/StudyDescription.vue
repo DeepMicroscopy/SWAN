@@ -6,7 +6,7 @@
   interface Props {
     study?: StudyList | Study | null
     show?: boolean
-    overtime?: string | null
+    postpone?: string | null
   }
 
   const props = withDefaults(defineProps<Props>(), {
@@ -54,8 +54,8 @@
       <v-card-text class="ma-3">
         <div v-html="formatMarkdown(props.study?.description)" />
 
-        <p v-if="props.overtime">
-          This study allows marking images for later classification by swiping {{ props.overtime }}.
+        <p v-if="props.postpone">
+          This study allows marking images for later classification by swiping {{ props.postpone }}.
           These images will be shown to you again after you have classified all images.
         </p>
       </v-card-text>
