@@ -73,9 +73,6 @@ class Directions(models.TextChoices):
     UP = "up", "up"
     DOWN = "down", "down"
 
-    class Meta:
-        abstract = True
-
 def ui_default():
     return {'left': {'text': 'left', 'icon': None, 'color': None}, 'right': {'text': 'right', 'label': 'bad'}}
 
