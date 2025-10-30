@@ -1,4 +1,5 @@
 import base64
+import os
 import uuid
 
 import magic
@@ -15,6 +16,7 @@ from rest_framework.response import Response
 from app import util
 from app.models import ClassificationUser, ClassificationAnonymous, Classification, Study
 from app.views.util import study_queryset_for_request, session_for_request
+from swan import settings
 
 
 class ClassifyInputSerializer(serializers.Serializer):
@@ -50,7 +52,7 @@ class ClassifyOutputSerializer(serializers.Serializer):
             solution.save(update_fields=["config"])
 
         try:
-            file_data = util.extract_file_data(solution.archive, obj.file)
+            file_data = util.extract_file_data(os.path.join(settings.MEDIA_ROOT, solution.archive.path), obj.file)
             mime_type = magic.from_buffer(file_data, mime=True)
             proof = f"data:{mime_type};base64,{base64.b64encode(file_data).decode()}"
         except KeyError:
