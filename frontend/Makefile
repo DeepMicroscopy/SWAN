@@ -25,7 +25,7 @@ check: check-dev
 	yarn run type-check
 
 .PHONY: dev
-dev:
+dev: install
 	yarn run dev
 
 .PHONY: run
