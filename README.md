@@ -1,6 +1,6 @@
 # SWAN
 
-TBD description
+SWAN (SWipeable ANnotations) is an open-source, MIT-licensed web application for fast and intuitive histopathology image annotation. Instead of slow, folder-based sorting, SWAN enables swipe-based classification on both desktop and mobile devices, supports flexible label mapping, and logs annotations and metadata in real time. Designed to reduce fatigue and make large-scale annotation more accessible, SWAN offers a lightweight, browser-based interface that allows pathologists and researchers to efficiently label image patches anytime, including on the go.
 
 ## Interface Example
 
