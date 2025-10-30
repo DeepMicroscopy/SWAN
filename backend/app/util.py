@@ -40,10 +40,12 @@ def extract_file_names(file_path):
 
     if zipfile.is_zipfile(file_path):
         with zipfile.ZipFile(file_path, 'r') as zipf:
-            result = zipf.namelist()
+            # Filter out directory entries
+            result = [name for name in zipf.namelist() if not name.endswith('/')]
     elif tarfile.is_tarfile(file_path):
         with tarfile.open(file_path, 'r:*') as tarf:
-            result = tarf.getnames()
+            # Filter only regular files
+            result = [m.name for m in tarf.getmembers() if m.isreg()]
 
     result.sort()
 
