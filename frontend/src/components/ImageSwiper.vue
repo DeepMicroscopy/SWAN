@@ -42,7 +42,7 @@
           @touchstart.prevent="handleSwipeStartTouch"
         >
           <v-card
-            class="card-item elevation-8"
+            class="card-item elevation-8 no-border-radius"
             :class="{ 'card-swiping': i === 0 && isSwiping }"
           >
             <div class="image-container" @wheel.prevent="handleMouseWheel">
@@ -526,5 +526,9 @@
 
   justify-content: center;
   align-items: center;
+}
+
+.no-border-radius {
+  border-radius: 0 !important;
 }
 </style>
