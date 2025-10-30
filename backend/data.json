@@ -1,329 +1,9 @@
 [
   {
-    "model": "app.user",
-    "pk": "4b311a7d-0551-48ae-ab5d-000000000000",
-    "fields": {
-      "password": "pbkdf2_sha256$1000000$lNVTxKgPG3TxZA7uqWOZmG$I29OVz+c+TmILMn3Ywswe0S6MQTcYVU48g0tHdPHKmw=",
-      "last_login": "2025-08-17T16:34:49.870Z",
-      "is_superuser": true,
-      "username": "admin",
-      "first_name": "",
-      "last_name": "",
-      "email": "admin@localhost",
-      "is_staff": true,
-      "is_active": true,
-      "date_joined": "2025-08-17T15:59:44.171Z",
-      "groups": [],
-      "user_permissions": []
-    }
-  },
-  {
-    "model": "app.user",
-    "pk": "4b311a7d-0551-48ae-ab5d-000000000001",
-    "fields": {
-      "password": "pbkdf2_sha256$1000000$9kfKRpSZGNeAjyXp6VCks5$GHyJ4a2KOCdynwmKq3TtkVV9C96JluJ/szcn8grWchg=",
-      "last_login": "2025-08-17T16:00:44.779Z",
-      "is_superuser": false,
-      "username": "user",
-      "first_name": "",
-      "last_name": "",
-      "email": "user@localhost",
-      "is_staff": true,
-      "is_active": true,
-      "date_joined": "2025-08-17T15:59:44.171Z",
-      "groups": [],
-      "user_permissions": []
-    }
-  },
-  {
-    "model": "app.user",
-    "pk": "d56b3e26-3ae1-4cde-bfd0-000000000001",
-    "fields": {
-      "password": "pbkdf2_sha256$1000000$hRSIQTWf9mnqrxNFCVogzr$yGFzBx3657GSRSLxSfjkjkafnRPO+LmPup2BAMCmlhA=",
-      "last_login": null,
-      "is_superuser": false,
-      "username": "expert-a-any",
-      "first_name": "",
-      "last_name": "",
-      "email": "",
-      "is_staff": false,
-      "is_active": true,
-      "date_joined": "2025-08-17T16:05:30Z",
-      "groups": [
-        1
-      ],
-      "user_permissions": []
-    }
-  },
-  {
-    "model": "app.user",
-    "pk": "d56b3e26-3ae1-4cde-bfd0-000000000002",
-    "fields": {
-      "password": "pbkdf2_sha256$1000000$hRSIQTWf9mnqrxNFCVogzr$yGFzBx3657GSRSLxSfjkjkafnRPO+LmPup2BAMCmlhA=",
-      "last_login": null,
-      "is_superuser": false,
-      "username": "expert-b-cats",
-      "first_name": "",
-      "last_name": "",
-      "email": "",
-      "is_staff": false,
-      "is_active": true,
-      "date_joined": "2025-08-17T16:05:30Z",
-      "groups": [
-        2
-      ],
-      "user_permissions": []
-    }
-  },
-  {
-    "model": "app.user",
-    "pk": "d56b3e26-3ae1-4cde-bfd0-000000000003",
-    "fields": {
-      "password": "pbkdf2_sha256$1000000$hRSIQTWf9mnqrxNFCVogzr$yGFzBx3657GSRSLxSfjkjkafnRPO+LmPup2BAMCmlhA=",
-      "last_login": null,
-      "is_superuser": false,
-      "username": "expert-c-dogs",
-      "first_name": "",
-      "last_name": "",
-      "email": "",
-      "is_staff": false,
-      "is_active": true,
-      "date_joined": "2025-08-17T16:05:30Z",
-      "groups": [
-        3
-      ],
-      "user_permissions": []
-    }
-  },
-  {
-    "model": "app.user",
-    "pk": "d56b3e26-3ae1-4cde-bfd0-000000000004",
-    "fields": {
-      "password": "pbkdf2_sha256$1000000$hRSIQTWf9mnqrxNFCVogzr$yGFzBx3657GSRSLxSfjkjkafnRPO+LmPup2BAMCmlhA=",
-      "last_login": null,
-      "is_superuser": false,
-      "username": "expert-d-multi",
-      "first_name": "",
-      "last_name": "",
-      "email": "",
-      "is_staff": false,
-      "is_active": true,
-      "date_joined": "2025-08-17T16:05:30Z",
-      "groups": [
-        1,
-        2,
-        3
-      ],
-      "user_permissions": []
-    }
-  },
-  {
-    "model": "app.dataset",
-    "pk": "570f18ae-8b9b-4be9-aeb0-000000000001",
-    "fields": {
-      "title": "test-dataset",
-      "archive": "dataset/test",
-      "file_count": 100,
-      "file_list": [
-        "SWAN/MIDOG21_141.png",
-        "SWAN/MIDOG21_1499.png",
-        "SWAN/MIDOG21_1675.png",
-        "SWAN/MIDOG21_168.png",
-        "SWAN/MIDOG21_172.png",
-        "SWAN/MIDOG21_1802.png",
-        "SWAN/MIDOG21_1847.png",
-        "SWAN/MIDOG21_1968.png",
-        "SWAN/MIDOG21_1969.png",
-        "SWAN/MIDOG21_1971.png",
-        "SWAN/MIDOG21_2005.png",
-        "SWAN/MIDOG21_2089.png",
-        "SWAN/MIDOG21_22.png",
-        "SWAN/MIDOG21_2239.png",
-        "SWAN/MIDOG21_2244.png",
-        "SWAN/MIDOG21_2346.png",
-        "SWAN/MIDOG21_2486.png",
-        "SWAN/MIDOG21_2488.png",
-        "SWAN/MIDOG21_2524.png",
-        "SWAN/MIDOG21_254.png",
-        "SWAN/MIDOG21_2576.png",
-        "SWAN/MIDOG21_2650.png",
-        "SWAN/MIDOG21_2736.png",
-        "SWAN/MIDOG21_2758.png",
-        "SWAN/MIDOG21_2883.png",
-        "SWAN/MIDOG21_2892.png",
-        "SWAN/MIDOG21_2943.png",
-        "SWAN/MIDOG21_3099.png",
-        "SWAN/MIDOG21_3117.png",
-        "SWAN/MIDOG21_3129.png",
-        "SWAN/MIDOG21_3671.png",
-        "SWAN/MIDOG21_3680.png",
-        "SWAN/MIDOG21_3951.png",
-        "SWAN/MIDOG21_4078.png",
-        "SWAN/MIDOG21_4096.png",
-        "SWAN/MIDOG21_4160.png",
-        "SWAN/MIDOG21_495.png",
-        "SWAN/MIDOG21_553.png",
-        "SWAN/MIDOG21_568.png",
-        "SWAN/MIDOG21_7.png",
-        "SWAN/MIDOG21_723.png",
-        "SWAN/MIDOG21_882.png",
-        "SWAN/MIDOG21_9.png",
-        "SWAN/MIDOG21_903.png",
-        "SWAN/MIDOG21_927.png",
-        "SWAN/TUPAC16_1098.png",
-        "SWAN/TUPAC16_1151.png",
-        "SWAN/TUPAC16_1153.png",
-        "SWAN/TUPAC16_12424.png",
-        "SWAN/TUPAC16_1279.png",
-        "SWAN/TUPAC16_1314.png",
-        "SWAN/TUPAC16_13333.png",
-        "SWAN/TUPAC16_1335.png",
-        "SWAN/TUPAC16_1374.png",
-        "SWAN/TUPAC16_1940.png",
-        "SWAN/TUPAC16_1956.png",
-        "SWAN/TUPAC16_2208.png",
-        "SWAN/TUPAC16_2279.png",
-        "SWAN/TUPAC16_2314.png",
-        "SWAN/TUPAC16_2458.png",
-        "SWAN/TUPAC16_2484.png",
-        "SWAN/TUPAC16_2618.png",
-        "SWAN/TUPAC16_2741.png",
-        "SWAN/TUPAC16_2817.png",
-        "SWAN/TUPAC16_2943.png",
-        "SWAN/TUPAC16_2971.png",
-        "SWAN/TUPAC16_3045.png",
-        "SWAN/TUPAC16_3272.png",
-        "SWAN/TUPAC16_338.png",
-        "SWAN/TUPAC16_3454.png",
-        "SWAN/TUPAC16_3779.png",
-        "SWAN/TUPAC16_4041.png",
-        "SWAN/TUPAC16_416.png",
-        "SWAN/TUPAC16_4412.png",
-        "SWAN/TUPAC16_4442.png",
-        "SWAN/TUPAC16_4507.png",
-        "SWAN/TUPAC16_476.png",
-        "SWAN/TUPAC16_4820.png",
-        "SWAN/TUPAC16_496.png",
-        "SWAN/TUPAC16_498.png",
-        "SWAN/TUPAC16_5002.png",
-        "SWAN/TUPAC16_5288.png",
-        "SWAN/TUPAC16_5408.png",
-        "SWAN/TUPAC16_5451.png",
-        "SWAN/TUPAC16_5466.png",
-        "SWAN/TUPAC16_5517.png",
-        "SWAN/TUPAC16_5645.png",
-        "SWAN/TUPAC16_5723.png",
-        "SWAN/TUPAC16_639.png",
-        "SWAN/TUPAC16_643.png",
-        "SWAN/TUPAC16_666.png",
-        "SWAN/TUPAC16_739.png",
-        "SWAN/TUPAC16_7426.png",
-        "SWAN/TUPAC16_7445.png",
-        "SWAN/TUPAC16_8126.png",
-        "SWAN/TUPAC16_818.png",
-        "SWAN/TUPAC16_905.png",
-        "SWAN/TUPAC16_9455.png",
-        "SWAN/TUPAC16_950.png",
-        "SWAN/TUPAC16_967.png"
-      ]
-    }
-  },
-  {
-    "model": "app.ui",
-    "pk": "16315980-c11d-49d5-9e44-000000000001",
-    "fields": {
-      "title": "test-ui",
-      "labels": {
-        "left": {
-          "text": "left"
-        },
-        "right": {
-          "text": "right"
-        }
-      }
-    }
-  },
-  {
-    "model": "app.study",
-    "pk": "d8c03784-682d-4f44-97a6-000000000001",
-    "fields": {
-      "title": "test-study-all",
-      "image": "image/test",
-      "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n\r\n(/3.png)[/4.png]",
-      "pub_date": "2025-08-17T00:00:00Z",
-      "end_date": "2026-08-17T00:00:00Z",
-      "group": 1,
-      "dataset": "570f18ae-8b9b-4be9-aeb0-000000000001",
-      "ui": "16315980-c11d-49d5-9e44-000000000001"
-    }
-  },
-  {
-    "model": "app.study",
-    "pk": "d8c03784-682d-4f44-97a6-000000000002",
-    "fields": {
-      "title": "test-study-cats",
-      "image": "image/test",
-      "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n(/3.png)[/4.png]",
-      "pub_date": "2025-08-17T00:00:00Z",
-      "end_date": "2026-08-17T00:00:00Z",
-      "group": 2,
-      "dataset": "570f18ae-8b9b-4be9-aeb0-000000000001",
-      "ui": "16315980-c11d-49d5-9e44-000000000001"
-    }
-  },
-  {
-    "model": "app.study",
-    "pk": "d8c03784-682d-4f44-97a6-000000000003",
-    "fields": {
-      "title": "test-study-dogs",
-      "image": "image/test",
-      "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n(/3.png)[/4.png]",
-      "pub_date": "2025-08-17T00:00:00Z",
-      "end_date": "2026-08-17T00:00:00Z",
-      "group": 3,
-      "dataset": "570f18ae-8b9b-4be9-aeb0-000000000001",
-      "ui": "16315980-c11d-49d5-9e44-000000000001"
-    }
-  },
-  {
-    "model": "app.solution",
-    "pk": "d8c03784-682d-4f44-97a6-000000000001",
-    "fields": {
-      "archive": "solution/test",
-      "config": {
-        "SWAN/MIDOC01.jpg": "bad"
-      }
-    }
-  },
-  {
-    "model": "app.classificationuser",
-    "pk": "9cebddb2-b019-4929-8e0c-000000000001",
-    "fields": {
-      "date": "2025-08-17T16:35:01Z",
-      "study": "d8c03784-682d-4f44-97a6-000000000001",
-      "file": "SWAN/MIDOC01.jpg",
-      "choice": "left",
-      "index": 0,
-      "user": "d56b3e26-3ae1-4cde-bfd0-000000000001"
-    }
-  },
-  {
-    "model": "app.classificationanonymous",
-    "pk": "43b0d019-dcf0-462f-aab8-000000000001",
-    "fields": {
-      "date": "2025-08-17T16:35:38Z",
-      "study": "d8c03784-682d-4f44-97a6-000000000001",
-      "file": "SWAN/MIDOC01.jpg",
-      "choice": "right",
-      "index": 0,
-      "session": "asdz89zhasdhasdh"
-    }
-  },
-  {
     "model": "auth.group",
     "pk": 1,
     "fields": {
-      "name": "Experts",
+      "name": "Animal Expert",
       "permissions": []
     }
   },
@@ -331,16 +11,479 @@
     "model": "auth.group",
     "pk": 2,
     "fields": {
-      "name": "Experts (Cats)",
+      "name": "Animal Expert (Cats)",
       "permissions": []
     }
   },
   {
-    "model": "auth.group",
-    "pk": 3,
+    "model": "app.user",
+    "pk": "93c5b35b-fe90-4099-b1fa-f17eb964b816",
     "fields": {
-      "name": "Experts (Dogs)",
-      "permissions": []
+      "password": "pbkdf2_sha256$1000000$51avGGI0Zv0Np634u1Jsvk$Y3FIxBPHGPdxbzAad/dD5CgR2DQoo2XsWPqeBxu0IoE=",
+      "last_login": "2025-10-30T13:33:46.165Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "admin@localhost",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2025-10-30T13:08:39.904Z",
+      "intro_general": 0,
+      "intro_swiping": 0,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.user",
+    "pk": "7a16c53d-3d29-491e-9624-c87d6b0a32bb",
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$1JFoCiHUnzCabEs06LEcXO$IfgRwlyE0yXPP7OWsJSGMvRzk7e2+4zJnaBDLwv85wE=",
+      "last_login": "2025-10-30T13:35:05.472Z",
+      "is_superuser": false,
+      "username": "expert",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-10-30T13:10:57Z",
+      "intro_general": 1,
+      "intro_swiping": 1,
+      "groups": [
+        1,
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.dataset",
+    "pk": "a8b5fe87-3cd2-48b0-9e16-efcce1125aca",
+    "fields": {
+      "created_at": "2025-10-30T13:23:54.147Z",
+      "updated_at": "2025-10-30T13:34:36.007Z",
+      "title": "tar",
+      "archive": "dataset/example-tar",
+      "file_count": 10,
+      "file_list": [
+        "example/01.png",
+        "example/02.png",
+        "example/03.png",
+        "example/04.png",
+        "example/05.png",
+        "example/06.png",
+        "example/07.png",
+        "example/08.png",
+        "example/09.png",
+        "example/10.png"
+      ]
+    }
+  },
+  {
+    "model": "app.dataset",
+    "pk": "f7a1217c-40dd-441e-a881-5304780a8e30",
+    "fields": {
+      "created_at": "2025-10-30T13:23:08.424Z",
+      "updated_at": "2025-10-30T13:23:08.424Z",
+      "title": "zip",
+      "archive": "dataset/example-zip",
+      "file_count": 10,
+      "file_list": [
+        "example/01.png",
+        "example/02.png",
+        "example/03.png",
+        "example/04.png",
+        "example/05.png",
+        "example/06.png",
+        "example/07.png",
+        "example/08.png",
+        "example/09.png",
+        "example/10.png"
+      ]
+    }
+  },
+  {
+    "model": "app.ui",
+    "pk": "6c92f06e-6fd0-476f-b42f-d05698851e6f",
+    "fields": {
+      "created_at": "2025-10-30T13:14:11.479Z",
+      "updated_at": "2025-10-30T13:14:11.479Z",
+      "title": "example",
+      "labels": {
+        "left": {
+          "text": "Good",
+          "label": "left",
+          "icon": "mdi-arrow-left",
+          "color": "green"
+        },
+        "right": {
+          "text": "Bad",
+          "label": "right",
+          "icon": "mdi-arrow-right",
+          "color": "red"
+        },
+        "up": {
+          "text": "Later",
+          "label": "invalid",
+          "icon": "mdi-help-circle",
+          "color": "blue"
+        }
+      },
+      "postpone": "up",
+      "pixelated": false,
+      "default_scale": 50
+    }
+  },
+  {
+    "model": "app.study",
+    "pk": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+    "fields": {
+      "created_at": "2025-10-30T13:26:35.112Z",
+      "updated_at": "2025-10-30T13:26:35.112Z",
+      "title": "example",
+      "image": "image/example",
+      "description": "# Title\r\n\r\nText",
+      "pub_date": "2025-10-30T12:00:00Z",
+      "end_date": "2035-10-30T12:00:00Z",
+      "group": 2,
+      "anonymous": true,
+      "dataset": "a8b5fe87-3cd2-48b0-9e16-efcce1125aca",
+      "ui": "6c92f06e-6fd0-476f-b42f-d05698851e6f"
+    }
+  },
+  {
+    "model": "app.solution",
+    "pk": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+    "fields": {
+      "created_at": "2025-10-30T13:28:20.428Z",
+      "updated_at": "2025-10-30T13:35:51.475Z",
+      "archive": "solution/example",
+      "config": {
+        "example/01.png": {
+          "text": ""
+        },
+        "example/02.png": {
+          "text": ""
+        },
+        "example/03.png": {
+          "text": ""
+        },
+        "example/04.png": {
+          "text": ""
+        },
+        "example/05.png": {
+          "text": ""
+        },
+        "example/06.png": {
+          "text": ""
+        },
+        "example/07.png": {
+          "text": ""
+        },
+        "example/08.png": {
+          "text": ""
+        },
+        "example/09.png": {
+          "text": ""
+        },
+        "example/10.png": {
+          "text": ""
+        }
+      },
+      "label_current": "Test",
+      "label_proof": "Result",
+      "css_row": null,
+      "css_column": "pa-1"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "1f6b00e5-4aff-4fc0-82c9-7355e6c17b56",
+    "fields": {
+      "date": "2025-10-30T13:41:24.180Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/05.png",
+      "choice": "left",
+      "index": 5,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "2da71e58-e168-4094-b7b6-70f03acc19d2",
+    "fields": {
+      "date": "2025-10-30T13:41:16.739Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/03.png",
+      "choice": "up",
+      "index": 8,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "3f8c205f-9942-4ca2-98fb-212e1ff178e2",
+    "fields": {
+      "date": "2025-10-30T13:41:25.975Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/03.png",
+      "choice": "up",
+      "index": 8,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "6f37182f-236d-42e4-b300-8f750f054628",
+    "fields": {
+      "date": "2025-10-30T13:40:47.006Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/07.png",
+      "choice": "left",
+      "index": 0,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "916459a6-3ae9-4dea-8898-396f5b5e9cb5",
+    "fields": {
+      "date": "2025-10-30T13:41:14.364Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/04.png",
+      "choice": "right",
+      "index": 7,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "96037d64-3b82-4e52-8b7e-9bf8d34520a1",
+    "fields": {
+      "date": "2025-10-30T13:41:09.355Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/06.png",
+      "choice": "right",
+      "index": 4,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "9ffae630-e875-49c6-a2da-1952f61cde09",
+    "fields": {
+      "date": "2025-10-30T13:41:18.125Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/02.png",
+      "choice": "left",
+      "index": 9,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "a5da5349-4e5b-438c-a596-25edaf96280c",
+    "fields": {
+      "date": "2025-10-30T13:41:12.969Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/08.png",
+      "choice": "left",
+      "index": 6,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "b060175d-2920-4115-99d3-dcbaf084a8c7",
+    "fields": {
+      "date": "2025-10-30T13:41:28.181Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/03.png",
+      "choice": "right",
+      "index": 8,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "b55971c1-d146-48f1-b421-25491a79c99d",
+    "fields": {
+      "date": "2025-10-30T13:41:10.705Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/05.png",
+      "choice": "up",
+      "index": 5,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "bb8ce919-15d5-423a-b437-8c56cd7317c5",
+    "fields": {
+      "date": "2025-10-30T13:40:53.042Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/10.png",
+      "choice": "right",
+      "index": 1,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "e272dd64-5bd0-4489-b74a-0fbb627c039e",
+    "fields": {
+      "date": "2025-10-30T13:41:07.742Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/09.png",
+      "choice": "left",
+      "index": 3,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "e769990f-84b3-4f07-b33f-a03e082fc762",
+    "fields": {
+      "date": "2025-10-30T13:41:21.572Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/01.png",
+      "choice": "right",
+      "index": 2,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationuser",
+    "pk": "ea2f3572-0c2f-41fe-baff-aebe8e4e14dc",
+    "fields": {
+      "date": "2025-10-30T13:40:55.981Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/01.png",
+      "choice": "up",
+      "index": 2,
+      "user": "7a16c53d-3d29-491e-9624-c87d6b0a32bb"
+    }
+  },
+  {
+    "model": "app.classificationanonymous",
+    "pk": "30ac8d95-57fa-4c70-901c-b3286bf1106b",
+    "fields": {
+      "date": "2025-10-30T13:42:19.832Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/08.png",
+      "choice": "right",
+      "index": 5,
+      "session": "0433cd4ebdf64781a4a2ad76079b6c77"
+    }
+  },
+  {
+    "model": "app.classificationanonymous",
+    "pk": "3cde94dc-221a-4dda-a5e7-16c0fa071c49",
+    "fields": {
+      "date": "2025-10-30T13:42:22.285Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/04.png",
+      "choice": "right",
+      "index": 7,
+      "session": "0433cd4ebdf64781a4a2ad76079b6c77"
+    }
+  },
+  {
+    "model": "app.classificationanonymous",
+    "pk": "5e58f07f-55d5-4b44-b6c5-9f9ea39d779a",
+    "fields": {
+      "date": "2025-10-30T13:42:13.585Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/03.png",
+      "choice": "left",
+      "index": 0,
+      "session": "0433cd4ebdf64781a4a2ad76079b6c77"
+    }
+  },
+  {
+    "model": "app.classificationanonymous",
+    "pk": "72a90868-fba5-4daa-8f77-471e87980dde",
+    "fields": {
+      "date": "2025-10-30T13:42:23.455Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/02.png",
+      "choice": "left",
+      "index": 8,
+      "session": "0433cd4ebdf64781a4a2ad76079b6c77"
+    }
+  },
+  {
+    "model": "app.classificationanonymous",
+    "pk": "85ff673f-1f71-4fd8-ae8f-9cfda31bd4b9",
+    "fields": {
+      "date": "2025-10-30T13:42:14.934Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/06.png",
+      "choice": "right",
+      "index": 1,
+      "session": "0433cd4ebdf64781a4a2ad76079b6c77"
+    }
+  },
+  {
+    "model": "app.classificationanonymous",
+    "pk": "b0414a31-ecb6-403d-92f3-4dd0db24e7ed",
+    "fields": {
+      "date": "2025-10-30T13:42:18.579Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/05.png",
+      "choice": "left",
+      "index": 4,
+      "session": "0433cd4ebdf64781a4a2ad76079b6c77"
+    }
+  },
+  {
+    "model": "app.classificationanonymous",
+    "pk": "b5f126b9-7670-4ff0-8c66-c2121d09ee10",
+    "fields": {
+      "date": "2025-10-30T13:42:17.395Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/07.png",
+      "choice": "right",
+      "index": 3,
+      "session": "0433cd4ebdf64781a4a2ad76079b6c77"
+    }
+  },
+  {
+    "model": "app.classificationanonymous",
+    "pk": "d38df121-2e8d-4ed5-9d6f-5cefbdb4d477",
+    "fields": {
+      "date": "2025-10-30T13:42:15.940Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/01.png",
+      "choice": "left",
+      "index": 2,
+      "session": "0433cd4ebdf64781a4a2ad76079b6c77"
+    }
+  },
+  {
+    "model": "app.classificationanonymous",
+    "pk": "ea0b340d-d8f4-4dd0-95d9-9f8e6d263bdb",
+    "fields": {
+      "date": "2025-10-30T13:42:24.633Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/10.png",
+      "choice": "right",
+      "index": 9,
+      "session": "0433cd4ebdf64781a4a2ad76079b6c77"
+    }
+  },
+  {
+    "model": "app.classificationanonymous",
+    "pk": "ef93a71a-1fb7-483a-a3b4-aff6e25fa364",
+    "fields": {
+      "date": "2025-10-30T13:42:21.016Z",
+      "study": "37a41a33-25a8-49bc-b844-827a8ec3c5aa",
+      "file": "example/09.png",
+      "choice": "left",
+      "index": 6,
+      "session": "0433cd4ebdf64781a4a2ad76079b6c77"
     }
   }
 ]
