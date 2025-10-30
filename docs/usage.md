@@ -24,7 +24,7 @@ Each direction supports these settings:
 
 - `text`: The text to display when swiping
 - `icon`: The icon to display when swiping
-    - https://pictogrammers.com/library/mdi/
+    - Prefix with `mdi-`, https://pictogrammers.com/library/mdi/
 - `color`: The color of the icon
     - https://vuetifyjs.com/en/styles/colors/#material-colors
 - `label`: The label to include in the export
