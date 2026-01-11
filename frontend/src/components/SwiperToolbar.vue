@@ -3,7 +3,7 @@
   import { computed } from 'vue';
   import { useRouter } from 'vue-router';
   import SwiperHelp from '@/components/SwiperHelp.vue';
-  import type { UiLabel } from '@/api.ts';
+  import type { Ui } from '@/api.ts';
 
   const router = useRouter()
   const store = useAppStore()
@@ -11,22 +11,17 @@
   interface Props {
     title?: string
     index?: number
+    study?: string
     total?: number
-    labels?: UiLabel
+    ui?: Ui
   }
 
   const props = withDefaults(defineProps<Props>(), {
     title: () => 'n/a',
     index: () => 0,
+    study: () => 'n/a',
     total: () => 0,
-    labels: () => ({
-      'left': {
-        'text': 'n/a',
-      },
-      'right': {
-        'text': 'n/a',
-      },
-    } as UiLabel),
+    ui: () => ({} as Ui),
   })
 
   const emit = defineEmits<{
@@ -125,7 +120,7 @@
       />
     </v-toolbar>
 
-    <SwiperHelp :labels="props.labels" :show="showHelp" @close="showHelp = false" />
+    <SwiperHelp :show="showHelp" :study="props.study" :ui="props.ui" @close="showHelp = false" />
   </v-container>
 </template>
 

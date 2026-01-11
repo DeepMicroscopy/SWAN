@@ -234,6 +234,7 @@ meta:
     <ImageSwiper
       :cards="cards"
       :index="index"
+      :study="study.id"
       :title="study.title"
       :ui="study.ui"
       @swiped="forward"
@@ -250,9 +251,10 @@ meta:
     <SwiperToolbar
       ref="toolbar"
       :index="index"
-      :labels="study.ui.labels"
+      :study="study.id"
       :title="study.title"
       :total="cards.length"
+      :ui="study.ui"
       @back="backward"
     />
   </v-container>

@@ -71,6 +71,7 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue'
   import type { Direction, Ui, UiDirection } from '@/api.ts';
+  import { useAppStore } from '@/stores/app.ts';
 
   // TODO
   // - dragging should be scaled to the zoom factor
@@ -81,6 +82,8 @@
   // in ms
   const thresholdSwipe = 100
   const thresholdDoubleTap = 500
+
+  const store = useAppStore()
 
   export interface Card {
     index: number
@@ -102,6 +105,7 @@
   }
 
   interface Props {
+    study?: string
     title?: string
     cards?: Card[]
     index?: number
@@ -109,6 +113,7 @@
   }
 
   const props = withDefaults(defineProps<Props>(), {
+    study: () => 'n/a',
     title: () => 'n/a',
     cards: () => [],
     index: () => -1,
@@ -137,10 +142,8 @@
   // Image zoom
   const isZooming = ref(false)
   const imageZoom = ref(1)
-  const imageScale = ref((props.ui.default_scale ?? 100) / 100)
   const currentDistance = ref(0)
   const lastTap = ref(Date.now())
-
 
   function labelToDirection (direction: Direction, label: UiDirection | null): SwipeDirection {
     return {
@@ -161,6 +164,9 @@
   // Computed
   const visibleCards = computed(() => {
     return props.cards.slice(props.index, props.index + 2)
+  })
+  const imageScale = computed(() => {
+    return (store.studySettings[props.study]?.imageZoom ?? props.ui.default_scale ?? 100) / 100
   })
 
   // Methods
