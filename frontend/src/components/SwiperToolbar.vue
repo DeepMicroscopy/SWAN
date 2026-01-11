@@ -104,7 +104,7 @@
 
       <v-spacer />
 
-      <p ref="title-study">{{ props.title }}</p>
+      <p ref="title-study" class="text-truncate">{{ props.title }}</p>
 
       <v-btn
         ref="button-help"
