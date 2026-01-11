@@ -79,10 +79,6 @@
   // - also add image-rendering to some settings
   // - add intro
 
-  // in ms
-  const thresholdSwipe = 100
-  const thresholdDoubleTap = 500
-
   const store = useAppStore()
 
   export interface Card {
@@ -168,6 +164,12 @@
   const imageScale = computed(() => {
     return (store.studySettings[props.study]?.imageZoom ?? props.ui.default_scale ?? 100) / 100
   })
+  const thresholdSwipe = computed(() => {
+    return store.studySettings[props.study].thresholdSwipe
+  })
+  const thresholdDoubleTap = computed(() => {
+    return store.studySettings[props.study].thresholdDoubleTap
+  })
 
   // Methods
   const getCardStyle = (index: number) => {
@@ -245,7 +247,7 @@
   }
 
   function directionForDeltas (x: number, y: number): Direction|null {
-    if (Math.abs(x) > thresholdSwipe || Math.abs(y) > thresholdSwipe) {
+    if (Math.abs(x) > thresholdSwipe.value || Math.abs(y) > thresholdSwipe.value) {
       if (Math.abs(x) > Math.abs(y)) {
         const isRight = x > 0
 
@@ -278,7 +280,7 @@
   }
 
   const handleSwipeEnd = () => {
-    if ((Date.now() - lastTap.value) < thresholdDoubleTap) {
+    if ((Date.now() - lastTap.value) < thresholdDoubleTap.value) {
       zoomReset()
       return
     } else {

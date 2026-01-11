@@ -30,10 +30,20 @@
   })
 
   const imageZoom = ref(store.studySettings[props.study]?.imageZoom ?? props.ui.default_scale ?? 100)
+  const thresholdSwipe = ref(store.studySettings[props.study]?.thresholdSwipe ?? 100)
+  const thresholdDoubleTap = ref(store.studySettings[props.study]?.thresholdDoubleTap ?? 500)
 
   watch(imageZoom, newValue => {
     store.updateSettings(props.study, { imageZoom: newValue })
-  })
+  }, { immediate: true })
+
+  watch(thresholdSwipe, newValue => {
+    store.updateSettings(props.study, { thresholdSwipe: newValue })
+  }, { immediate: true })
+
+  watch(thresholdDoubleTap, newValue => {
+    store.updateSettings(props.study, { thresholdDoubleTap: newValue })
+  }, { immediate: true })
 
 </script>
 
@@ -95,14 +105,46 @@
           <v-list-subheader>User Settings</v-list-subheader>
 
           <v-list-item>
-            <v-list-subheader inset>Image Zoom</v-list-subheader>
+            <v-list-subheader>Image Zoom (%)</v-list-subheader>
             <v-slider
               v-model="imageZoom"
               append-icon="mdi-magnify-plus-outline"
+              color="deep-purple-darken-3"
+              hide-details
               max="150"
               min="10"
               prepend-icon="mdi-magnify-minus-outline"
               step="5"
+              thumb-label
+              thumb-size="10"
+            />
+          </v-list-item>
+          <v-list-item>
+            <v-list-subheader>Swipe Distance (px)</v-list-subheader>
+            <v-slider
+              v-model="thresholdSwipe"
+              append-icon="mdi-gesture-swipe"
+              color="light-blue-darken-3"
+              hide-details
+              max="400"
+              min="50"
+              prepend-icon="mdi-gesture-swipe-horizontal"
+              step="25"
+              thumb-label
+              thumb-size="10"
+            />
+          </v-list-item>
+          <v-list-item>
+            <v-list-subheader>Double Tap (ms)</v-list-subheader>
+            <v-slider
+              v-model="thresholdDoubleTap"
+              append-icon="mdi-timer-plus-outline"
+              color="cyan-darken-3"
+              hide-details
+              max="1000"
+              min="100"
+              prepend-icon="mdi-timer-minus-outline"
+              step="100"
               thumb-label
               thumb-size="10"
             />

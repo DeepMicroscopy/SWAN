@@ -3,6 +3,8 @@ import { defineStore } from 'pinia'
 
 interface StudySettings {
   imageZoom: number
+  thresholdSwipe: number
+  thresholdDoubleTap: number
 }
 
 export const useAppStore = defineStore('app', {
