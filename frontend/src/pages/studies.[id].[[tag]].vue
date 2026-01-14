@@ -37,6 +37,7 @@ meta:
 
   const cards = ref<Card[]>(result);
   const index = ref(study?.index + 1);
+  const indexMax = ref(index.value)
   const showDescription = ref(false)
 
   const decisionText = ref('')
@@ -58,6 +59,9 @@ meta:
   watch(index, () => {
     if (index.value === cards.value.length) {
       showAppreciation.value = true
+    }
+    if (index.value > indexMax.value) {
+      indexMax.value = index.value
     }
   }, { immediate: true })
 
@@ -115,7 +119,10 @@ meta:
 
   const backward = () => {
     index.value--
+    displayDecision()
+  }
 
+  const displayDecision = () => {
     client.GET('/v1/classify/{id}/{index}/', {
       params: {
         path: {
@@ -141,6 +148,15 @@ meta:
         }
       })
       .catch(error => console.log(error))
+  }
+
+  const forwardImage = () => {
+    index.value++
+    if (index.value < indexMax.value) {
+      displayDecision()
+    } else {
+      showDecision.value = false
+    }
   }
 
   function getIcon (choice: string): string {
@@ -215,6 +231,12 @@ meta:
     },
     {
       child: 'toolbar',
+      ref: 'buttonForward',
+      title: 'Forward',
+      description: 'Navigate forward to the next image and decision point in the study.',
+    },
+    {
+      child: 'toolbar',
       ref: 'progressBar',
       title: 'Progress',
       description: 'This indicates your progress through the current study.',
@@ -251,11 +273,13 @@ meta:
     <SwiperToolbar
       ref="toolbar"
       :index="index"
+      :index-max="indexMax"
       :study="study.id"
       :title="study.title"
       :total="cards.length"
       :ui="study.ui"
       @back="backward"
+      @forward="forwardImage"
     />
   </v-container>
 

@@ -11,6 +11,7 @@
   interface Props {
     title?: string
     index?: number
+    indexMax?: number
     study?: string
     total?: number
     ui?: Ui
@@ -19,13 +20,15 @@
   const props = withDefaults(defineProps<Props>(), {
     title: () => 'n/a',
     index: () => 0,
+    indexMax: () => 0,
     study: () => 'n/a',
     total: () => 0,
     ui: () => ({} as Ui),
   })
 
   const emit = defineEmits<{
-    back: [event: void]
+    back: [event: void],
+    forward: [event: void],
   }>()
 
   const showHelp = ref(false)
@@ -35,6 +38,7 @@
   const titleStudy = useTemplateRef('title-study')
   const buttonHelp = useTemplateRef('button-help')
   const buttonBack = useTemplateRef('button-back')
+  const buttonForward = useTemplateRef('button-forward')
   const progressBar = useTemplateRef('progress-bar')
   const buttonExit = useTemplateRef('button-exit')
 
@@ -42,6 +46,7 @@
     titleStudy,
     buttonHelp,
     buttonBack,
+    buttonForward,
     progressBar,
     buttonExit,
   });
@@ -56,6 +61,10 @@
 
   const backward = () => {
     emit('back')
+  }
+
+  const forward = () => {
+    emit('forward')
   }
 
   const close = () => {
@@ -95,6 +104,14 @@
         :disabled="props.index === 0"
         icon="mdi-arrow-left"
         @click="backward"
+      />
+
+      <v-btn
+        ref="button-forward"
+        color="white"
+        :disabled="props.index === props.indexMax"
+        icon="mdi-arrow-right"
+        @click="forward"
       />
 
       <v-spacer />
