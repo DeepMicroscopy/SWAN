@@ -32,7 +32,6 @@
           class="card-wrapper"
           :class="{ 'active-card': i === 0 }"
           :style="getCardStyle(i)"
-          @dblclick="zoomReset"
           @mousedown.prevent="handleSwipeStartMouse"
           @mouseleave.prevent="handleSwipeEnd"
           @mousemove.prevent="handleSwipeMoveMouse"
@@ -282,6 +281,7 @@
   const handleSwipeEnd = () => {
     if ((Date.now() - lastTap.value) < thresholdDoubleTap.value) {
       zoomReset()
+      swipeReset()
       return
     } else {
       lastTap.value = Date.now()
