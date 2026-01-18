@@ -1,14 +1,14 @@
 asgiref==3.8.1
 attrs==25.3.0
 dj-database-url==3.0.1
-Django==5.2.1
+Django==5.2.9
 django-extensions==4.1
 django-json-widget==2.0.3
 djangorestframework==3.16.1
 drf-spectacular==0.28.0
 drf-spectacular-sidecar==2025.8.1
 h11==0.16.0
-h2==4.2.0
+h2==4.3.0
 hpack==4.1.0
 Hypercorn==0.17.3
 hyperframe==6.1.0
