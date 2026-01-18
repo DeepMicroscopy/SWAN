@@ -1,11 +1,10 @@
 import uuid
 
 from django.db.models import Q
+from rest_framework import serializers
 
 from app import util
 from app.models import Study
-
-from rest_framework import serializers
 
 
 class ErrorSerializer(serializers.Serializer):
@@ -14,7 +13,7 @@ class ErrorSerializer(serializers.Serializer):
 
 def study_queryset_for_request(request):
     if request.user.is_authenticated:
-        return Study.objects.filter(Q(group__in=util.groups(request)) | Q(group__isnull=True))
+        return Study.objects.filter(Q(group__in=util.groups(request)) | Q(group__isnull=True) | Q(anonymous=True))
     else:
         return Study.objects.filter(anonymous=True)
 
