@@ -1,5 +1,11 @@
 // Utilities
 import { defineStore } from 'pinia'
+import { DEFAULTS } from '@/const.ts';
+
+interface AppState {
+  login: boolean
+  studySettings: Record<string, StudySettings>
+}
 
 interface StudySettings {
   imageZoom: number
@@ -8,7 +14,7 @@ interface StudySettings {
 }
 
 export const useAppStore = defineStore('app', {
-  state: () => ({
+  state: (): AppState => ({
     login: !!localStorage.getItem('login'),
     studySettings: JSON.parse(localStorage.getItem('studySettings')!) ?? {} as Record<string, StudySettings>,
   }),
@@ -28,7 +34,7 @@ export const useAppStore = defineStore('app', {
     },
     updateSettings (study: string, patch: Partial<StudySettings>) {
       if (!this.studySettings[study]) {
-        this.studySettings[study] = {}
+        this.studySettings[study] = { imageZoom: DEFAULTS.IMAGE_ZOOM, thresholdDoubleTap: DEFAULTS.DOUBLE_TAP_THRESHOLD, thresholdSwipe: DEFAULTS.SWIPE_THRESHOLD }
       }
       Object.assign(this.studySettings[study], patch)
       localStorage.setItem('studySettings', JSON.stringify(this.studySettings))
