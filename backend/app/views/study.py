@@ -76,21 +76,12 @@ class SolutionConfigSerializer(serializers.HyperlinkedModelSerializer):
 
 class StudyListSerializer(serializers.HyperlinkedModelSerializer):
     educational = serializers.SerializerMethodField()
+    length = serializers.IntegerField(source="dataset.file_count")
+    index = serializers.SerializerMethodField()
 
     @staticmethod
     def get_educational(study: Study) -> bool:
         return hasattr(study, "solution")
-
-    class Meta:
-        model = Study
-        fields = ["id", "title", "description", "image", "pub_date", "end_date", "educational"]
-
-
-class StudySerializer(StudyListSerializer):
-    ui = UiSerializer()
-    length = serializers.IntegerField(source="dataset.file_count")
-    index = serializers.SerializerMethodField()
-    solution = SolutionConfigSerializer(allow_null=True)
 
     def get_index(self, study: Study) -> int:
         request = self.context.get("request")
@@ -98,8 +89,14 @@ class StudySerializer(StudyListSerializer):
 
     class Meta:
         model = Study
-        fields = ["id", "title", "description", "image", "pub_date", "end_date", "solution", "ui", "length", "index"]
+        fields = ["id", "title", "description", "image", "pub_date", "end_date", "educational", "length", "index"]
 
+class StudySerializer(StudyListSerializer):
+    solution = SolutionConfigSerializer(allow_null=True)
+    ui = UiSerializer()
+
+    class Meta(StudyListSerializer.Meta):
+        fields = StudyListSerializer.Meta.fields + ["solution", "ui"]
 
 class PostponedSerializer(serializers.Serializer):
     images = serializers.ListField(child=serializers.IntegerField())

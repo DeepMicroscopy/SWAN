@@ -61,6 +61,9 @@
       >
         <v-list-item-title>{{ study.title }}</v-list-item-title>
         <v-list-item-subtitle>{{ formatDate(study.pub_date) }} - {{ formatDate(study.end_date) }}</v-list-item-subtitle>
+
+        <v-chip color="primary" size="x-small" variant="outlined">{{ study.index }} / {{ study.length }}</v-chip>
+
         <template #prepend>
           <v-btn
             class="mr-3"
@@ -79,10 +82,7 @@
             @click="setStudy(study)"
           />
         </template>
-
-
       </v-list-item>
-
     </v-list>
   </v-card>
 

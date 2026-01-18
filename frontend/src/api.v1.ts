@@ -406,10 +406,11 @@ export interface components {
              * @description The study will be removed from the overview at this time.
              */
       end_date: string;
-      solution: components['schemas']['SolutionConfig'] | null;
-      ui: components['schemas']['Ui'];
+      readonly educational: boolean;
       length: number;
       readonly index: number;
+      solution: components['schemas']['SolutionConfig'] | null;
+      ui: components['schemas']['Ui'];
     };
     StudyList: {
       /** Format: uuid */
@@ -436,6 +437,8 @@ export interface components {
              */
       end_date: string;
       readonly educational: boolean;
+      length: number;
+      readonly index: number;
     };
     Ui: {
       /** @description Only used for display purposes in the study creation. */
