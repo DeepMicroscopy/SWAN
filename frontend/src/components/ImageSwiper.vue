@@ -71,12 +71,10 @@
   import { computed, ref } from 'vue'
   import type { Direction, Ui, UiDirection } from '@/api.ts';
   import { useAppStore } from '@/stores/app.ts';
+  import { DEFAULTS } from '@/const.ts';
 
   // TODO
   // - dragging should be scaled to the zoom factor
-  // - move threshold and position to user-settings
-  // - also add image-rendering to some settings
-  // - add intro
 
   const store = useAppStore()
 
@@ -161,13 +159,13 @@
     return props.cards.slice(props.index, props.index + 2)
   })
   const imageScale = computed(() => {
-    return (store.studySettings[props.study]?.imageZoom ?? props.ui.default_scale ?? 100) / 100
+    return (store.studySettings[props.study]?.imageZoom ?? props.ui.default_scale ?? DEFAULTS.IMAGE_ZOOM) / 100
   })
   const thresholdSwipe = computed(() => {
-    return store.studySettings[props.study].thresholdSwipe
+    return store.studySettings[props.study]?.thresholdSwipe ?? DEFAULTS.SWIPE_THRESHOLD
   })
   const thresholdDoubleTap = computed(() => {
-    return store.studySettings[props.study].thresholdDoubleTap
+    return store.studySettings[props.study]?.thresholdDoubleTap ?? DEFAULTS.DOUBLE_TAP_THRESHOLD
   })
 
   // Methods

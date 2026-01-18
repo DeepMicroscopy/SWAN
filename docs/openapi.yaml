@@ -767,18 +767,22 @@ components:
           format: date-time
           title: End
           description: The study will be removed from the overview at this time.
+        educational:
+          type: boolean
+          readOnly: true
+        length:
+          type: integer
+        index:
+          type: integer
+          readOnly: true
         solution:
           allOf:
           - $ref: '#/components/schemas/SolutionConfig'
           nullable: true
         ui:
           $ref: '#/components/schemas/Ui'
-        length:
-          type: integer
-        index:
-          type: integer
-          readOnly: true
       required:
+      - educational
       - end_date
       - id
       - index
@@ -820,10 +824,17 @@ components:
         educational:
           type: boolean
           readOnly: true
+        length:
+          type: integer
+        index:
+          type: integer
+          readOnly: true
       required:
       - educational
       - end_date
       - id
+      - index
+      - length
       - pub_date
       - title
     Ui:

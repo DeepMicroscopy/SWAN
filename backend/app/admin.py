@@ -137,7 +137,7 @@ class ClassificationAdmin(admin.ModelAdmin):
 
         for entry in queryset:
             writer.writerow(
-                [int(entry.date.timestamp()), entry.study.id, entry.file, entry.choice] + self.csv_data(entry)
+                [entry.date.timestamp(), entry.study.id, entry.file, entry.choice] + self.csv_data(entry)
             )
 
         return response

@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import type { Ui } from '@/api.ts';
   import { useAppStore } from '@/stores/app.ts';
+  import { DEFAULTS } from '@/const.ts';
 
   const store = useAppStore()
 
@@ -29,9 +30,9 @@
     },
   })
 
-  const imageZoom = ref(store.studySettings[props.study]?.imageZoom ?? props.ui.default_scale ?? 100)
-  const thresholdSwipe = ref(store.studySettings[props.study]?.thresholdSwipe ?? 100)
-  const thresholdDoubleTap = ref(store.studySettings[props.study]?.thresholdDoubleTap ?? 500)
+  const imageZoom = ref(store.studySettings[props.study]?.imageZoom ?? props.ui.default_scale ?? DEFAULTS.IMAGE_ZOOM)
+  const thresholdSwipe = ref(store.studySettings[props.study]?.thresholdSwipe ?? DEFAULTS.SWIPE_THRESHOLD)
+  const thresholdDoubleTap = ref(store.studySettings[props.study]?.thresholdDoubleTap ?? DEFAULTS.DOUBLE_TAP_THRESHOLD)
 
   watch(imageZoom, newValue => {
     store.updateSettings(props.study, { imageZoom: newValue })
