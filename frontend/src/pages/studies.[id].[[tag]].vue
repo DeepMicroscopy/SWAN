@@ -36,7 +36,7 @@ meta:
   }
 
   const cards = ref<Card[]>(result);
-  const index = ref(study?.index + 1);
+  const index = ref(study?.index);
   const indexMax = ref(index.value)
   const showDescription = ref(false)
 

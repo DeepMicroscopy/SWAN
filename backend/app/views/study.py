@@ -31,9 +31,9 @@ def get_index_for_request(request, study):
         ).order_by("-index").first()
 
     if result is None:
-        return -1
+        return 0
     else:
-        return result.index
+        return result.index + 1
 
 
 def get_postponed_for_request(request, study, direction):
