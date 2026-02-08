@@ -11,6 +11,7 @@ interface StudySettings {
   imageZoom: number
   thresholdSwipe: number
   thresholdDoubleTap: number
+  keyboardNavigation: boolean
 }
 
 export const useAppStore = defineStore('app', {
@@ -34,7 +35,7 @@ export const useAppStore = defineStore('app', {
     },
     updateSettings (study: string, patch: Partial<StudySettings>) {
       if (!this.studySettings[study]) {
-        this.studySettings[study] = { imageZoom: DEFAULTS.IMAGE_ZOOM, thresholdDoubleTap: DEFAULTS.DOUBLE_TAP_THRESHOLD, thresholdSwipe: DEFAULTS.SWIPE_THRESHOLD }
+        this.studySettings[study] = { imageZoom: DEFAULTS.IMAGE_ZOOM, thresholdDoubleTap: DEFAULTS.DOUBLE_TAP_THRESHOLD, thresholdSwipe: DEFAULTS.SWIPE_THRESHOLD, keyboardNavigation: DEFAULTS.KEYBOARD_NAVIGATION }
       }
       Object.assign(this.studySettings[study], patch)
       localStorage.setItem('studySettings', JSON.stringify(this.studySettings))

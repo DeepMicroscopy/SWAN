@@ -167,6 +167,9 @@
   const thresholdDoubleTap = computed(() => {
     return store.studySettings[props.study]?.thresholdDoubleTap ?? DEFAULTS.DOUBLE_TAP_THRESHOLD
   })
+  const keyboardNavigation = computed(() => {
+    return store.studySettings[props.study]?.keyboardNavigation ?? DEFAULTS.KEYBOARD_NAVIGATION
+  })
 
   // Methods
   const getCardStyle = (index: number) => {
@@ -208,6 +211,34 @@
   const getSwipeText = (direction: string) => {
     return swipeDirections[direction]?.action || ''
   }
+
+  // Keyboard events
+  const keyboardEvents: Record<string, Direction> = {}
+  if (props.ui.labels.up) keyboardEvents['ArrowUp'] = 'up'
+  if (props.ui.labels.down) keyboardEvents['ArrowDown'] = 'down'
+  if (props.ui.labels.left) keyboardEvents['ArrowLeft'] = 'left'
+  if (props.ui.labels.right) keyboardEvents['ArrowRight'] = 'right'
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!keyboardNavigation.value) return
+
+    if (!keyboardEvents.hasOwnProperty(e.key)) return
+
+    const direction = keyboardEvents[e.key]
+
+    emit('swiped', <SwipeEvent>{
+      card: props.cards[props.index],
+      direction,
+    })
+  }
+
+  onMounted(() => {
+    window.addEventListener('keydown', handleKeyDown, { capture: true })
+  })
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeyDown, { capture: true })
+  })
 
   // Swipe events
   const handleSwipeStartTouch = (e: TouchEvent) => {
@@ -406,6 +437,11 @@
   transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
+}
+
+.cards-stack:focus,
+.cards-stack:focus-visible {
+  outline: none;
 }
 
 .card-wrapper {
