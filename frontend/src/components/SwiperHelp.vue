@@ -33,6 +33,7 @@
   const imageZoom = ref(store.studySettings[props.study]?.imageZoom ?? props.ui.default_scale ?? DEFAULTS.IMAGE_ZOOM)
   const thresholdSwipe = ref(store.studySettings[props.study]?.thresholdSwipe ?? DEFAULTS.SWIPE_THRESHOLD)
   const thresholdDoubleTap = ref(store.studySettings[props.study]?.thresholdDoubleTap ?? DEFAULTS.DOUBLE_TAP_THRESHOLD)
+  const keyboardNavigation = ref(store.studySettings[props.study]?.keyboardNavigation ?? DEFAULTS.KEYBOARD_NAVIGATION)
 
   watch(imageZoom, newValue => {
     store.updateSettings(props.study, { imageZoom: newValue })
@@ -44,6 +45,10 @@
 
   watch(thresholdDoubleTap, newValue => {
     store.updateSettings(props.study, { thresholdDoubleTap: newValue })
+  }, { immediate: true })
+
+  watch(keyboardNavigation, newValue => {
+    store.updateSettings(props.study, { keyboardNavigation: newValue })
   }, { immediate: true })
 
 </script>
@@ -148,6 +153,17 @@
               step="100"
               thumb-label
               thumb-size="10"
+            />
+          </v-list-item>
+          <v-list-item>
+            <v-list-subheader>Keyboard Navigation</v-list-subheader>
+            <v-switch
+              v-model="keyboardNavigation"
+              class="mx-2"
+              color="green-darken-2"
+              density="compact"
+              hide-details
+              prepend-icon="mdi-keyboard-outline"
             />
           </v-list-item>
         </v-list>

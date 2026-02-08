@@ -167,6 +167,9 @@
   const thresholdDoubleTap = computed(() => {
     return store.studySettings[props.study]?.thresholdDoubleTap ?? DEFAULTS.DOUBLE_TAP_THRESHOLD
   })
+  const keyboardNavigation = computed(() => {
+    return store.studySettings[props.study]?.keyboardNavigation ?? DEFAULTS.KEYBOARD_NAVIGATION
+  })
 
   // Methods
   const getCardStyle = (index: number) => {
@@ -217,6 +220,8 @@
   if (props.ui.labels.right) keyboardEvents['ArrowRight'] = 'right'
 
   const handleKeyDown = (e: KeyboardEvent) => {
+    if (!keyboardNavigation.value) return
+
     if (!keyboardEvents.hasOwnProperty(e.key)) return
 
     const direction = keyboardEvents[e.key]
