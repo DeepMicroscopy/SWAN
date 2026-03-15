@@ -77,6 +77,7 @@ class UiAdmin(admin.ModelAdmin):
         css = {
             "all": ("admin/css/white_space.css",)
         }
+        js = ("admin/js/ui_confirm.js",)
 
 
 @admin.register(Study)
@@ -124,6 +125,7 @@ class StudyAdmin(admin.ModelAdmin):
         css = {
             "all": ("admin/css/wide_table.css",)
         }
+        js = ("admin/js/study_confirm.js",)
 
 
 class ClassificationAdmin(admin.ModelAdmin):
