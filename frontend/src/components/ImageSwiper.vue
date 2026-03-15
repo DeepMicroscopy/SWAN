@@ -495,6 +495,10 @@
   text-align: center;
   pointer-events: none;
 
+  &.fade-transition-leave-active {
+    transition-delay: 0.1s;
+  }
+
   .swipe-text {
     margin-top: 8px;
     font-weight: bold;
