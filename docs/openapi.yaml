@@ -361,7 +361,7 @@ paths:
         name: index
         schema:
           type: string
-          pattern: ^\d+$
+          pattern: ^[0-9]+$
         required: true
       tags:
       - Dataset
