@@ -1,7 +1,7 @@
 [
   {
     "id": "d8c03784-682d-4f44-97a6-000000000001",
-    "title": "Educational",
+    "title": "test-study-educational",
     "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n\r\n(/3.png)[/4.png]",
     "image": "http://testserver/media/image/test",
     "pub_date": "2025-01-01T10:10:10Z",
