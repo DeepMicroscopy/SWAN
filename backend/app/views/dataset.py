@@ -31,7 +31,7 @@ class DatasetViewSet(viewsets.ReadOnlyModelViewSet):
         responses=OpenApiTypes.BINARY,
         description="The file at the index of the dataset",
     )
-    @action(detail=True, url_path="(?P<index>\d+)", renderer_classes=[util.FileRenderer])
+    @action(detail=True, url_path="(?P<index>\\d+)", renderer_classes=[util.FileRenderer])
     def entry(self, request, pk=None, index: int = None):
         index = int(index)
         queryset = Dataset.objects.all()

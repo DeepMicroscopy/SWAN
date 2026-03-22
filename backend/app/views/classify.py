@@ -6,7 +6,7 @@ import magic
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_field
 from rest_framework import serializers
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -41,10 +41,12 @@ class ClassifyOutputSerializer(serializers.Serializer):
     education = serializers.SerializerMethodField(allow_null=True)
 
     @staticmethod
-    def get_education(obj: Classification) -> EducationSerializer:
+    @extend_schema_field(EducationSerializer)
+    def get_education(obj: Classification):
         if not hasattr(obj.study, "solution"):
             return None
 
+        # noinspection PyUnresolvedReferences
         solution = obj.study.solution
 
         if obj.file not in solution.config:

@@ -36,14 +36,17 @@ def upload_to(name):
     return f'{name}/{today.year}/{today.month}/{today.day}/{uuid.uuid4().hex}'
 
 
+# noinspection PyUnusedLocal
 def upload_to_dataset(instance, filename):
     return upload_to("dataset")
 
 
+# noinspection PyUnusedLocal
 def upload_to_solution(instance, filename):
     return upload_to("solution")
 
 
+# noinspection PyUnusedLocal
 def upload_to_image(instance, filename):
     return upload_to("image")
 

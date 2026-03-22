@@ -3,11 +3,11 @@ from pathlib import Path
 from django.test import TestCase
 from rest_framework.test import APIClient
 
-from app.tests.util import with_testuser, save_fixture, with_login, DEFAULT_USER
+from app.tests.util import with_tester, save_fixture, with_login, DEFAULT_USER
 
 
 class AuthApi(TestCase):
-    @with_testuser
+    @with_tester
     def setUp(self):
         self.client = APIClient()
 

@@ -4,13 +4,13 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 
 from app.models import Study
-from app.tests.util import save_fixture, with_login, with_testuser
+from app.tests.util import save_fixture, with_login, with_tester
 
 
 class StudyApi(TestCase):
     fixtures = ['study.json']
 
-    @with_testuser
+    @with_tester
     def setUp(self):
         self.client = APIClient()
 

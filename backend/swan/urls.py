@@ -1,7 +1,7 @@
 """
-URL configuration for SWAN project.
+URL configuration for the SWAN project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
+The `urlpatterns` list routes URLs to views. For more information, please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
 Examples:
 Function views
@@ -20,7 +20,6 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_not_required
 from django.urls import path, include, re_path
 from django.views.static import serve
-
 from drf_spectacular.views import (
     SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 )
@@ -31,6 +30,8 @@ admin.site.site_header = 'SWAN Admin'
 admin.site.site_title = 'SWAN Admin Portal'
 admin.site.index_title = 'Welcome to SWAN'
 
+
+# noinspection PyShadowingNames
 @login_not_required
 def free_serve(request, path, **kwargs):
     return serve(request, path, **kwargs)

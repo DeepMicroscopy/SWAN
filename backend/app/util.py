@@ -94,10 +94,10 @@ def check_tag(study: str, code: str) -> bool:
 
 
 def create_qr(data):
-    # ERROR_CORRECT_L: About 7% or less errors can be corrected.
-    # ERROR_CORRECT_M: About 15% or less errors can be corrected.
-    # ERROR_CORRECT_Q: About 25% or less errors can be corrected.
-    # ERROR_CORRECT_H: About 30% or less errors can be corrected
+    # ERROR_CORRECT_L: About 7% or fewer errors can be corrected.
+    # ERROR_CORRECT_M: About 15% or fewer errors can be corrected.
+    # ERROR_CORRECT_Q: About 25% or fewer errors can be corrected.
+    # ERROR_CORRECT_H: About 30% or fewer errors can be corrected
     qr = qrcode.QRCode(
         version=None,
         error_correction=qrcode.ERROR_CORRECT_M,
@@ -117,7 +117,7 @@ def create_qr(data):
         # color_mask=None,
         module_drawer=qrcode.image.styles.moduledrawers.svg.SvgPathSquareDrawer(),
         # unavailable for svg
-        # embeded_image_path=None,
+        # embedded_image_path=None,
     )
 
     xml: str = img.to_string(encoding="unicode")

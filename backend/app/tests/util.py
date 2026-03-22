@@ -19,7 +19,7 @@ def save_fixture(path: Path, name: str, data):
         json.dump(data, f, cls=DjangoJSONEncoder, indent=2)
 
 
-def with_testuser(func, username=DEFAULT_USER, password=DEFAULT_PASSWORD):
+def with_tester(func, username=DEFAULT_USER, password=DEFAULT_PASSWORD):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
         self.user = User.objects.create_user(username=username, password=password)
