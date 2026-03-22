@@ -19,7 +19,7 @@
     "fields": {
       "created_at": "2025-08-22T16:58:28.804Z",
       "updated_at": "2025-08-23T18:05:55.140Z",
-      "title": "test-ui",
+      "title": "test-ui-default",
       "labels": {
         "left": {
           "text": "left"
@@ -27,7 +27,42 @@
         "right": {
           "text": "right"
         }
-      }
+      },
+      "postpone": null,
+      "pixelated": true,
+      "default_scale": 100
+    }
+  },
+  {
+    "model": "app.ui",
+    "pk": "16315980-c11d-49d5-9e44-000000000002",
+    "fields": {
+      "created_at": "2025-08-22T16:58:28.804Z",
+      "updated_at": "2025-08-23T18:05:55.140Z",
+      "title": "test-ui-full",
+      "labels": {
+        "left": {
+          "text": "Good",
+          "label": "left",
+          "icon": "mdi-arrow-left",
+          "color": "green"
+        },
+        "right": {
+          "text": "Bad",
+          "label": "right",
+          "icon": "mdi-arrow-right",
+          "color": "red"
+        },
+        "up": {
+          "text": "Later",
+          "label": "invalid",
+          "icon": "mdi-help-circle",
+          "color": "blue"
+        }
+      },
+      "postpone": "up",
+      "pixelated": false,
+      "default_scale": 50
     }
   },
   {
@@ -36,7 +71,7 @@
     "fields": {
       "created_at": "2025-08-22T16:58:28.798Z",
       "updated_at": "2025-08-23T14:54:06.997Z",
-      "title": "Educational",
+      "title": "test-study-educational",
       "image": "image/test",
       "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n\r\n(/3.png)[/4.png]",
       "pub_date": "2025-01-01T10:10:10Z",
@@ -53,7 +88,7 @@
     "fields": {
       "created_at": "2025-08-22T16:58:28.798Z",
       "updated_at": "2025-08-23T14:30:10.153Z",
-      "title": "Normal",
+      "title": "test-study-normal",
       "image": "image/test",
       "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n(/3.png)[/4.png]",
       "pub_date": "2025-02-02T20:20:20Z",
@@ -61,7 +96,7 @@
       "group": null,
       "anonymous": false,
       "dataset": "570f18ae-8b9b-4be9-aeb0-000000000001",
-      "ui": "16315980-c11d-49d5-9e44-000000000001"
+      "ui": "16315980-c11d-49d5-9e44-000000000002"
     }
   },
   {
@@ -73,16 +108,20 @@
       "archive": "solution/test",
       "config": {
         "SWAN/MIDOG21_141.png": {
-          "text": "text"
+          "text": "test-text"
         }
-      }
+      },
+      "label_current": "test-label-current",
+      "label_proof": "test-label-proof",
+      "css_row": "test-css-row",
+      "css_column": "test-css-column"
     }
   },
   {
     "model": "auth.group",
     "pk": 1,
     "fields": {
-      "name": "Experts",
+      "name": "test-group",
       "permissions": []
     }
   }

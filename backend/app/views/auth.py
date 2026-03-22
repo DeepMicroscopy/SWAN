@@ -53,6 +53,7 @@ class AuthViewSet(viewsets.ViewSet):
         })
 
         response = Response(serializer.data)
+        # noinspection PyProtectedMember
         ensure_csrf_cookie(lambda r: response)(request._request)
         return response
 

@@ -1,4 +1,3 @@
-import abc
 import csv
 
 from django.contrib import admin
@@ -100,6 +99,7 @@ class StudyAdmin(admin.ModelAdmin):
     def educational(self, study) -> bool:
         return study.solution is not None
 
+    # required to display checkmark in table instead of string
     educational.boolean = True
 
     @staticmethod
@@ -144,11 +144,9 @@ class ClassificationAdmin(admin.ModelAdmin):
 
         return response
 
-    @abc.abstractmethod
     def csv_header(self):
         raise NotImplementedError
 
-    @abc.abstractmethod
     def csv_data(self, entry):
         raise NotImplementedError
 

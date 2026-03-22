@@ -4,13 +4,13 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 
 from app.models import Study
-from app.tests.util import save_fixture, with_login, with_testuser
+from app.tests.util import save_fixture, with_login, with_tester
 
 
 class StudyApi(TestCase):
     fixtures = ['study.json']
 
-    @with_testuser
+    @with_tester
     def setUp(self):
         self.client = APIClient()
 
@@ -27,6 +27,7 @@ class StudyApi(TestCase):
 
     @with_login
     def test_list_empty(self):
+        # user is not in the group and no study allows anonymous access
         Study.objects.update(group=1, anonymous=False)
 
         response = self.client.get('/v1/studies/')
@@ -41,6 +42,7 @@ class StudyApi(TestCase):
 
     @with_login
     def test_list_anonymous(self):
+        # user is not in this group, but one study allows anonymous access
         Study.objects.update(group=1)
 
         response = self.client.get('/v1/studies/')

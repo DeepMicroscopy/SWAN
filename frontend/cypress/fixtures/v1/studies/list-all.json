@@ -1,20 +1,24 @@
 [
   {
     "id": "d8c03784-682d-4f44-97a6-000000000001",
-    "title": "Educational",
+    "title": "test-study-educational",
     "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n\r\n(/3.png)[/4.png]",
     "image": "http://testserver/media/image/test",
     "pub_date": "2025-01-01T10:10:10Z",
     "end_date": "2035-01-01T10:10:10Z",
-    "educational": true
+    "educational": true,
+    "length": 1,
+    "index": 0
   },
   {
     "id": "d8c03784-682d-4f44-97a6-000000000002",
-    "title": "Normal",
+    "title": "test-study-normal",
     "description": "# markdown\r\n\r\n- markdown\r\n\r\n[/1.png](/2.png)\r\n(/3.png)[/4.png]",
     "image": "http://testserver/media/image/test",
     "pub_date": "2025-02-02T20:20:20Z",
     "end_date": "2035-02-02T20:20:20Z",
-    "educational": false
+    "educational": false,
+    "length": 1,
+    "index": 0
   }
 ]
