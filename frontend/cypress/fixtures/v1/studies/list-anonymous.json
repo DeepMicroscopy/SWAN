@@ -6,6 +6,8 @@
     "image": "http://testserver/media/image/test",
     "pub_date": "2025-01-01T10:10:10Z",
     "end_date": "2035-01-01T10:10:10Z",
-    "educational": true
+    "educational": true,
+    "length": 1,
+    "index": 0
   }
 ]

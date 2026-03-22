@@ -12,9 +12,9 @@ assert FIXTURE_OUTPUT_DIR.exists()
 DEFAULT_USER = 'test-user'
 DEFAULT_PASSWORD = 'test-pass'
 
-# do not add the suffix here, as otherwise the refactoring will not pick up the string
+# do not add the file suffix here, as otherwise the refactoring will not pick up the string
 def save_fixture(path: Path, name: str, data):
-    print(f"saving fixture: {path}/{name}")
+    #print(f"saving fixture: {path}/{name}")
     with open(FIXTURE_OUTPUT_DIR / path / f"{name}", "w", encoding="utf-8") as f:
         json.dump(data, f, cls=DjangoJSONEncoder, indent=2)
 

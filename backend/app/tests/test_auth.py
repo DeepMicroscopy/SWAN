@@ -25,13 +25,13 @@ class AuthApi(TestCase):
 
     @with_login
     def test_status_get_authenticated(self):
-            response = self.client.get('/v1/auth/status/')
-            self.assertEqual(response.status_code, 200)
+        response = self.client.get('/v1/auth/status/')
+        self.assertEqual(response.status_code, 200)
 
-            data = response.json()
-            assert isinstance(data, dict)
+        data = response.json()
+        assert isinstance(data, dict)
 
-            self.assertEqual(data['username'], DEFAULT_USER)
-            self.assertTrue(data['authenticated'])
+        self.assertEqual(data['username'], DEFAULT_USER)
+        self.assertTrue(data['authenticated'])
 
-            save_fixture(Path("v1/auth/status"), "get-authenticated.json", data)
+        save_fixture(Path("v1/auth/status"), "get-authenticated.json", data)
