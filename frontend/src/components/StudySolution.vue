@@ -2,6 +2,7 @@
   import type { Education, SolutionConfig, Study } from '@/api.ts';
   import MarkdownIt from 'markdown-it';
   import DOMPurify from 'dompurify';
+  import { DEFAULTS } from '@/const.ts';
 
   interface Props {
     config?: SolutionConfig | null
@@ -49,12 +50,12 @@
         {{ props.study?.title }}
       </v-card-title>
       <v-card-text class="ma-3 min-width-images">
-        <v-row v-if="props.education?.proof" :class="props.config?.css_row ?? 'text-center text-decoration-underline font-weight-bold'">
-          <v-col :class="props.config?.css_column" cols="6">{{ props.config?.label_current ?? "Current" }}</v-col>
+        <v-row v-if="props.education?.proof" :class="props.config?.css_row ?? DEFAULTS.SOLUTION.CSS_ROW">
+          <v-col :class="props.config?.css_column ?? DEFAULTS.SOLUTION.CSS_COLUMN" cols="6">{{ props.config?.label_current ?? DEFAULTS.SOLUTION.LABEL_CURRENT }}</v-col>
 
-          <v-col :class="props.config?.css_column" cols="6">{{ props.config?.label_proof ?? "Proof" }}</v-col>
+          <v-col :class="props.config?.css_column ?? DEFAULTS.SOLUTION.CSS_COLUMN" cols="6">{{ props.config?.label_proof ?? DEFAULTS.SOLUTION.LABEL_PROOF }}</v-col>
 
-          <v-col :class="props.config?.css_column" cols="6">
+          <v-col :class="props.config?.css_column ?? DEFAULTS.SOLUTION.CSS_COLUMN" cols="6">
             <v-img
               aspect-ratio="1"
               cover
@@ -62,7 +63,7 @@
             />
           </v-col>
 
-          <v-col :class="props.config?.css_column" cols="6">
+          <v-col :class="props.config?.css_column ?? DEFAULTS.SOLUTION.CSS_COLUMN" cols="6">
             <v-img
               aspect-ratio="1"
               cover
