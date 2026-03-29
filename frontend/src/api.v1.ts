@@ -366,7 +366,10 @@ export interface components {
       images: number[];
     };
     Solution: {
+      /** @default  */
       text: string;
+      /** @default  */
+      choice: string;
     };
     SolutionConfig: {
       /** @description (optional) The label displayed for the classified image. Defaults to 'Current' in the frontend. */

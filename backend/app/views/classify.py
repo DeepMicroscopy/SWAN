@@ -26,7 +26,8 @@ class ClassifyInputSerializer(serializers.Serializer):
 
 
 class SolutionSerializer(serializers.Serializer):
-    text = serializers.CharField()
+    text = serializers.CharField(default="")
+    choice = serializers.CharField(default="")
 
 
 class EducationSerializer(serializers.Serializer):
@@ -50,7 +51,7 @@ class ClassifyOutputSerializer(serializers.Serializer):
         solution = obj.study.solution
 
         if obj.file not in solution.config:
-            solution.config[obj.file] = {"text": ""}
+            solution.config[obj.file] = {"text": "", "choice": ""}
             solution.save(update_fields=["config"])
 
         try:

@@ -113,7 +113,7 @@ class Study(UUIDModel, DecoratorMixin):
 class Solution(DecoratorMixin):
     study = models.OneToOneField(Study, on_delete=models.CASCADE, primary_key=True, help_text="The study that this solution belongs to.")
     archive = models.FileField(upload_to=upload_to_solution, help_text="The solution archive. Solution images must have the same names as the dataset images.")
-    config = models.JSONField(default=dict, blank=True, help_text="A dictionary mapping file names in the dataset to an object. The object has the key 'text'. Markdown is supported.")
+    config = models.JSONField(default=dict, blank=True, help_text="A dictionary mapping file names in the dataset to an object. The object has 'text' to be displayed and 'choice' for skipping matches. Markdown is supported.")
 
     label_current = models.CharField(max_length=200, null=True, blank=True, help_text="(optional) The label displayed for the classified image. Defaults to 'Current' in the frontend.")
     label_proof = models.CharField(max_length=200, null=True, blank=True, help_text="(optional) The label displayed for the proof. Defaults to 'Proof' in the frontend.")
