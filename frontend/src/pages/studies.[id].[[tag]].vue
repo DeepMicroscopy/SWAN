@@ -105,7 +105,7 @@ meta:
           return
         }
 
-        if (result.data?.education) {
+        if (result.data?.education && event.direction !== result.data.education.solution.choice) {
           showSolution.value = true
           currentImage.value = cards.value[index.value - 1]?.image ?? ''
           currentEducation.value = result.data?.education

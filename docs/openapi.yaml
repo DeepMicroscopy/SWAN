@@ -698,8 +698,10 @@ components:
       properties:
         text:
           type: string
-      required:
-      - text
+          default: ''
+        choice:
+          type: string
+          default: ''
     SolutionConfig:
       type: object
       properties:
