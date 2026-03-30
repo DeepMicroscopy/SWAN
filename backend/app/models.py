@@ -2,11 +2,15 @@ import datetime
 import uuid
 
 from django.contrib.auth.models import AbstractUser, Group
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.deconstruct import deconstructible
 
 from app import util
 from swan.settings import AUTH_USER_MODEL
 
+allowed_extensions_archive = ['.zip', '.tar', '.tar.zst', '.tar.gz']
+allowed_extensions_image = ['.png', '.jpg', '.jpeg']
 
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -31,29 +35,36 @@ class DecoratorMixin(models.Model):
         abstract = True
 
 
-def upload_to(name):
-    today = datetime.date.today()
-    return f'{name}/{today.year}/{today.month}/{today.day}/{uuid.uuid4().hex}'
+@deconstructible
+class UploadTo(object):
+    def __init__(self, name: str = "default", extensions: list[str] = None):
+        self.name = name
+        self.extensions = extensions
+
+    def __call__(self, instance, filename):
+        extension = next((x for x in self.extensions if filename.endswith(x)), None)
+        if not extension:
+            raise ValidationError("Invalid file extension.") # validator should have prevented this
+
+        today = datetime.date.today()
+        return f'{self.name}/{today.year}/{today.month}/{today.day}/{uuid.uuid4().hex}{extension}'
 
 
-# noinspection PyUnusedLocal
-def upload_to_dataset(instance, filename):
-    return upload_to("dataset")
+@deconstructible
+class ValidatorExtension(object):
+    def __init__(self, extensions: list[str] = None):
+        self.extensions = extensions
 
-
-# noinspection PyUnusedLocal
-def upload_to_solution(instance, filename):
-    return upload_to("solution")
-
-
-# noinspection PyUnusedLocal
-def upload_to_image(instance, filename):
-    return upload_to("image")
+    def __call__(self, value):
+        for extension in self.extensions:
+            if value.name.endswith(extension):
+                return
+        raise ValidationError("Extension not allowed. Allowed extensions: "+", ".join(self.extensions))
 
 
 class Dataset(UUIDModel, DecoratorMixin):
     title = models.CharField(max_length=200, help_text="Only used for display purposes in the study creation.")
-    archive = models.FileField(upload_to=upload_to_dataset, help_text="The dataset archive. Files are registered by their full path inside the archive.")
+    archive = models.FileField(upload_to=UploadTo("dataset", allowed_extensions_archive), validators=[ValidatorExtension(allowed_extensions_archive)], help_text="The dataset archive. Files are registered by their full path inside the archive.")
     file_count = models.PositiveIntegerField(null=True, blank=True, help_text="The number of files in the dataset. Calculated automatically.")
     file_list = models.JSONField(null=True, blank=True, help_text="A list of all files in the dataset. Calculated automatically.")
 
@@ -94,7 +105,7 @@ The object has the keys 'text', 'icon' and 'color' - 'label' can be used to rena
 
 class Study(UUIDModel, DecoratorMixin):
     title = models.CharField(max_length=200, help_text="The title of the study. Visible in all interfaces.")
-    image = models.ImageField(upload_to=upload_to_image, null=True, blank=True, help_text="(optional) A title image for the study.")
+    image = models.ImageField(upload_to=UploadTo("image", allowed_extensions_image), validators=[ValidatorExtension(allowed_extensions_image)], null=True, blank=True, help_text="(optional) A title image for the study.")
     description = models.TextField(null=True, blank=True, help_text="(optional) A short description of the study. Markdown is supported.")
 
     pub_date = models.DateTimeField("Start", help_text="The study will be visible on the overview at this time.")
@@ -112,7 +123,7 @@ class Study(UUIDModel, DecoratorMixin):
 
 class Solution(DecoratorMixin):
     study = models.OneToOneField(Study, on_delete=models.CASCADE, primary_key=True, help_text="The study that this solution belongs to.")
-    archive = models.FileField(upload_to=upload_to_solution, help_text="The solution archive. Solution images must have the same names as the dataset images.")
+    archive = models.FileField(upload_to=UploadTo("solution", allowed_extensions_archive), validators=[ValidatorExtension(allowed_extensions_archive)], help_text="The solution archive. Solution images must have the same names as the dataset images.")
     config = models.JSONField(default=dict, blank=True, help_text="A dictionary mapping file names in the dataset to an object. The object has 'text' to be displayed and 'choice' for skipping matches. Markdown is supported.")
 
     label_current = models.CharField(max_length=200, null=True, blank=True, help_text="(optional) The label displayed for the classified image. Defaults to 'Current' in the frontend.")
