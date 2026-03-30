@@ -32,27 +32,44 @@ Each direction supports these settings:
 You can optionally select one of the configured directions as the `postpone` direction.
 Images swiped in this direction will be shown again at the end of the dataset until none are left that have been swiped
 in this direction.
+A default help text indicating this will be displayed in the study description.
 
 If you have tiny images / low resolution, you can configure image pixelation and the default zoom level in percent.
+
+![](images/manual_ui.png)
+
+This is how it would be displayed:
+
+![](images/manual_swipe.png)
 
 ### Uploading a Dataset
 
 Under `App` -> `Datasets` click `Add`. Select a title and the archive file.
-Supported formats are `.zip` and `.tar.*`. After the upload, all file names from the archive will be collected.
+Supported formats are `.zip` and `.tar.*` with an allowlist set in `models.py`.
+After the upload, all file names from the archive will be collected.
 You can nest directories in the archive, SWAN will accept any path to a file in the archive.
 
 For randomizing the order for each participant, this is the list of files that is shuffled.
 If you change the dataset after the study is released, the sorted list of file names must remain stable.
 
+![](images/manual_dataset.png)
+
 ### Creating a Study
 
-Under `App` -> `Studys` click `Add`. Select a title, a title image and the description in markdown.
-Select your dataset and the UI configuration, set the start and end date.
+Under `App` -> `Studys` click `Add`. Select a title, a title image and the description in Markdown.
+
+Select your dataset and the UI configuration, set the start and end date for the publication.
 
 If you wish to limit the study to a specific group of users, select the group.
 
-If you want to release the study to anonymous users, check the box. The QR code will then contain an authentication tag
-for this study.
+If you want to release the study to anonymous users, check the box.
+The QR code and URL will then contain an authentication tag for this study.
+
+![](images/manual_study.png)
+
+After a study is released, it will also be shown to registered users in the overview:
+
+![](images/manual_overview.png)
 
 ### Adding a solution
 
@@ -63,14 +80,52 @@ For each file path in the original archive, this archive needs to contain the so
 For each solution you can define a custom text that will be displayed in the frontend.
 In the Config object, assign an object `{"text": "Solution text"}` to the file path key.
 
+To only display the solution for incorrect classifications, set the `choice` key to the correct direction.
+If no config is created, each filename will get a default assigned on the first classification by a user.
+
+The interface allows for dynamic configuration of the solution image "Current" and "Proof" labels.
+The CSS classes of the image grid can also be configured. A common choice could be `pa-1` for the column to enlarge the images.
+All Vuetify helper classes are supported and defaults are defined in the frontends `const.ts` file.
+
+![](images/manual_solution.png)
+
+This is how it would be displayed:
+
+![](images/manual_education.png)
+
+The blue progress bare indicates the overtime mode for finishing postponed images.
+
 ### Extra
 
 If anonymous access is enabled, the QR code can be generated under `App` -> `Studys` and clicking `QR` under `Share` for the study.
 
-To export filtered data of the last choice for each image, click `CSV` under `Export` in `App` -> `Studys` for the study.
+To export filtered data of the last choice for each image, click `CSV` in `App` -> `Studys` under `Export` for the study.
 
-The two classification types for known and unknown users provide filtering and raw export.
+![](images/manual_export.png)
+
+The two classification types for known and unknown users provide filtering and raw export of selected entries.
+
+![](images/manual_rawdata.png)
+
+The combined data (registered + anonymous) will then look like this:
+
+![](images/manual_cleandata.png)
+
+The identifier in the proper UUID format is the user, while the other is a session identifier.
 
 ## User
 
-Currently handled by the intro in the frontend.
+Opening a study will check if the user has seen the most recent introduction yet.
+Anonymous users will always see it if they haven't classified an image yet.
+
+![](images/manual_intro.png)
+
+The help menu next to the study title also contains per study settings for advanced users:
+
+![](images/manual_help.png)
+
+- override default image zoom configured for the UI
+- adjust required swipe distance based on the device
+- threshold to register zoom resets (mouse wheel / pinch)
+
+For our power users we also support optional keyboard navigation.

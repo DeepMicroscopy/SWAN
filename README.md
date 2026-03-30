@@ -1,10 +1,13 @@
 # SWipeable ANnotations
 
 SWAN (SWipeable ANnotations) is an open-source, MIT-licensed web application for fast and intuitive histopathology image
-annotation. Instead of slow, folder-based sorting, SWAN enables swipe-based classification on both desktop and mobile
-devices, supports flexible label mapping, and logs annotations and metadata in real time. Designed to reduce fatigue and
-make large-scale annotation more accessible, SWAN offers a lightweight, browser-based interface that allows pathologists
-and researchers to efficiently label image patches anytime, including on the go.
+annotation.
+
+Instead of slow, folder-based sorting, SWAN enables swipe-based classification on both desktop and mobile
+devices, supports flexible label mapping, and records timestamped annotations with metadata.
+
+Designed to reduce fatigue and make large-scale annotation more accessible, SWAN offers a lightweight, browser-based
+interface that allows pathologists and researchers to efficiently label image patches anytime, including on the go.
 
 ## Features
 
@@ -44,7 +47,7 @@ After that run `make -C backend/ admin` in a second terminal to create the `admi
 password.
 
 You can load example data using `make -C backend/ example` which will create `admin` / `admin` and `expert` / `expert`
-users..
+users.
 
 ## Installation
 
@@ -75,15 +78,3 @@ The following are the links to the post-study questionnaires that were filled by
 
 SWAN (Initial Phase) - https://forms.gle/N5tsQu185kVoqUki8 <br>
 SWAN (Enhanced) - https://forms.gle/fsEnC4iupWuspQHaA
-
-## Security
-
-### Verifying commits
-
-```sh
-# configure allowed signers
-git config gpg.ssh.allowedSignersFile known_signers
-
-# view signatures for commits
-git log --show-signature
-```
