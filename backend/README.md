@@ -2,8 +2,10 @@
 
 ## Testing
 
+Generates fixtures for the frontend:
+
 ```sh
-./manage.py test app.tests
+./manage.py test
 ```
 
 ## Exploring

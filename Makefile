@@ -3,14 +3,15 @@ SHELL := /bin/bash
 default: all
 all: frontend backend
 
-frontend: backend-api
+frontend: api
 	$(MAKE) -C frontend all build
 
 backend: frontend
 	$(MAKE) -C backend all build
 
-backend-api:
+api:
 	$(MAKE) -C backend api
+	$(MAKE) -C frontend api
 
 .PHONY: all frontend backend backend-api
 
