@@ -11,6 +11,7 @@ meta:
   import type { Education, UiLabel } from '@/api.ts';
   import { type ErrorData, getError, setError } from '@/util/fetch-errors.ts';
   import { useIntro } from '@/composables/useIntro.ts';
+  import type { Driver } from 'driver.js';
 
   const route = useRoute<'/studies.[id].[[tag]]'>();
 
@@ -183,7 +184,7 @@ meta:
       const lastIntroGeneral = result.data?.intro_general ?? 0
       const lastIntroSwiping = result.data?.intro_swiping ?? 0
       if (lastIntroGeneral < currentIntroGeneral) {
-        intro.drive()
+        intro?.drive()
       } else if (lastIntroSwiping < currentIntroSwiping) {
         showOverlay.value = true
       }
@@ -210,45 +211,48 @@ meta:
     })
   }
 
-  const intro = useIntro([
-    {
-      child: 'toolbar',
-      ref: 'titleStudy',
-      title: 'Title',
-      description: 'Here you can see the title of the current study.',
-    },
-    {
-      child: 'toolbar',
-      ref: 'buttonHelp',
-      title: 'Help',
-      description: 'View a guide to the user controls.',
-    },
-    {
-      child: 'toolbar',
-      ref: 'buttonBack',
-      title: 'Back',
-      description: 'Navigate back to the previous image and decision point in the study.',
-    },
-    {
-      child: 'toolbar',
-      ref: 'buttonForward',
-      title: 'Forward',
-      description: 'Navigate forward to the next image and decision point in the study.',
-    },
-    {
-      child: 'toolbar',
-      ref: 'progressBar',
-      title: 'Progress',
-      description: 'This indicates your progress through the current study.',
-    },
-    {
-      child: 'toolbar',
-      ref: 'buttonExit',
-      title: 'Exit',
-      description: 'Close the study and return to the overview page. Your progress will be saved.',
-      onNext: closeIntro,
-    },
-  ])
+  let intro: Driver|null = null
+  if (!failed.value) {
+    intro = useIntro([
+      {
+        child: 'toolbar',
+        ref: 'titleStudy',
+        title: 'Title',
+        description: 'Here you can see the title of the current study.',
+      },
+      {
+        child: 'toolbar',
+        ref: 'buttonHelp',
+        title: 'Help',
+        description: 'View a guide to the user controls.',
+      },
+      {
+        child: 'toolbar',
+        ref: 'buttonBack',
+        title: 'Back',
+        description: 'Navigate back to the previous image and decision point in the study.',
+      },
+      {
+        child: 'toolbar',
+        ref: 'buttonForward',
+        title: 'Forward',
+        description: 'Navigate forward to the next image and decision point in the study.',
+      },
+      {
+        child: 'toolbar',
+        ref: 'progressBar',
+        title: 'Progress',
+        description: 'This indicates your progress through the current study.',
+      },
+      {
+        child: 'toolbar',
+        ref: 'buttonExit',
+        title: 'Exit',
+        description: 'Close the study and return to the overview page. Your progress will be saved.',
+        onNext: closeIntro,
+      },
+    ])
+  }
 </script>
 
 <template>
@@ -281,21 +285,21 @@ meta:
       @back="backward"
       @forward="forwardImage"
     />
+
+    <StudySolution
+      v-if="study.solution"
+      :config="study.solution"
+      :current="currentImage"
+      :education="currentEducation"
+      :show="showSolution"
+      :study="study"
+      @close="showSolution = false"
+    />
+
+    <StudyDescription :postpone="study.ui.postpone" :show="showDescription" :study="study" @close="closeDescription" />
+
+    <StudyAppreciation :postpone="!!study.ui.postpone" :show="showAppreciation" :study="study" @close="closeAppreciation" />
   </v-container>
-
-  <StudySolution
-    v-if="study.solution"
-    :config="study.solution"
-    :current="currentImage"
-    :education="currentEducation"
-    :show="showSolution"
-    :study="study"
-    @close="showSolution = false"
-  />
-
-  <StudyDescription :postpone="study.ui.postpone" :show="showDescription" :study="study" @close="closeDescription" />
-
-  <StudyAppreciation :postpone="!!study.ui.postpone" :show="showAppreciation" :study="study" @close="closeAppreciation" />
 
   <FetchError
     class="mb-6"
