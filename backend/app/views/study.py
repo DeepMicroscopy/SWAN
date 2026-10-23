@@ -127,11 +127,77 @@ class ReviewerProgressSerializer(serializers.Serializer):
     last_activity = serializers.DateTimeField(allow_null=True)
 
 
+class AnswerCountSerializer(serializers.Serializer):
+    choice = serializers.CharField()
+    label = serializers.CharField(allow_null=True)
+    count = serializers.IntegerField()
+
+
 class StudyProgressSerializer(serializers.Serializer):
     study = serializers.UUIDField()
+    title = serializers.CharField()
+    description = serializers.CharField(allow_null=True)
+    group = serializers.CharField(allow_null=True)
+    pub_date = serializers.DateTimeField()
+    end_date = serializers.DateTimeField()
+    anonymous = serializers.BooleanField()
+    dataset_title = serializers.CharField()
     file_count = serializers.IntegerField()
     reviewers = ReviewerProgressSerializer(many=True)
     complete_reviewers = serializers.IntegerField()
+    answers = AnswerCountSerializer(many=True)
+
+
+def study_progress(study: Study) -> dict:
+    """Per reviewer: images classified (latest answers only count once), plus how the answers are distributed."""
+    file_count = study.dataset.file_count or 0
+
+    rows = (
+        ClassificationUser.objects.filter(study=study)
+        .values("user", "user__username")
+        .annotate(classified=Count("index", distinct=True), last_activity=Max("date"))
+    )
+    reviewers = {
+        row["user"]: {
+            "user": row["user"], "username": row["user__username"] or "(deleted user)",
+            "classified": row["classified"], "last_activity": row["last_activity"],
+        }
+        for row in rows
+    }
+    if study.group is not None:
+        for member in study.group.user_set.all():
+            reviewers.setdefault(member.id, {
+                "user": member.id, "username": member.username, "classified": 0, "last_activity": None,
+            })
+
+    result = sorted(reviewers.values(), key=lambda r: r["username"])
+    for r in result:
+        r["complete"] = file_count > 0 and r["classified"] >= file_count
+
+    labels = study.ui.labels or {}
+    answers = [
+        {
+            "choice": row["choice"],
+            "label": (labels.get(row["choice"]) or {}).get("text"),
+            "count": row["n"],
+        }
+        for row in get_queryset_users(study.id).values("choice").annotate(n=Count("id")).order_by("choice")
+    ]
+
+    return {
+        "study": study.id,
+        "title": study.title,
+        "description": study.description,
+        "group": study.group.name if study.group else None,
+        "pub_date": study.pub_date,
+        "end_date": study.end_date,
+        "anonymous": study.anonymous,
+        "dataset_title": study.dataset.title,
+        "file_count": file_count,
+        "reviewers": result,
+        "complete_reviewers": sum(1 for r in result if r["complete"]),
+        "answers": answers,
+    }
 
 
 @extend_schema(tags=['Study'])
@@ -225,41 +291,18 @@ class StudyViewSet(viewsets.GenericViewSet):
         study = serializer.save()
         return Response(StudyCreateSerializer(study).data, status=status.HTTP_201_CREATED)
 
+    @extend_schema(request=None, responses=StudyProgressSerializer(many=True))
+    @action(detail=False, methods=["get"], url_path="all")
+    def all_studies(self, request):
+        """Every study with its progress, for the staff overview (no matter who may take part)."""
+        studies = Study.objects.select_related("dataset", "group", "ui").order_by("-pub_date")
+        return Response(StudyProgressSerializer([study_progress(st) for st in studies], many=True).data)
+
     @extend_schema(request=None, responses=StudyProgressSerializer)
     @action(detail=True, methods=["get"])
     def progress(self, request, pk=None):
         """How many images each reviewer has classified. A reviewer is complete once every image has an answer.
 
         Members of the study's group are listed even if they have not started yet."""
-        study = get_object_or_404(Study.objects.select_related("dataset", "group"), pk=pk)
-        file_count = study.dataset.file_count or 0
-
-        rows = (
-            ClassificationUser.objects.filter(study=study)
-            .values("user", "user__username")
-            .annotate(classified=Count("index", distinct=True), last_activity=Max("date"))
-        )
-        reviewers = {
-            row["user"]: {
-                "user": row["user"], "username": row["user__username"] or "(deleted user)",
-                "classified": row["classified"], "last_activity": row["last_activity"],
-            }
-            for row in rows
-        }
-        if study.group is not None:
-            for member in study.group.user_set.all():
-                reviewers.setdefault(member.id, {
-                    "user": member.id, "username": member.username, "classified": 0, "last_activity": None,
-                })
-
-        result = sorted(reviewers.values(), key=lambda r: r["username"])
-        for r in result:
-            r["complete"] = file_count > 0 and r["classified"] >= file_count
-
-        serializer = StudyProgressSerializer({
-            "study": study.id,
-            "file_count": file_count,
-            "reviewers": result,
-            "complete_reviewers": sum(1 for r in result if r["complete"]),
-        })
-        return Response(serializer.data)
+        study = get_object_or_404(Study.objects.select_related("dataset", "group", "ui"), pk=pk)
+        return Response(StudyProgressSerializer(study_progress(study)).data)

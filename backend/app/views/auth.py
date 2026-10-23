@@ -13,6 +13,7 @@ from app.views.util import ErrorSerializer
 class StatusSerializer(serializers.Serializer):
     authenticated = serializers.BooleanField()
     username = serializers.CharField()
+    staff = serializers.BooleanField()
 
 
 class InfoRequestSerializer(serializers.Serializer):
@@ -49,7 +50,8 @@ class AuthViewSet(viewsets.ViewSet):
     def status(self, request):
         serializer = StatusSerializer({
             "authenticated": request.user.is_authenticated,
-            "username": request.user.username if request.user.is_authenticated else None
+            "username": request.user.username if request.user.is_authenticated else None,
+            "staff": request.user.is_staff,
         })
 
         response = Response(serializer.data)

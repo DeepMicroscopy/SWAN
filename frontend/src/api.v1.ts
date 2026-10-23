@@ -129,7 +129,7 @@ export interface paths {
     };
     get: operations['v1_datasets_list'];
     put?: never;
-    post?: never;
+    post: operations['v1_datasets_create'];
     delete?: never;
     options?: never;
     head?: never;
@@ -186,6 +186,57 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/export/{study}/results/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description The latest classification of every registered reviewer for each image, as JSON */
+    get: operations['v1_export_results_retrieve'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/groups/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Reviewer groups. A study with a group is only visible to its members. */
+    get: operations['v1_groups_list'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/groups/{id}/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Reviewer groups. A study with a group is only visible to its members. */
+    get: operations['v1_groups_retrieve'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/share/{study}/anonymous/': {
     parameters: {
       query?: never;
@@ -229,7 +280,7 @@ export interface paths {
     };
     get: operations['v1_studies_list'];
     put?: never;
-    post?: never;
+    post: operations['v1_studies_create'];
     delete?: never;
     options?: never;
     head?: never;
@@ -285,10 +336,86 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/studies/{id}/progress/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description How many images each reviewer has classified. A reviewer is complete once every image has an answer.
+         *
+         *     Members of the study's group are listed even if they have not started yet. */
+    get: operations['v1_studies_progress_retrieve'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/studies/all/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Every study with its progress, for the staff overview (no matter who may take part). */
+    get: operations['v1_studies_all_list'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/uis/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description The swipe interface (labels per direction) that studies are shown with. */
+    get: operations['v1_uis_list'];
+    put?: never;
+    /** @description The swipe interface (labels per direction) that studies are shown with. */
+    post: operations['v1_uis_create'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/uis/{id}/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description The swipe interface (labels per direction) that studies are shown with. */
+    get: operations['v1_uis_retrieve'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    AnswerCount: {
+      choice: string;
+      label: string | null;
+      count: number;
+    };
     /** @enum {unknown} */
     BlankEnum: '';
     /**
@@ -322,13 +449,10 @@ export interface components {
              * @description The dataset archive. Files are registered by their full path inside the archive.
              */
       archive: string;
-      /**
-             * Format: int64
-             * @description The number of files in the dataset. Calculated automatically.
-             */
-      file_count?: number | null;
+      /** @description The number of files in the dataset. Calculated automatically. */
+      readonly file_count: number | null;
       /** @description A list of all files in the dataset. Calculated automatically. */
-      file_list?: unknown;
+      readonly file_list: unknown;
     };
     Detail: {
       detail: string;
@@ -339,6 +463,17 @@ export interface components {
     };
     Error: {
       detail: string;
+    };
+    Group: {
+      readonly id: number;
+      name: string;
+      readonly user_set: components['schemas']['GroupMember'][];
+    };
+    GroupMember: {
+      /** Format: uuid */
+      readonly id: string;
+      /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
+      username: string;
     };
     InfoRequest: {
       intro_general?: number;
@@ -365,6 +500,15 @@ export interface components {
     Postponed: {
       images: number[];
     };
+    ReviewerProgress: {
+      /** Format: uuid */
+      user: string | null;
+      username: string;
+      classified: number;
+      complete: boolean;
+      /** Format: date-time */
+      last_activity: string | null;
+    };
     Solution: {
       /** @default  */
       text: string;
@@ -384,6 +528,7 @@ export interface components {
     Status: {
       authenticated: boolean;
       username: string;
+      staff: boolean;
     };
     Study: {
       /** Format: uuid */
@@ -415,6 +560,33 @@ export interface components {
       solution: components['schemas']['SolutionConfig'] | null;
       ui: components['schemas']['Ui'];
     };
+    StudyCreate: {
+      /** Format: uuid */
+      readonly id: string;
+      /** @description The title of the study. Visible in all interfaces. */
+      title: string;
+      /** @description (optional) A short description of the study. Markdown is supported. */
+      description?: string | null;
+      /**
+             * Start
+             * Format: date-time
+             * @description The study will be visible on the overview at this time.
+             */
+      pub_date: string;
+      /**
+             * End
+             * Format: date-time
+             * @description The study will be removed from the overview at this time.
+             */
+      end_date: string;
+      group?: number | null;
+      /** @description Adds an authentication tag to the URL allowing anonymous access. */
+      anonymous?: boolean;
+      /** Format: uuid */
+      dataset: string;
+      /** Format: uuid */
+      ui: string;
+    };
     StudyList: {
       /** Format: uuid */
       readonly id: string;
@@ -443,6 +615,23 @@ export interface components {
       length: number;
       readonly index: number;
     };
+    StudyProgress: {
+      /** Format: uuid */
+      study: string;
+      title: string;
+      description: string | null;
+      group: string | null;
+      /** Format: date-time */
+      pub_date: string;
+      /** Format: date-time */
+      end_date: string;
+      anonymous: boolean;
+      dataset_title: string;
+      file_count: number;
+      reviewers: components['schemas']['ReviewerProgress'][];
+      complete_reviewers: number;
+      answers: components['schemas']['AnswerCount'][];
+    };
     Ui: {
       /** @description Only used for display purposes in the study creation. */
       title: string;
@@ -461,6 +650,13 @@ export interface components {
              * @description The default scale of images in the study. Values in percent.
              */
       default_scale?: number;
+    };
+    UiAdmin: {
+      /** Format: uuid */
+      readonly id: string;
+      /** @description Only used for display purposes in the study creation. */
+      title: string;
+      labels: components['schemas']['UiLabel'];
     };
     UiDirection: {
       text: string | null;
@@ -697,6 +893,31 @@ export interface operations {
       };
     };
   };
+  v1_datasets_create: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'multipart/form-data': components['schemas']['Dataset'];
+        'application/x-www-form-urlencoded': components['schemas']['Dataset'];
+        'application/json': components['schemas']['Dataset'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Dataset'];
+        };
+      };
+    };
+  };
   v1_datasets_retrieve: {
     parameters: {
       query?: never;
@@ -763,6 +984,70 @@ export interface operations {
       };
     };
   };
+  v1_export_results_retrieve: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        study: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': {
+            [key: string]: unknown;
+          };
+        };
+      };
+    };
+  };
+  v1_groups_list: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Group'][];
+        };
+      };
+    };
+  };
+  v1_groups_retrieve: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description A unique integer value identifying this group. */
+        id: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Group'];
+        };
+      };
+    };
+  };
   v1_share_anonymous_retrieve: {
     parameters: {
       query?: never;
@@ -820,6 +1105,31 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['StudyList'][];
+        };
+      };
+    };
+  };
+  v1_studies_create: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['StudyCreate'];
+        'application/x-www-form-urlencoded': components['schemas']['StudyCreate'];
+        'multipart/form-data': components['schemas']['StudyCreate'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StudyCreate'];
         };
       };
     };
@@ -887,6 +1197,113 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['Postponed'];
+        };
+      };
+    };
+  };
+  v1_studies_progress_retrieve: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description A UUID string identifying this study. */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StudyProgress'];
+        };
+      };
+    };
+  };
+  v1_studies_all_list: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StudyProgress'][];
+        };
+      };
+    };
+  };
+  v1_uis_list: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UiAdmin'][];
+        };
+      };
+    };
+  };
+  v1_uis_create: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UiAdmin'];
+        'application/x-www-form-urlencoded': components['schemas']['UiAdmin'];
+        'multipart/form-data': components['schemas']['UiAdmin'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UiAdmin'];
+        };
+      };
+    };
+  };
+  v1_uis_retrieve: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description A UUID string identifying this ui. */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UiAdmin'];
         };
       };
     };

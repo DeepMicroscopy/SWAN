@@ -15,10 +15,11 @@ python manage.py drf_create_token <username>  # use as: Authorization: Token <ke
 | `GET/POST /v1/uis/` | list / create swipe interfaces |
 | `GET /v1/groups/` | groups with their members |
 | `POST /v1/studies/` | create a study (`title`, `pub_date`, `end_date`, `dataset`, `ui`, optional `group`) |
-| `GET /v1/studies/{id}/progress/` | per reviewer: images classified, finished? |
+| `GET /v1/studies/{id}/progress/` | study details, per reviewer: images classified, finished?, distribution of the answers |
+| `GET /v1/studies/all/` | the same for every study (feeds the staff overview page) |
 | `GET /v1/export/{id}/results/` | latest answer per reviewer and image as JSON |
 
-All of them require a staff user. Session login keeps working unchanged. Uploads need a matching
+All of them require a staff user. Staff also get a **Study overview** in the web app (`/#/admin/studies`, one page per study with reviewer progress), which works for studies whose group they do not belong to. Session login keeps working unchanged. Uploads need a matching
 `client_max_body_size` in the reverse proxy.
 
 ## Testing

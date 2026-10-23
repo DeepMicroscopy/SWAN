@@ -139,12 +139,33 @@ class ManagementApi(TestCase):
         self.assertFalse(by_user["expert2"]["complete"])
         self.assertEqual(progress["complete_reviewers"], 2)
 
+        # the staff overview: study meta, group and the distribution of the latest answers (2 x left, 3 x right)
+        self.assertEqual(progress["title"], "batch")
+        self.assertEqual(progress["group"], "experts")
+        self.assertEqual(progress["dataset_title"], "crops")
+        answers = {a["choice"]: (a["label"], a["count"]) for a in progress["answers"]}
+        self.assertEqual(answers, {"left": ("Non-mitotic", 2), "right": ("Mitotic figure", 3)})
+
         results = self.api.get(f"/v1/export/{sid}/results/").json()
         got = {(c["username"], c["file"]): c["label"] for c in results["classifications"]}
         self.assertEqual(got[("expert0", "a.png")], "Mitotic figure")
         self.assertEqual(got[("expert0", "b.png")], "Non-mitotic")
         self.assertEqual(len(got), 5)
         self.assertEqual(results["file_count"], 2)
+
+    def test_overview_of_all_studies_for_staff(self):
+        self.create_study()
+        self.create_study()
+        data = self.api.get("/v1/studies/all/").json()
+        self.assertEqual(len(data), 2)
+        self.assertEqual(data[0]["file_count"], 2)
+        self.assertEqual([r["username"] for r in data[0]["reviewers"]], ["expert0", "expert1", "expert2"])
+        self.assertEqual(client_for(self.experts[0]).get("/v1/studies/all/").status_code, 403)
+        self.assertEqual(APIClient().get("/v1/studies/all/").status_code, 403)
+
+    def test_auth_status_tells_staff(self):
+        self.assertTrue(self.api.get("/v1/auth/status/").json()["staff"])
+        self.assertFalse(client_for(self.experts[0]).get("/v1/auth/status/").json()["staff"])
 
     def test_progress_requires_admin(self):
         _, study = self.create_study()
