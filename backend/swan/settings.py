@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_json_widget',
     'rest_framework',
+    'rest_framework.authtoken',
     'drf_spectacular',
     'drf_spectacular_sidecar',
 ]
@@ -162,7 +163,11 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAdminUser',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        # Session must stay first: it keeps unauthenticated requests at 403 (Token would turn them into 401).
         'rest_framework.authentication.SessionAuthentication',
+        # API tokens (`manage.py drf_create_token <user>`) let services such as the muROMI dataset manager
+        # create and monitor studies without a browser session.
+        'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
