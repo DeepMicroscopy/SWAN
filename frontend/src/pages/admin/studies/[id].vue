@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import { onBeforeUnmount, ref } from 'vue';
+  import DOMPurify from 'dompurify';
+  import MarkdownIt from 'markdown-it';
   import { useRoute } from 'vue-router';
   import client from '@/client.ts';
   import type { StudyProgress } from '@/api.ts';
@@ -35,6 +37,12 @@
     return rawDate ? new Date(rawDate).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : 'not started';
   }
 
+  // descriptions are Markdown, as in the reviewers' view
+  const md = new MarkdownIt()
+  function formatMarkdown (text: string): string {
+    return DOMPurify.sanitize(md.render(text))
+  }
+
   function percent (classified: number, total: number): number {
     return total > 0 ? Math.min(100, Math.round(100 * classified / total)) : 0
   }
@@ -54,7 +62,7 @@
 
     <template v-if="progress">
       <h2 class="text-h5">{{ progress.title }}</h2>
-      <p v-if="progress.description" class="text-medium-emphasis mt-1" style="white-space: pre-line">{{ progress.description }}</p>
+      <div v-if="progress.description" class="text-medium-emphasis mt-1" v-html="formatMarkdown(progress.description)" />
 
       <div class="d-flex flex-wrap ga-2 my-4">
         <v-chip prepend-icon="mdi-account-group" variant="outlined">{{ progress.group ?? 'no group' }}</v-chip>
