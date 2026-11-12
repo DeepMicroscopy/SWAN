@@ -16,6 +16,10 @@
         Home
       </v-list-item>
 
+      <v-list-item v-if="staff" prepend-icon="mdi-clipboard-pulse" to="/admin/studies">
+        Study overview
+      </v-list-item>
+
       <v-list-item disabled prepend-icon="mdi-account" to="/profile">
         Profile
       </v-list-item>
@@ -69,6 +73,18 @@
   const store = useAppStore()
   const router = useRouter()
   const drawer = ref(false)
+  const staff = ref(false)
+
+  // staff get the study overview; the server enforces it, this only decides whether to show the entry
+  watch(() => store.loggedIn, loggedIn => {
+    if (!loggedIn) {
+      staff.value = false
+      return
+    }
+    client.GET('/v1/auth/status/')
+      .then(res => { staff.value = !!res.data?.staff })
+      .catch(error => console.log(error))
+  }, { immediate: true })
 
   function logoff () {
     client.POST('/v1/auth/logout/')

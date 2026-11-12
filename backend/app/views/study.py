@@ -2,7 +2,8 @@ import datetime
 import os
 
 import magic
-from django.db.models import Q
+from django.contrib.auth.models import Group
+from django.db.models import Count, Max, Q
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, OpenApiTypes
@@ -12,7 +13,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 from app import util
-from app.models import Study, ClassificationAnonymous, ClassificationUser, Ui, Solution
+from app.models import Study, ClassificationAnonymous, ClassificationUser, Dataset, Ui, Solution
 from app.views.export import get_queryset_users, get_queryset_anonymous
 from app.views.util import study_queryset_for_request, session_for_request
 from swan import settings
@@ -102,6 +103,103 @@ class PostponedSerializer(serializers.Serializer):
     images = serializers.ListField(child=serializers.IntegerField())
 
 
+class StudyCreateSerializer(serializers.ModelSerializer):
+    dataset = serializers.PrimaryKeyRelatedField(queryset=Dataset.objects.all())
+    ui = serializers.PrimaryKeyRelatedField(queryset=Ui.objects.all())
+    group = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), allow_null=True, required=False)
+
+    class Meta:
+        model = Study
+        fields = ["id", "title", "description", "pub_date", "end_date", "group", "anonymous", "dataset", "ui"]
+        read_only_fields = ["id"]
+
+    def validate(self, attrs):
+        if attrs["end_date"] <= attrs["pub_date"]:
+            raise serializers.ValidationError("end_date must be after pub_date")
+        return attrs
+
+
+class ReviewerProgressSerializer(serializers.Serializer):
+    user = serializers.UUIDField(allow_null=True)
+    username = serializers.CharField()
+    classified = serializers.IntegerField()
+    complete = serializers.BooleanField()
+    last_activity = serializers.DateTimeField(allow_null=True)
+
+
+class AnswerCountSerializer(serializers.Serializer):
+    choice = serializers.CharField()
+    label = serializers.CharField(allow_null=True)
+    count = serializers.IntegerField()
+
+
+class StudyProgressSerializer(serializers.Serializer):
+    study = serializers.UUIDField()
+    title = serializers.CharField()
+    description = serializers.CharField(allow_null=True)
+    group = serializers.CharField(allow_null=True)
+    pub_date = serializers.DateTimeField()
+    end_date = serializers.DateTimeField()
+    anonymous = serializers.BooleanField()
+    dataset_title = serializers.CharField()
+    file_count = serializers.IntegerField()
+    reviewers = ReviewerProgressSerializer(many=True)
+    complete_reviewers = serializers.IntegerField()
+    answers = AnswerCountSerializer(many=True)
+
+
+def study_progress(study: Study) -> dict:
+    """Per reviewer: images classified (latest answers only count once), plus how the answers are distributed."""
+    file_count = study.dataset.file_count or 0
+
+    rows = (
+        ClassificationUser.objects.filter(study=study)
+        .values("user", "user__username")
+        .annotate(classified=Count("index", distinct=True), last_activity=Max("date"))
+    )
+    reviewers = {
+        row["user"]: {
+            "user": row["user"], "username": row["user__username"] or "(deleted user)",
+            "classified": row["classified"], "last_activity": row["last_activity"],
+        }
+        for row in rows
+    }
+    if study.group is not None:
+        for member in study.group.user_set.all():
+            reviewers.setdefault(member.id, {
+                "user": member.id, "username": member.username, "classified": 0, "last_activity": None,
+            })
+
+    result = sorted(reviewers.values(), key=lambda r: r["username"])
+    for r in result:
+        r["complete"] = file_count > 0 and r["classified"] >= file_count
+
+    labels = study.ui.labels or {}
+    answers = [
+        {
+            "choice": row["choice"],
+            "label": (labels.get(row["choice"]) or {}).get("text"),
+            "count": row["n"],
+        }
+        for row in get_queryset_users(study.id).values("choice").annotate(n=Count("id")).order_by("choice")
+    ]
+
+    return {
+        "study": study.id,
+        "title": study.title,
+        "description": study.description,
+        "group": study.group.name if study.group else None,
+        "pub_date": study.pub_date,
+        "end_date": study.end_date,
+        "anonymous": study.anonymous,
+        "dataset_title": study.dataset.title,
+        "file_count": file_count,
+        "reviewers": result,
+        "complete_reviewers": sum(1 for r in result if r["complete"]),
+        "answers": answers,
+    }
+
+
 @extend_schema(tags=['Study'])
 class StudyViewSet(viewsets.GenericViewSet):
     queryset = Study.objects.all()
@@ -185,3 +283,26 @@ class StudyViewSet(viewsets.GenericViewSet):
 
         serializer = PostponedSerializer({"images": get_postponed_for_request(request, pk, ui.postpone)})
         return Response(serializer.data)
+
+    @extend_schema(request=StudyCreateSerializer, responses=StudyCreateSerializer)
+    def create(self, request):
+        serializer = StudyCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        study = serializer.save()
+        return Response(StudyCreateSerializer(study).data, status=status.HTTP_201_CREATED)
+
+    @extend_schema(request=None, responses=StudyProgressSerializer(many=True))
+    @action(detail=False, methods=["get"], url_path="all")
+    def all_studies(self, request):
+        """Every study with its progress, for the staff overview (no matter who may take part)."""
+        studies = Study.objects.select_related("dataset", "group", "ui").order_by("-pub_date")
+        return Response(StudyProgressSerializer([study_progress(st) for st in studies], many=True).data)
+
+    @extend_schema(request=None, responses=StudyProgressSerializer)
+    @action(detail=True, methods=["get"])
+    def progress(self, request, pk=None):
+        """How many images each reviewer has classified. A reviewer is complete once every image has an answer.
+
+        Members of the study's group are listed even if they have not started yet."""
+        study = get_object_or_404(Study.objects.select_related("dataset", "group", "ui"), pk=pk)
+        return Response(StudyProgressSerializer(study_progress(study)).data)

@@ -1,11 +1,13 @@
 import os
+import zipfile
 
 import magic
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, OpenApiTypes
-from rest_framework import serializers, viewsets, status
+from rest_framework import mixins, serializers, viewsets, status
 from rest_framework.decorators import action
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
@@ -18,13 +20,21 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Dataset
         fields = ["id", "title", "archive", "file_count", "file_list"]
+        read_only_fields = ["file_count", "file_list"]
+
+    def validate_archive(self, archive):
+        if not zipfile.is_zipfile(archive):
+            raise serializers.ValidationError("The archive must be a zip file.")
+        archive.seek(0)
+        return archive
 
 
 @extend_schema(tags=['Dataset'])
-class DatasetViewSet(viewsets.ReadOnlyModelViewSet):
+class DatasetViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Dataset.objects.all()
     serializer_class = DatasetSerializer
     permission_classes = [IsAdminUser]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     @extend_schema(
         operation_id="v1_datasets_retrieve_entry",

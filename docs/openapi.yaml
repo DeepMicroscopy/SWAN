@@ -128,6 +128,7 @@ paths:
       - api
       security:
       - cookieAuth: []
+      - tokenAuth: []
       - {}
       responses:
         '200':
@@ -156,6 +157,7 @@ paths:
       - Auth
       security:
       - cookieAuth: []
+      - tokenAuth: []
       - {}
       responses:
         '200':
@@ -181,6 +183,7 @@ paths:
               $ref: '#/components/schemas/InfoRequest'
       security:
       - cookieAuth: []
+      - tokenAuth: []
       - {}
       responses:
         '200':
@@ -208,6 +211,7 @@ paths:
         required: true
       security:
       - cookieAuth: []
+      - tokenAuth: []
       - {}
       responses:
         '200':
@@ -229,6 +233,7 @@ paths:
       - Auth
       security:
       - cookieAuth: []
+      - tokenAuth: []
       responses:
         '200':
           content:
@@ -243,6 +248,7 @@ paths:
       - Auth
       security:
       - cookieAuth: []
+      - tokenAuth: []
       - {}
       responses:
         '200':
@@ -270,6 +276,7 @@ paths:
         required: true
       security:
       - cookieAuth: []
+      - tokenAuth: []
       - {}
       responses:
         '201':
@@ -299,6 +306,7 @@ paths:
       - Classify
       security:
       - cookieAuth: []
+      - tokenAuth: []
       - {}
       responses:
         '200':
@@ -314,6 +322,7 @@ paths:
       - Dataset
       security:
       - cookieAuth: []
+      - tokenAuth: []
       responses:
         '200':
           content:
@@ -322,6 +331,32 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Dataset'
+          description: ''
+    post:
+      operationId: v1_datasets_create
+      tags:
+      - Dataset
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Dataset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Dataset'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Dataset'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dataset'
           description: ''
   /v1/datasets/{id}/:
     get:
@@ -338,6 +373,7 @@ paths:
       - Dataset
       security:
       - cookieAuth: []
+      - tokenAuth: []
       responses:
         '200':
           content:
@@ -367,6 +403,7 @@ paths:
       - Dataset
       security:
       - cookieAuth: []
+      - tokenAuth: []
       responses:
         '200':
           content:
@@ -390,12 +427,79 @@ paths:
       - Export
       security:
       - cookieAuth: []
+      - tokenAuth: []
       responses:
         '200':
           content:
             image/svg+xml:
               schema:
                 type: string
+          description: ''
+  /v1/export/{study}/results/:
+    get:
+      operationId: v1_export_results_retrieve
+      description: The latest classification of every registered reviewer for each
+        image, as JSON
+      parameters:
+      - in: path
+        name: study
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Export
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /v1/groups/:
+    get:
+      operationId: v1_groups_list
+      description: Reviewer groups. A study with a group is only visible to its members.
+      tags:
+      - Group
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+          description: ''
+  /v1/groups/{id}/:
+    get:
+      operationId: v1_groups_retrieve
+      description: Reviewer groups. A study with a group is only visible to its members.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this group.
+        required: true
+      tags:
+      - Group
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
           description: ''
   /v1/share/{study}/anonymous/:
     get:
@@ -413,6 +517,7 @@ paths:
       - Share
       security:
       - cookieAuth: []
+      - tokenAuth: []
       responses:
         '200':
           content:
@@ -435,6 +540,7 @@ paths:
       - Share
       security:
       - cookieAuth: []
+      - tokenAuth: []
       responses:
         '200':
           content:
@@ -449,6 +555,7 @@ paths:
       - Study
       security:
       - cookieAuth: []
+      - tokenAuth: []
       responses:
         '200':
           content:
@@ -457,6 +564,32 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/StudyList'
+          description: ''
+    post:
+      operationId: v1_studies_create
+      tags:
+      - Study
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StudyCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StudyCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyCreate'
           description: ''
   /v1/studies/{id}/:
     get:
@@ -473,6 +606,7 @@ paths:
       - Study
       security:
       - cookieAuth: []
+      - tokenAuth: []
       - {}
       responses:
         '200':
@@ -503,6 +637,7 @@ paths:
       - Study
       security:
       - cookieAuth: []
+      - tokenAuth: []
       - {}
       responses:
         '200':
@@ -527,6 +662,7 @@ paths:
       - Study
       security:
       - cookieAuth: []
+      - tokenAuth: []
       - {}
       responses:
         '200':
@@ -535,8 +671,140 @@ paths:
               schema:
                 $ref: '#/components/schemas/Postponed'
           description: ''
+  /v1/studies/{id}/progress/:
+    get:
+      operationId: v1_studies_progress_retrieve
+      description: |-
+        How many images each reviewer has classified. A reviewer is complete once every image has an answer.
+
+        Members of the study's group are listed even if they have not started yet.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this study.
+        required: true
+      tags:
+      - Study
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyProgress'
+          description: ''
+  /v1/studies/all/:
+    get:
+      operationId: v1_studies_all_list
+      description: Every study with its progress, for the staff overview (no matter
+        who may take part).
+      tags:
+      - Study
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudyProgress'
+          description: ''
+  /v1/uis/:
+    get:
+      operationId: v1_uis_list
+      description: The swipe interface (labels per direction) that studies are shown
+        with.
+      tags:
+      - Ui
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UiAdmin'
+          description: ''
+    post:
+      operationId: v1_uis_create
+      description: The swipe interface (labels per direction) that studies are shown
+        with.
+      tags:
+      - Ui
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UiAdmin'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UiAdmin'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UiAdmin'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UiAdmin'
+          description: ''
+  /v1/uis/{id}/:
+    get:
+      operationId: v1_uis_retrieve
+      description: The swipe interface (labels per direction) that studies are shown
+        with.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this ui.
+        required: true
+      tags:
+      - Ui
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UiAdmin'
+          description: ''
 components:
   schemas:
+    AnswerCount:
+      type: object
+      properties:
+        choice:
+          type: string
+        label:
+          type: string
+          nullable: true
+        count:
+          type: integer
+      required:
+      - choice
+      - count
+      - label
     BlankEnum:
       enum:
       - ''
@@ -604,16 +872,17 @@ components:
             inside the archive.
         file_count:
           type: integer
-          maximum: 9223372036854775807
-          minimum: 0
-          format: int64
+          readOnly: true
           nullable: true
           description: The number of files in the dataset. Calculated automatically.
         file_list:
+          readOnly: true
           nullable: true
           description: A list of all files in the dataset. Calculated automatically.
       required:
       - archive
+      - file_count
+      - file_list
       - id
       - title
     Detail:
@@ -641,6 +910,40 @@ components:
           type: string
       required:
       - detail
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        user_set:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupMember'
+          readOnly: true
+      required:
+      - id
+      - name
+      - user_set
+    GroupMember:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+      required:
+      - id
+      - username
     InfoRequest:
       type: object
       properties:
@@ -693,6 +996,29 @@ components:
             type: integer
       required:
       - images
+    ReviewerProgress:
+      type: object
+      properties:
+        user:
+          type: string
+          format: uuid
+          nullable: true
+        username:
+          type: string
+        classified:
+          type: integer
+        complete:
+          type: boolean
+        last_activity:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - classified
+      - complete
+      - last_activity
+      - user
+      - username
     Solution:
       type: object
       properties:
@@ -736,8 +1062,11 @@ components:
           type: boolean
         username:
           type: string
+        staff:
+          type: boolean
       required:
       - authenticated
+      - staff
       - username
     Study:
       type: object
@@ -793,6 +1122,50 @@ components:
       - solution
       - title
       - ui
+    StudyCreate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          description: The title of the study. Visible in all interfaces.
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+          description: (optional) A short description of the study. Markdown is supported.
+        pub_date:
+          type: string
+          format: date-time
+          title: Start
+          description: The study will be visible on the overview at this time.
+        end_date:
+          type: string
+          format: date-time
+          title: End
+          description: The study will be removed from the overview at this time.
+        group:
+          type: integer
+          nullable: true
+        anonymous:
+          type: boolean
+          description: Adds an authentication tag to the URL allowing anonymous access.
+        dataset:
+          type: string
+          format: uuid
+        ui:
+          type: string
+          format: uuid
+      required:
+      - dataset
+      - end_date
+      - id
+      - pub_date
+      - title
+      - ui
     StudyList:
       type: object
       properties:
@@ -839,6 +1212,55 @@ components:
       - length
       - pub_date
       - title
+    StudyProgress:
+      type: object
+      properties:
+        study:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        group:
+          type: string
+          nullable: true
+        pub_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        anonymous:
+          type: boolean
+        dataset_title:
+          type: string
+        file_count:
+          type: integer
+        reviewers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewerProgress'
+        complete_reviewers:
+          type: integer
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnswerCount'
+      required:
+      - anonymous
+      - answers
+      - complete_reviewers
+      - dataset_title
+      - description
+      - end_date
+      - file_count
+      - group
+      - pub_date
+      - reviewers
+      - study
+      - title
     Ui:
       type: object
       properties:
@@ -871,6 +1293,23 @@ components:
           format: int64
           description: The default scale of images in the study. Values in percent.
       required:
+      - labels
+      - title
+    UiAdmin:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          description: Only used for display purposes in the study creation.
+          maxLength: 200
+        labels:
+          $ref: '#/components/schemas/UiLabel'
+      required:
+      - id
       - labels
       - title
     UiDirection:
@@ -918,3 +1357,8 @@ components:
       type: apiKey
       in: cookie
       name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

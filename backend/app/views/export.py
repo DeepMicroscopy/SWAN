@@ -8,6 +8,7 @@ from drf_spectacular.utils import extend_schema, OpenApiTypes, OpenApiParameter
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
 
 from app import util
 from app.models import ClassificationUser, ClassificationAnonymous, Study
@@ -73,6 +74,34 @@ class ExportViewSet(viewsets.ViewSet):
                 yield writer.writerow(ExportViewSet.Util.change(row, ui))
 
         return StreamingHttpResponse(generator(), content_type="text/plain")
+
+    @extend_schema(
+        responses=OpenApiTypes.OBJECT,
+        description="The latest classification of every registered reviewer for each image, as JSON",
+    )
+    @action(detail=True)
+    def results(self, request, study=None):
+        study_obj = get_object_or_404(Study.objects.select_related("ui", "dataset"), pk=study)
+        ui = study_obj.ui
+
+        rows = get_queryset_users(study).order_by("file", "user__username").values(
+            "date", "file", "choice", "index", "user", "user__username",
+        )
+        return Response({
+            "study": str(study_obj.id),
+            "file_count": study_obj.dataset.file_count,
+            "classifications": [
+                {
+                    "file": row["file"],
+                    "choice": row["choice"],
+                    "label": ExportViewSet.Util.label(row["choice"], ui),
+                    "user": str(row["user"]) if row["user"] else None,
+                    "username": row["user__username"],
+                    "date": row["date"],
+                }
+                for row in rows
+            ],
+        })
 
     class Util:
         @staticmethod

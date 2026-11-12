@@ -1,4 +1,5 @@
 {
   "authenticated": true,
-  "username": "test-user"
+  "username": "test-user",
+  "staff": false
 }
