@@ -115,7 +115,9 @@ class ManagementApi(TestCase):
         _, study = self.create_study()
         sid = study["id"]
         self.classify(sid, self.experts[0], 0, "a.png", "right")
-        listed = lambda: [s["id"] for s in client_for(self.experts[0]).get("/v1/studies/").json()]
+        def listed():
+            return [s["id"] for s in client_for(self.experts[0]).get("/v1/studies/").json()]
+
         self.assertIn(sid, listed())
         r = self.api.post(f"/v1/studies/{sid}/close/")
         self.assertEqual(r.status_code, 200, r.content)
