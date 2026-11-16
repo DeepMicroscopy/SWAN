@@ -291,6 +291,15 @@ class StudyViewSet(viewsets.GenericViewSet):
         study = serializer.save()
         return Response(StudyCreateSerializer(study).data, status=status.HTTP_201_CREATED)
 
+    @extend_schema(request=None, responses=StudyProgressSerializer)
+    @action(detail=True, methods=["post"])
+    def close(self, request, pk=None):
+        """Takes the study off the reviewers' overview (its end is now). Nothing is deleted: the answers stay and can still be read."""
+        study = get_object_or_404(Study.objects.select_related("dataset", "group", "ui"), pk=pk)
+        study.end_date = datetime.datetime.now(datetime.timezone.utc)
+        study.save(update_fields=["end_date"])
+        return Response(StudyProgressSerializer(study_progress(study)).data)
+
     @extend_schema(request=None, responses=StudyProgressSerializer(many=True))
     @action(detail=False, methods=["get"], url_path="all")
     def all_studies(self, request):

@@ -93,6 +93,36 @@ class ManagementApi(TestCase):
         }, format="multipart")
         self.assertEqual(response.status_code, 400)
 
+    def test_group_is_created_with_members_and_never_loses_any(self):
+        r = self.api.post("/v1/groups/", {"name": "solo", "usernames": ["expert1"]}, format="json")
+        self.assertEqual(r.status_code, 201, r.content)
+        self.assertEqual([m["username"] for m in r.json()["user_set"]], ["expert1"])
+        # again: the same group, the member is not duplicated, and one more is added
+        r = self.api.post("/v1/groups/", {"name": "solo", "usernames": ["expert1", "expert2"]}, format="json")
+        self.assertEqual(r.status_code, 200, r.content)
+        self.assertEqual(sorted(m["username"] for m in r.json()["user_set"]), ["expert1", "expert2"])
+        self.assertEqual(Group.objects.filter(name="solo").count(), 1)
+        # other groups are untouched
+        self.assertEqual(self.group.user_set.count(), 3)
+
+    def test_group_needs_existing_users_and_an_admin(self):
+        r = self.api.post("/v1/groups/", {"name": "solo", "usernames": ["nobody"]}, format="json")
+        self.assertEqual(r.status_code, 400)
+        self.assertFalse(Group.objects.filter(name="solo").exists())
+        self.assertEqual(client_for(self.experts[0]).post("/v1/groups/", {"name": "x"}, format="json").status_code, 403)
+
+    def test_closing_a_study_takes_it_off_the_overview_and_keeps_the_answers(self):
+        _, study = self.create_study()
+        sid = study["id"]
+        self.classify(sid, self.experts[0], 0, "a.png", "right")
+        listed = lambda: [s["id"] for s in client_for(self.experts[0]).get("/v1/studies/").json()]
+        self.assertIn(sid, listed())
+        r = self.api.post(f"/v1/studies/{sid}/close/")
+        self.assertEqual(r.status_code, 200, r.content)
+        self.assertNotIn(sid, listed())
+        self.assertEqual(ClassificationUser.objects.filter(study_id=sid).count(), 1)
+        self.assertEqual(client_for(self.experts[0]).post(f"/v1/studies/{sid}/close/").status_code, 403)
+
     def test_groups_list_members(self):
         data = self.api.get("/v1/groups/").json()
         self.assertEqual([m["username"] for m in data[0]["user_set"]], ["expert0", "expert1", "expert2"])
