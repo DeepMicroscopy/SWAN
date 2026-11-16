@@ -210,10 +210,17 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description Reviewer groups. A study with a group is only visible to its members. */
+    /** @description Reviewer groups. A study with a group is only visible to its members.
+         *
+         *     `POST` makes a group with the given members, or - when a group of that name exists - adds the members to it (it never
+         *     removes anyone and never touches other groups), so a service can set groups up repeatedly. */
     get: operations['v1_groups_list'];
     put?: never;
-    post?: never;
+    /** @description Reviewer groups. A study with a group is only visible to its members.
+         *
+         *     `POST` makes a group with the given members, or - when a group of that name exists - adds the members to it (it never
+         *     removes anyone and never touches other groups), so a service can set groups up repeatedly. */
+    post: operations['v1_groups_create'];
     delete?: never;
     options?: never;
     head?: never;
@@ -227,7 +234,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description Reviewer groups. A study with a group is only visible to its members. */
+    /** @description Reviewer groups. A study with a group is only visible to its members.
+         *
+         *     `POST` makes a group with the given members, or - when a group of that name exists - adds the members to it (it never
+         *     removes anyone and never touches other groups), so a service can set groups up repeatedly. */
     get: operations['v1_groups_retrieve'];
     put?: never;
     post?: never;
@@ -314,6 +324,23 @@ export interface paths {
     get: operations['v1_studies_retrieve_entry'];
     put?: never;
     post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/studies/{id}/close/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Takes the study off the reviewers' overview (its end is now). Nothing is deleted: the answers stay and can still be read. */
+    post: operations['v1_studies_close_create'];
     delete?: never;
     options?: never;
     head?: never;
@@ -468,6 +495,11 @@ export interface components {
       readonly id: number;
       name: string;
       readonly user_set: components['schemas']['GroupMember'][];
+    };
+    GroupCreate: {
+      name: string;
+      /** @description Members of the group; every one must be an existing user. */
+      usernames?: string[];
     };
     GroupMember: {
       /** Format: uuid */
@@ -1026,6 +1058,31 @@ export interface operations {
       };
     };
   };
+  v1_groups_create: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GroupCreate'];
+        'application/x-www-form-urlencoded': components['schemas']['GroupCreate'];
+        'multipart/form-data': components['schemas']['GroupCreate'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Group'];
+        };
+      };
+    };
+  };
   v1_groups_retrieve: {
     parameters: {
       query?: never;
@@ -1175,6 +1232,28 @@ export interface operations {
         };
         content: {
           'application/octet-stream': string;
+        };
+      };
+    };
+  };
+  v1_studies_close_create: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description A UUID string identifying this study. */
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['StudyProgress'];
         };
       };
     };

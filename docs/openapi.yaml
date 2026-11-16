@@ -463,7 +463,11 @@ paths:
   /v1/groups/:
     get:
       operationId: v1_groups_list
-      description: Reviewer groups. A study with a group is only visible to its members.
+      description: |-
+        Reviewer groups. A study with a group is only visible to its members.
+
+        `POST` makes a group with the given members, or - when a group of that name exists - adds the members to it (it never
+        removes anyone and never touches other groups), so a service can set groups up repeatedly.
       tags:
       - Group
       security:
@@ -478,10 +482,45 @@ paths:
                 items:
                   $ref: '#/components/schemas/Group'
           description: ''
+    post:
+      operationId: v1_groups_create
+      description: |-
+        Reviewer groups. A study with a group is only visible to its members.
+
+        `POST` makes a group with the given members, or - when a group of that name exists - adds the members to it (it never
+        removes anyone and never touches other groups), so a service can set groups up repeatedly.
+      tags:
+      - Group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GroupCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GroupCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+          description: ''
   /v1/groups/{id}/:
     get:
       operationId: v1_groups_retrieve
-      description: Reviewer groups. A study with a group is only visible to its members.
+      description: |-
+        Reviewer groups. A study with a group is only visible to its members.
+
+        `POST` makes a group with the given members, or - when a group of that name exists - adds the members to it (it never
+        removes anyone and never touches other groups), so a service can set groups up repeatedly.
       parameters:
       - in: path
         name: id
@@ -646,6 +685,31 @@ paths:
               schema:
                 type: string
                 format: binary
+          description: ''
+  /v1/studies/{id}/close/:
+    post:
+      operationId: v1_studies_close_create
+      description: 'Takes the study off the reviewers'' overview (its end is now).
+        Nothing is deleted: the answers stay and can still be read.'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this study.
+        required: true
+      tags:
+      - Study
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyProgress'
           description: ''
   /v1/studies/{id}/postponed/:
     get:
@@ -928,6 +992,19 @@ components:
       - id
       - name
       - user_set
+    GroupCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 150
+        usernames:
+          type: array
+          items:
+            type: string
+          description: Members of the group; every one must be an existing user.
+      required:
+      - name
     GroupMember:
       type: object
       properties:
